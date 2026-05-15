@@ -1,0 +1,6 @@
+# Entity Models
+
+@"game_data.jsonic"
+@"player.jsonic"
+@"schedule.jsonic"
+@"team.jsonic"

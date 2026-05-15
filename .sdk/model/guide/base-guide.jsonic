@@ -1,0 +1,42 @@
+# Guide
+
+guide: {
+  metrics: count: entity: 4
+  metrics: count: path: 6
+  metrics: count: method: 6
+
+  entity: game_data: {
+    path: "/game/{game_pk}/feed/live": {
+      op: load: method: *GET
+    }
+    path: "/game/{game_pk}/feed/live/timestamps": {
+      op: list: method: *GET
+    }
+  }
+
+  entity: player: {
+    path: "/people/{playerId}": {
+      rename: param: "playerId": *"player_id"
+      op: load: method: *GET
+    }
+  }
+
+  entity: schedule: {
+    path: "/schedule": {
+      op: list: method: *GET
+    }
+  }
+
+  entity: team: {
+    path: "/teams/{teamId}": {
+      rename: param: "teamId": *"id"
+      op: load: method: *GET
+    }
+    path: "/teams/{teamId}/roster": {
+      action: "roster": {}
+      rename: param: "teamId": *"id"
+      op: list: method: *GET
+    }
+  }
+
+}

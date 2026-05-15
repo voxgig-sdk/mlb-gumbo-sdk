@@ -1,0 +1,28 @@
+# API Information
+
+
+main: {
+  kit: {
+    info: {
+      contact: {
+        name: "MLB GUMBO API"
+        url: "https://github.com/MajorLeagueBaseball/google-cloud-mlb-hackathon"
+      }
+      description: "The MLB GUMBO API provides real-time access to comprehensive Major League Baseball data, including live game information and player statistics. Developers can utilize this API to create applications that enhance fan engagement using advanced data insights and machine learning capabilities. The GUMBO (Grand Unified Master Baseball Object) live data feed provides a standardized JSON response that summarizes the entire state of a selected game upon each update."
+      servers: [
+        {
+          description: "MLB Stats API v1.1 Server"
+          url: "https://statsapi.mlb.com/api/v1.1"
+        }
+        {
+          description: "MLB Stats API v1 Server"
+          url: "https://statsapi.mlb.com/api/v1"
+        }
+      ]
+      title: "MLB GUMBO API"
+      version: "1.1.0"
+    }
+  }
+}
+
+}

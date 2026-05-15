@@ -1,0 +1,33 @@
+{
+  "existing": {
+    "game_data": {
+      "GAME_DATA00": {
+        "game_data": {},
+        "live_data": {},
+        "timestamp": [],
+        "game_pk": "GAME_PK01"
+      },
+      "GAME_DATA01": {
+        "game_data": {},
+        "live_data": {},
+        "timestamp": [],
+        "game_pk": "GAME_PK01"
+      },
+      "GAME_DATA02": {
+        "game_data": {},
+        "live_data": {},
+        "timestamp": [],
+        "game_pk": "GAME_PK01"
+      }
+    }
+  },
+  "new": {
+    "game_data": {
+      "game_data_ref01": {
+        "game_data": {},
+        "live_data": {},
+        "timestamp": []
+      }
+    }
+  }
+}

@@ -1,0 +1,94 @@
+# Entity: schedule
+
+main: kit: entity: schedule: {
+
+  alias: field: {}
+
+  fields: [
+    {
+      name: "date"
+      req: false
+      type: "`$STRING`"
+    }
+    {
+      name: "game"
+      req: false
+      type: "`$ARRAY`"
+    }
+  ]
+
+  name: "schedule"
+  op: {
+    list: {
+      name: "list"
+      points: [
+        {
+          args: {
+            query: [
+              {
+                example: "03/15/2024"
+                kind: "query"
+                name: "date"
+                orig: "date"
+                reqd: false
+                type: "`$STRING`"
+              }
+              {
+                example: "R"
+                kind: "query"
+                name: "game_type"
+                orig: "game_type"
+                reqd: false
+                type: "`$STRING`"
+              }
+              {
+                kind: "query"
+                name: "hydrate"
+                orig: "hydrate"
+                reqd: false
+                type: "`$STRING`"
+              }
+              {
+                example: 2024
+                kind: "query"
+                name: "season"
+                orig: "season"
+                reqd: false
+                type: "`$INTEGER`"
+              }
+              {
+                example: 1
+                kind: "query"
+                name: "sport_id"
+                orig: "sport_id"
+                reqd: false
+                type: "`$INTEGER`"
+              }
+            ]
+          }
+          method: "GET"
+          orig: "/schedule"
+          parts: [
+            "schedule"
+          ]
+          select: {
+            exist: [
+              "date"
+              "game_type"
+              "hydrate"
+              "season"
+              "sport_id"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

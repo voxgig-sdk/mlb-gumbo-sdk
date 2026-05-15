@@ -1,0 +1,88 @@
+# Entity: player
+
+main: kit: entity: player: {
+
+  alias: field: {}
+
+  fields: [
+    {
+      name: "person"
+      req: false
+      type: "`$ARRAY`"
+    }
+  ]
+
+  name: "player"
+  op: {
+    load: {
+      name: "load"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                example: 660271
+                kind: "param"
+                name: "player_id"
+                orig: "player_id"
+                reqd: true
+                type: "`$INTEGER`"
+              }
+            ]
+            query: [
+              {
+                example: "stats,currentTeam"
+                kind: "query"
+                name: "hydrate"
+                orig: "hydrate"
+                reqd: false
+                type: "`$STRING`"
+              }
+              {
+                example: 2024
+                kind: "query"
+                name: "season"
+                orig: "season"
+                reqd: false
+                type: "`$INTEGER`"
+              }
+            ]
+          }
+          method: "GET"
+          orig: "/people/{playerId}"
+          parts: [
+            "people"
+            "{player_id}"
+          ]
+          rename: {
+            param: {
+              playerId: "player_id"
+            }
+          }
+          select: {
+            exist: [
+              "hydrate"
+              "player_id"
+              "season"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+  relations: {
+    ancestors: [
+      [
+        "person"
+      ]
+    ]
+  }
+
+
+
+}

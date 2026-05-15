@@ -1,0 +1,32 @@
+# BasicPlayerFlow
+
+main: kit: flow: BasicPlayerFlow:
+{
+  entity: "player",
+  kind: "basic",
+  name: "BasicPlayerFlow",
+  step: [
+    {
+      input: {
+        ref: "player_ref01",
+        srcdatavar: "player_ref01_data",
+        suffix: "_dt0"
+      }
+
+      match: {
+        id: "player01"
+      }
+
+      op: "load",
+      valid: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-player_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicPlayerFlow"
+}

@@ -1,0 +1,159 @@
+# Entity: team
+
+main: kit: entity: team: {
+
+  alias: field: {}
+
+  fields: [
+    {
+      name: "jersey_number"
+      req: false
+      type: "`$STRING`"
+    }
+    {
+      name: "person"
+      req: false
+      type: "`$OBJECT`"
+    }
+    {
+      name: "position"
+      req: false
+      type: "`$OBJECT`"
+    }
+    {
+      name: "status"
+      req: false
+      type: "`$OBJECT`"
+    }
+    {
+      name: "team"
+      req: false
+      type: "`$ARRAY`"
+    }
+  ]
+
+  name: "team"
+  op: {
+    list: {
+      name: "list"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                example: 119
+                kind: "param"
+                name: "id"
+                orig: "team_id"
+                reqd: true
+                type: "`$INTEGER`"
+              }
+            ]
+            query: [
+              {
+                kind: "query"
+                name: "hydrate"
+                orig: "hydrate"
+                reqd: false
+                type: "`$STRING`"
+              }
+              {
+                example: 2024
+                kind: "query"
+                name: "season"
+                orig: "season"
+                reqd: false
+                type: "`$INTEGER`"
+              }
+            ]
+          }
+          method: "GET"
+          orig: "/teams/{teamId}/roster"
+          parts: [
+            "teams"
+            "{id}"
+            "roster"
+          ]
+          rename: {
+            param: {
+              teamId: "id"
+            }
+          }
+          select: {
+            "$action": "roster"
+            exist: [
+              "hydrate"
+              "id"
+              "season"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                example: 119
+                kind: "param"
+                name: "id"
+                orig: "team_id"
+                reqd: true
+                type: "`$INTEGER`"
+              }
+            ]
+            query: [
+              {
+                kind: "query"
+                name: "hydrate"
+                orig: "hydrate"
+                reqd: false
+                type: "`$STRING`"
+              }
+              {
+                example: 2024
+                kind: "query"
+                name: "season"
+                orig: "season"
+                reqd: false
+                type: "`$INTEGER`"
+              }
+            ]
+          }
+          method: "GET"
+          orig: "/teams/{teamId}"
+          parts: [
+            "teams"
+            "{id}"
+          ]
+          rename: {
+            param: {
+              teamId: "id"
+            }
+          }
+          select: {
+            exist: [
+              "hydrate"
+              "id"
+              "season"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

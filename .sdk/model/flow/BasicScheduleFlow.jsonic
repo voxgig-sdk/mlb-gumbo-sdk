@@ -1,0 +1,22 @@
+# BasicScheduleFlow
+
+main: kit: flow: BasicScheduleFlow:
+{
+  entity: "schedule",
+  kind: "basic",
+  name: "BasicScheduleFlow",
+  step: [
+    {
+      op: "list",
+      valid: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "schedule_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicScheduleFlow"
+}

@@ -1,0 +1,26 @@
+{
+  "existing": {
+    "schedule": {
+      "SCHEDULE00": {
+        "date": "s14",
+        "game": []
+      },
+      "SCHEDULE01": {
+        "date": "s28",
+        "game": []
+      },
+      "SCHEDULE02": {
+        "date": "s3c",
+        "game": []
+      }
+    }
+  },
+  "new": {
+    "schedule": {
+      "schedule_ref01": {
+        "date": "s50",
+        "game": []
+      }
+    }
+  }
+}

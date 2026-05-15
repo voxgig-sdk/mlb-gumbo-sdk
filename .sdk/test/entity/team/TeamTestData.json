@@ -1,0 +1,38 @@
+{
+  "existing": {
+    "team": {
+      "TEAM00": {
+        "jersey_number": "s32",
+        "person": {},
+        "position": {},
+        "status": {},
+        "team": []
+      },
+      "TEAM01": {
+        "jersey_number": "s64",
+        "person": {},
+        "position": {},
+        "status": {},
+        "team": []
+      },
+      "TEAM02": {
+        "jersey_number": "s96",
+        "person": {},
+        "position": {},
+        "status": {},
+        "team": []
+      }
+    }
+  },
+  "new": {
+    "team": {
+      "team_ref01": {
+        "jersey_number": "sc8",
+        "person": {},
+        "position": {},
+        "status": {},
+        "team": []
+      }
+    }
+  }
+}

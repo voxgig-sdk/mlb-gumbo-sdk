@@ -1,0 +1,25 @@
+{
+  "existing": {
+    "player": {
+      "PLAYER00": {
+        "person": [],
+        "player_id": "PLAYER01"
+      },
+      "PLAYER01": {
+        "person": [],
+        "player_id": "PLAYER01"
+      },
+      "PLAYER02": {
+        "person": [],
+        "player_id": "PLAYER01"
+      }
+    }
+  },
+  "new": {
+    "player": {
+      "player_ref01": {
+        "person": []
+      }
+    }
+  }
+}

@@ -1,0 +1,140 @@
+# Entity: game_data
+
+main: kit: entity: game_data: {
+
+  alias: field: {}
+
+  fields: [
+    {
+      name: "game_data"
+      req: false
+      type: "`$OBJECT`"
+    }
+    {
+      name: "live_data"
+      req: false
+      type: "`$OBJECT`"
+    }
+    {
+      name: "timestamp"
+      req: false
+      type: "`$ARRAY`"
+    }
+  ]
+
+  name: "game_data"
+  op: {
+    list: {
+      name: "list"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                example: "716463"
+                kind: "param"
+                name: "game_pk"
+                orig: "game_pk"
+                reqd: true
+                type: "`$STRING`"
+              }
+            ]
+          }
+          method: "GET"
+          orig: "/game/{game_pk}/feed/live/timestamps"
+          parts: [
+            "game"
+            "{game_pk}"
+            "feed"
+            "live"
+            "timestamps"
+          ]
+          select: {
+            exist: [
+              "game_pk"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                example: "716463"
+                kind: "param"
+                name: "game_pk"
+                orig: "game_pk"
+                reqd: true
+                type: "`$STRING`"
+              }
+            ]
+            query: [
+              {
+                kind: "query"
+                name: "field"
+                orig: "field"
+                reqd: false
+                type: "`$STRING`"
+              }
+              {
+                example: "stats,team"
+                kind: "query"
+                name: "hydrate"
+                orig: "hydrate"
+                reqd: false
+                type: "`$STRING`"
+              }
+              {
+                example: "20240315_123456"
+                kind: "query"
+                name: "timecode"
+                orig: "timecode"
+                reqd: false
+                type: "`$STRING`"
+              }
+            ]
+          }
+          method: "GET"
+          orig: "/game/{game_pk}/feed/live"
+          parts: [
+            "game"
+            "{game_pk}"
+            "feed"
+            "live"
+          ]
+          select: {
+            exist: [
+              "field"
+              "game_pk"
+              "hydrate"
+              "timecode"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+  relations: {
+    ancestors: [
+      [
+        "game"
+      ]
+    ]
+  }
+
+
+
+}

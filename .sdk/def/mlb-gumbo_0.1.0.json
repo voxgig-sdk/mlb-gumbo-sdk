@@ -1,0 +1,686 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "MLB GUMBO API",
+    "description": "The MLB GUMBO API provides real-time access to comprehensive Major League Baseball data, including live game information and player statistics. Developers can utilize this API to create applications that enhance fan engagement using advanced data insights and machine learning capabilities. The GUMBO (Grand Unified Master Baseball Object) live data feed provides a standardized JSON response that summarizes the entire state of a selected game upon each update.",
+    "version": "1.1.0",
+    "contact": {
+      "name": "MLB GUMBO API",
+      "url": "https://github.com/MajorLeagueBaseball/google-cloud-mlb-hackathon"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://statsapi.mlb.com/api/v1.1",
+      "description": "MLB Stats API v1.1 Server"
+    },
+    {
+      "url": "https://statsapi.mlb.com/api/v1",
+      "description": "MLB Stats API v1 Server"
+    }
+  ],
+  "paths": {
+    "/game/{game_pk}/feed/live": {
+      "get": {
+        "summary": "Get Live Game Feed",
+        "description": "Returns the complete current state of a game via the GUMBO (Grand Unified Master Baseball Object) live data feed. Each GUMBO object includes the complete and current dataset for the entire game, providing comprehensive game information without requiring incremental updates.",
+        "operationId": "getLiveGameFeed",
+        "tags": [
+          "Game Data",
+          "GUMBO"
+        ],
+        "parameters": [
+          {
+            "name": "game_pk",
+            "in": "path",
+            "description": "The unique identifier (primary key) for the specific game",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "716463"
+            }
+          },
+          {
+            "name": "timecode",
+            "in": "query",
+            "description": "Retrieve game state at a specific timestamp in format yyyymmdd_######",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{8}_\\d{6}$",
+              "example": "20240315_123456"
+            }
+          },
+          {
+            "name": "hydrate",
+            "in": "query",
+            "description": "Add additional data to the response (e.g., stats, team)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "stats,team"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "description": "Limit the response to specific fields",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved live game feed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "gameData": {
+                      "type": "object",
+                      "description": "Metadata about the game including teams, venue, and game status"
+                    },
+                    "liveData": {
+                      "type": "object",
+                      "description": "Real-time game data including plays, boxscore, and current state"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Game not found"
+          }
+        }
+      }
+    },
+    "/game/{game_pk}/feed/live/timestamps": {
+      "get": {
+        "summary": "Get Game Update Timestamps",
+        "description": "Returns a list of all available timestamps for game updates, useful for retrieving historical game states",
+        "operationId": "getGameTimestamps",
+        "tags": [
+          "Game Data",
+          "GUMBO"
+        ],
+        "parameters": [
+          {
+            "name": "game_pk",
+            "in": "path",
+            "description": "The unique identifier (primary key) for the specific game",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "716463"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved list of timestamps",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "timestamps": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Array of timestamp strings in format yyyymmdd_######"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Game not found"
+          }
+        }
+      }
+    },
+    "/schedule": {
+      "get": {
+        "summary": "Get Game Schedule",
+        "description": "Returns the game schedule for specified parameters including season, sport, and game type",
+        "operationId": "getSchedule",
+        "tags": [
+          "Schedule"
+        ],
+        "parameters": [
+          {
+            "name": "sportId",
+            "in": "query",
+            "description": "Sport identifier (1 = Major League Baseball)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "season",
+            "in": "query",
+            "description": "The season year",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 2024
+            }
+          },
+          {
+            "name": "gameType",
+            "in": "query",
+            "description": "Type of games to include (R = Regular Season, P = Postseason, S = Spring Training)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "R",
+                "P",
+                "S"
+              ],
+              "example": "R"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Specific date for schedule (format: MM/DD/YYYY)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "03/15/2024"
+            }
+          },
+          {
+            "name": "hydrate",
+            "in": "query",
+            "description": "Add additional data to the response",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved schedule",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "dates": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "games": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "gamePk": {
+                                  "type": "integer",
+                                  "description": "Unique game identifier"
+                                },
+                                "gameDate": {
+                                  "type": "string",
+                                  "format": "date-time"
+                                },
+                                "teams": {
+                                  "type": "object"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/teams/{teamId}": {
+      "get": {
+        "summary": "Get Team Information",
+        "description": "Returns detailed information about a specific team",
+        "operationId": "getTeam",
+        "tags": [
+          "Teams"
+        ],
+        "parameters": [
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "The unique identifier for the team (e.g., 119 for LA Dodgers)",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 119
+            }
+          },
+          {
+            "name": "season",
+            "in": "query",
+            "description": "Specify a season year for team information",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 2024
+            }
+          },
+          {
+            "name": "hydrate",
+            "in": "query",
+            "description": "Add additional data to the response",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved team information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "teams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "teamName": {
+                            "type": "string"
+                          },
+                          "abbreviation": {
+                            "type": "string"
+                          },
+                          "locationName": {
+                            "type": "string"
+                          },
+                          "division": {
+                            "type": "object"
+                          },
+                          "league": {
+                            "type": "object"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Team not found"
+          }
+        }
+      }
+    },
+    "/teams/{teamId}/roster": {
+      "get": {
+        "summary": "Get Team Roster",
+        "description": "Returns the roster for a specific team and season",
+        "operationId": "getTeamRoster",
+        "tags": [
+          "Teams",
+          "Roster"
+        ],
+        "parameters": [
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "The unique identifier for the team (e.g., 119 for LA Dodgers)",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 119
+            }
+          },
+          {
+            "name": "season",
+            "in": "query",
+            "description": "The season year for the roster",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 2024
+            }
+          },
+          {
+            "name": "hydrate",
+            "in": "query",
+            "description": "Add additional data to the response",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved team roster",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "roster": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "person": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer"
+                              },
+                              "fullName": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "jerseyNumber": {
+                            "type": "string"
+                          },
+                          "position": {
+                            "type": "object",
+                            "properties": {
+                              "code": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "status": {
+                            "type": "object"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Team not found"
+          }
+        }
+      }
+    },
+    "/people/{playerId}": {
+      "get": {
+        "summary": "Get Player Information",
+        "description": "Returns detailed information about a specific player",
+        "operationId": "getPlayer",
+        "tags": [
+          "Players"
+        ],
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "The unique identifier for the player (e.g., 660271 for Shohei Ohtani)",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 660271
+            }
+          },
+          {
+            "name": "season",
+            "in": "query",
+            "description": "Specify a season year for player information",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 2024
+            }
+          },
+          {
+            "name": "hydrate",
+            "in": "query",
+            "description": "Add additional data to the response (e.g., stats, currentTeam)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "stats,currentTeam"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved player information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "people": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "fullName": {
+                            "type": "string"
+                          },
+                          "firstName": {
+                            "type": "string"
+                          },
+                          "lastName": {
+                            "type": "string"
+                          },
+                          "primaryNumber": {
+                            "type": "string"
+                          },
+                          "birthDate": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "currentAge": {
+                            "type": "integer"
+                          },
+                          "height": {
+                            "type": "string"
+                          },
+                          "weight": {
+                            "type": "integer"
+                          },
+                          "primaryPosition": {
+                            "type": "object",
+                            "properties": {
+                              "code": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "batSide": {
+                            "type": "object"
+                          },
+                          "pitchHand": {
+                            "type": "object"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Player not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GameFeed": {
+        "type": "object",
+        "description": "Complete game state from the GUMBO feed",
+        "properties": {
+          "gameData": {
+            "type": "object",
+            "description": "Static and metadata about the game"
+          },
+          "liveData": {
+            "type": "object",
+            "description": "Real-time game data and current state"
+          }
+        }
+      },
+      "Schedule": {
+        "type": "object",
+        "properties": {
+          "dates": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "Team": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "teamName": {
+            "type": "string"
+          },
+          "abbreviation": {
+            "type": "string"
+          }
+        }
+      },
+      "Player": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "primaryNumber": {
+            "type": "string"
+          },
+          "primaryPosition": {
+            "type": "object"
+          }
+        }
+      },
+      "Roster": {
+        "type": "object",
+        "properties": {
+          "roster": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "SeasonParam": {
+        "name": "season",
+        "in": "query",
+        "description": "The season year",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "example": 2024
+        }
+      },
+      "HydrateParam": {
+        "name": "hydrate",
+        "in": "query",
+        "description": "Add additional data to the response",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Game Data",
+      "description": "Live and historical game data endpoints"
+    },
+    {
+      "name": "GUMBO",
+      "description": "Grand Unified Master Baseball Object live data feeds"
+    },
+    {
+      "name": "Schedule",
+      "description": "Game scheduling information"
+    },
+    {
+      "name": "Teams",
+      "description": "Team information and data"
+    },
+    {
+      "name": "Roster",
+      "description": "Team roster information"
+    },
+    {
+      "name": "Players",
+      "description": "Player information and statistics"
+    }
+  ],
+  "externalDocs": {
+    "description": "MLB GUMBO API Documentation on GitHub",
+    "url": "https://github.com/MajorLeagueBaseball/google-cloud-mlb-hackathon"
+  }
+}
