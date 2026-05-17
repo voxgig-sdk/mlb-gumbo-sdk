@@ -6,21 +6,24 @@
         "person": {},
         "position": {},
         "status": {},
-        "team": []
+        "team": [],
+        "id": "TEAM00"
       },
       "TEAM01": {
         "jersey_number": "s64",
         "person": {},
         "position": {},
         "status": {},
-        "team": []
+        "team": [],
+        "id": "TEAM01"
       },
       "TEAM02": {
         "jersey_number": "s96",
         "person": {},
         "position": {},
         "status": {},
-        "team": []
+        "team": [],
+        "id": "TEAM02"
       }
     }
   },

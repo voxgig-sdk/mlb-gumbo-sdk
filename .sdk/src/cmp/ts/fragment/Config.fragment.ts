@@ -29,7 +29,7 @@ class Config {
 
 
   options = {
-    base: 'https://statsapi.mlb.com/api/v1.1',
+    base: '$$main.kit.info.servers.0.url$$',
 
     'AUTHBLOCK'headers: 'HEADERS',
 

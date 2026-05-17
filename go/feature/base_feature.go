@@ -1,7 +1,7 @@
 package feature
 
 import (
-	"github.com/voxgig-sdk/mlb-gumbo-sdk/core"
+	"github.com/voxgig-sdk/mlb-gumbo-sdk/go/core"
 )
 
 type BaseFeature struct {

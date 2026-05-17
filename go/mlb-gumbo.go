@@ -1,10 +1,10 @@
 package voxgigmlbgumbosdk
 
 import (
-	"github.com/voxgig-sdk/mlb-gumbo-sdk/core"
-	"github.com/voxgig-sdk/mlb-gumbo-sdk/entity"
-	"github.com/voxgig-sdk/mlb-gumbo-sdk/feature"
-	_ "github.com/voxgig-sdk/mlb-gumbo-sdk/utility"
+	"github.com/voxgig-sdk/mlb-gumbo-sdk/go/core"
+	"github.com/voxgig-sdk/mlb-gumbo-sdk/go/entity"
+	"github.com/voxgig-sdk/mlb-gumbo-sdk/go/feature"
+	_ "github.com/voxgig-sdk/mlb-gumbo-sdk/go/utility"
 )
 
 // Type aliases preserve external API.

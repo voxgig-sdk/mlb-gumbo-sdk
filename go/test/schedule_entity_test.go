@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	sdk "github.com/voxgig-sdk/mlb-gumbo-sdk"
-	"github.com/voxgig-sdk/mlb-gumbo-sdk/core"
+	sdk "github.com/voxgig-sdk/mlb-gumbo-sdk/go"
+	"github.com/voxgig-sdk/mlb-gumbo-sdk/go/core"
 
-	vs "github.com/voxgig/struct"
+	vs "github.com/voxgig-sdk/mlb-gumbo-sdk/go/utility/struct"
 )
 
 func TestScheduleEntity(t *testing.T) {

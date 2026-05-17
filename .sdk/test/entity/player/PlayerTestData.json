@@ -3,15 +3,18 @@
     "player": {
       "PLAYER00": {
         "person": [],
-        "player_id": "PLAYER01"
+        "player_id": "PLAYER01",
+        "id": "PLAYER00"
       },
       "PLAYER01": {
         "person": [],
-        "player_id": "PLAYER01"
+        "player_id": "PLAYER01",
+        "id": "PLAYER01"
       },
       "PLAYER02": {
         "person": [],
-        "player_id": "PLAYER01"
+        "player_id": "PLAYER01",
+        "id": "PLAYER02"
       }
     }
   },

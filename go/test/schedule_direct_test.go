@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	sdk "github.com/voxgig-sdk/mlb-gumbo-sdk"
-	"github.com/voxgig-sdk/mlb-gumbo-sdk/core"
+	sdk "github.com/voxgig-sdk/mlb-gumbo-sdk/go"
+	"github.com/voxgig-sdk/mlb-gumbo-sdk/go/core"
 )
 
 func TestScheduleDirect(t *testing.T) {

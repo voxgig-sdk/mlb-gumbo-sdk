@@ -1,9 +1,9 @@
 package entity
 
 import (
-	"github.com/voxgig-sdk/mlb-gumbo-sdk/core"
+	"github.com/voxgig-sdk/mlb-gumbo-sdk/go/core"
 
-	vs "github.com/voxgig/struct"
+	vs "github.com/voxgig-sdk/mlb-gumbo-sdk/go/utility/struct"
 )
 
 type TeamEntity struct {
