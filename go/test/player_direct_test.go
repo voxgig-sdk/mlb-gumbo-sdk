@@ -110,14 +110,12 @@ func playerDirectSetup(mockres any) *playerDirectSetupResult {
 	env := envOverride(map[string]any{
 		"MLBGUMBO_TEST_PLAYER_ENTID": map[string]any{},
 		"MLBGUMBO_TEST_LIVE":    "FALSE",
-		"MLBGUMBO_APIKEY":       "NONE",
 	})
 
 	live := env["MLBGUMBO_TEST_LIVE"] == "TRUE"
 
 	if live {
 		mergedOpts := map[string]any{
-			"apikey": env["MLBGUMBO_APIKEY"],
 		}
 		client := sdk.NewMlbGumboSDK(mergedOpts)
 

@@ -100,7 +100,6 @@ def _team_basic_setup(extra):
         "MLBGUMBO_TEST_TEAM_ENTID": idmap,
         "MLBGUMBO_TEST_LIVE": "FALSE",
         "MLBGUMBO_TEST_EXPLAIN": "FALSE",
-        "MLBGUMBO_APIKEY": "NONE",
     })
 
     idmap_resolved = helpers.to_map(
@@ -111,7 +110,6 @@ def _team_basic_setup(extra):
     if env.get("MLBGUMBO_TEST_LIVE") == "TRUE":
         merged_opts = vs.merge([
             {
-                "apikey": env.get("MLBGUMBO_APIKEY"),
             },
             extra or {},
         ])

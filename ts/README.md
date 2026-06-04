@@ -17,9 +17,7 @@ loading a specific record.
 ```ts
 import { MlbGumboSDK } from 'mlb-gumbo'
 
-const client = new MlbGumboSDK({
-  apikey: process.env.MLB-GUMBO_APIKEY,
-})
+const client = new MlbGumboSDK({})
 ```
 
 ### 2. List gamedatas
@@ -94,7 +92,7 @@ const result = await client.Planet().load({ id: 'test01' })
 You can also use the instance method:
 
 ```ts
-const client = new MlbGumboSDK({ apikey: '...' })
+const client = new MlbGumboSDK()
 const testClient = client.tester()
 ```
 
@@ -130,7 +128,6 @@ const logger = {
 }
 
 const client = new MlbGumboSDK({
-  apikey: '...',
   extend: [logger],
 })
 ```
@@ -141,7 +138,6 @@ Create a `.env.local` file at the project root:
 
 ```
 MLB-GUMBO_TEST_LIVE=TRUE
-MLB-GUMBO_APIKEY=<your-key>
 ```
 
 Then run:
@@ -159,7 +155,6 @@ cd ts && npm test
 
 ```ts
 new MlbGumboSDK(options?: {
-  apikey?: string
   base?: string
   prefix?: string
   suffix?: string
@@ -170,7 +165,6 @@ new MlbGumboSDK(options?: {
 
 | Option | Type | Description |
 | --- | --- | --- |
-| `apikey` | `string` | API key for authentication. |
 | `base` | `string` | Base URL of the API server. |
 | `prefix` | `string` | URL path prefix prepended to all requests. |
 | `suffix` | `string` | URL path suffix appended to all requests. |

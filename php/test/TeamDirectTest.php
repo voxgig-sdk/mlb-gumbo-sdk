@@ -135,14 +135,12 @@ function team_direct_setup($mockres)
     $env = Runner::env_override([
         "MLBGUMBO_TEST_TEAM_ENTID" => [],
         "MLBGUMBO_TEST_LIVE" => "FALSE",
-        "MLBGUMBO_APIKEY" => "NONE",
     ]);
 
     $live = $env["MLBGUMBO_TEST_LIVE"] === "TRUE";
 
     if ($live) {
         $merged_opts = [
-            "apikey" => $env["MLBGUMBO_APIKEY"],
         ];
         $client = new MlbGumboSDK($merged_opts);
         return [

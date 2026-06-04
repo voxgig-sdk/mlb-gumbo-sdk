@@ -79,14 +79,12 @@ function directSetup(mockres?: any) {
   const env = envOverride({
     'MLBGUMBO_TEST_PLAYER_ENTID': {},
     'MLBGUMBO_TEST_LIVE': 'FALSE',
-    'MLBGUMBO_APIKEY': 'NONE',
   })
 
   const live = 'TRUE' === env.MLBGUMBO_TEST_LIVE
 
   if (live) {
     const client = new MlbGumboSDK({
-      apikey: env.MLBGUMBO_APIKEY,
     })
 
     let idmap: any = env['MLBGUMBO_TEST_PLAYER_ENTID']

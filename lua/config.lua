@@ -14,9 +14,6 @@ local function make_config()
     },
     options = {
       base = "https://statsapi.mlb.com/api/v1.1",
-      auth = {
-        prefix = "Bearer",
-      },
       headers = {
         ["content-type"] = "application/json",
       },

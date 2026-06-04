@@ -61,14 +61,12 @@ def _schedule_direct_setup(mockres):
     env = runner.env_override({
         "MLBGUMBO_TEST_SCHEDULE_ENTID": {},
         "MLBGUMBO_TEST_LIVE": "FALSE",
-        "MLBGUMBO_APIKEY": "NONE",
     })
 
     live = env.get("MLBGUMBO_TEST_LIVE") == "TRUE"
 
     if live:
         merged_opts = {
-            "apikey": env.get("MLBGUMBO_APIKEY"),
         }
         client = MlbGumboSDK(merged_opts)
         return {
