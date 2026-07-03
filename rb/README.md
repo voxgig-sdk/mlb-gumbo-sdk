@@ -10,13 +10,13 @@ The Ruby SDK for the MlbGumbo API — an entity-oriented client using idiomatic 
 
 ## Install
 ```bash
-gem install mlb-gumbo-sdk
+gem install voxgig-sdk-mlb-gumbo
 ```
 
 Or add to your `Gemfile`:
 
 ```ruby
-gem "mlb-gumbo-sdk"
+gem "voxgig-sdk-mlb-gumbo"
 ```
 
 Then run:

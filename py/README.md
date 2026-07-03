@@ -10,7 +10,7 @@ The Python SDK for the MlbGumbo API — an entity-oriented client following Pyth
 
 ## Install
 ```bash
-pip install mlb-gumbo-sdk
+pip install voxgig-sdk-mlb-gumbo
 ```
 
 Or install from source:

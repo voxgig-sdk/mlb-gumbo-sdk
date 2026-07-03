@@ -10,7 +10,7 @@ The Lua SDK for the MlbGumbo API — an entity-oriented client using Lua convent
 
 ## Install
 ```bash
-luarocks install mlb-gumbo-sdk
+luarocks install voxgig-sdk-mlb-gumbo
 ```
 
 If the module is not yet published, add the source directory to

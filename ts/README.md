@@ -10,7 +10,7 @@ The TypeScript SDK for the MlbGumbo API — a type-safe, entity-oriented client 
 
 ## Install
 ```bash
-npm install mlb-gumbo
+npm install @voxgig-sdk/mlb-gumbo
 ```
 ## Tutorial: your first API call
 

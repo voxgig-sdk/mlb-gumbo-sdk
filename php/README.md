@@ -10,7 +10,7 @@ The PHP SDK for the MlbGumbo API — an entity-oriented client using PHP convent
 
 ## Install
 ```bash
-composer require voxgig/mlb-gumbo-sdk
+composer require voxgig-sdk/mlb-gumbo
 ```
 
 

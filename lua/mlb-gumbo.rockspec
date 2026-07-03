@@ -8,12 +8,14 @@ source = {
   dir = "mlb-gumbo-sdk/lua"
 }
 description = {
-  summary = "MlbGumbo SDK for Lua",
-  license = "MIT"
+  summary = "Unofficial generated Lua SDK for the MLB GUMBO public API. Not affiliated with or endorsed by the upstream API provider.",
+  homepage = "https://github.com/voxgig-sdk/mlb-gumbo-sdk",
+  issues_url = "https://github.com/voxgig-sdk/mlb-gumbo-sdk/issues",
+  license = "MIT",
+  labels = { "voxgig", "sdk", "generated-sdk", "openapi", "api-client", "mlb-gumbo" }
 }
 dependencies = {
   "lua >= 5.3",
-  "dkjson >= 2.5",
   "dkjson >= 2.5",
 }
 build = {
