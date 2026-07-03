@@ -91,6 +91,7 @@ function player_basic_setup(extra)
     ["MLBGUMBO_TEST_PLAYER_ENTID"] = idmap,
     ["MLBGUMBO_TEST_LIVE"] = "FALSE",
     ["MLBGUMBO_TEST_EXPLAIN"] = "FALSE",
+    ["MLBGUMBO_APIKEY"] = "NONE",
   })
 
   local idmap_resolved = helpers.to_map(
@@ -102,6 +103,7 @@ function player_basic_setup(extra)
   if env["MLBGUMBO_TEST_LIVE"] == "TRUE" then
     local merged_opts = vs.merge({
       {
+        apikey = env["MLBGUMBO_APIKEY"],
       },
       extra or {},
     })

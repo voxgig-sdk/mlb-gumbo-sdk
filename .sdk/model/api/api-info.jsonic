@@ -21,31 +21,7 @@ main: {
       ]
       title: "MLB GUMBO API"
       version: "1.1.0"
-      tagline: "Real-time Major League Baseball game feeds, schedules, players, and team data via MLB's public Stats API"
-      homepage: "https://statsapi.mlb.com/api/v1.1"
-      docs_url: "https://statsapi.mlb.com/docs/"
-      license_short: "Unofficial public endpoint operated by MLB Advanced Media; no published licence — use is at your own risk and subject to MLB's terms."
-      license_md: `- The MLB Stats API is operated by MLB Advanced Media and is publicly reachable, but no formal open-data licence is published.
-- Data and trademarks (team names, logos, player likenesses) remain property of MLB and its clubs.
-- Treat as best-effort: endpoints, fields, and availability can change without notice.
-- Check MLB's terms of service before using the data in a commercial product.`
-      about_md: `The **MLB GUMBO API** is the public face of the [MLB Stats API](https://statsapi.mlb.com/api/v1.1), run by MLB Advanced Media. GUMBO (Grand Unified Master Baseball Object) is the JSON document format MLB uses internally to describe a live game — every pitch, play, substitution, and box-score line — and the same feed powers MLB.com and the official MLB app.
-
-What you typically get from the API:
-
-- Live and historical **game feeds** in GUMBO format, including play-by-play, line scores, and box scores
-- **Schedule** data by date, team, or season, with probable pitchers and game status
-- **Team** rosters, venues, divisions, and league affiliations
-- **Player** biographical information and season/career statistics
-
-The API is read-only over HTTPS and returns JSON. CORS is enabled, so browser clients can call it directly. There is no documented authentication step and no published rate limit, but the service is shared infrastructure — keep request volume reasonable and cache where you can.`
-      entity_desc: {
-        game_data: "A live or completed game in MLB's GUMBO JSON format, covering line score, box score, and play-by-play; typically served from `/game/{gamePk}/feed/live`."
-        player: "A Major League Baseball player resource with biographical details and statistics, typically served from `/people/{personId}`."
-        schedule: "Game schedules filterable by date, team, sportId, or season, typically served from `/schedule`."
-        team: "An MLB club resource with league, division, venue, and roster references, typically served from `/teams/{teamId}`."
-      }
-      auth: false
     }
   }
 }
+

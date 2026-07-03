@@ -1,21 +1,8 @@
 # MlbGumbo SDK
 
-Real-time Major League Baseball game feeds, schedules, players, and team data via MLB's public Stats API
+MLB GUMBO API client, generated from the OpenAPI spec.
 
 > TypeScript, Python, PHP, Golang, Ruby, Lua SDKs, a CLI, an interactive REPL, and an MCP server for AI agents — all generated from one OpenAPI spec by [@voxgig/sdkgen](https://github.com/voxgig/sdkgen).
-
-## About MLB GUMBO API
-
-The **MLB GUMBO API** is the public face of the [MLB Stats API](https://statsapi.mlb.com/api/v1.1), run by MLB Advanced Media. GUMBO (Grand Unified Master Baseball Object) is the JSON document format MLB uses internally to describe a live game — every pitch, play, substitution, and box-score line — and the same feed powers MLB.com and the official MLB app.
-
-What you typically get from the API:
-
-- Live and historical **game feeds** in GUMBO format, including play-by-play, line scores, and box scores
-- **Schedule** data by date, team, or season, with probable pitchers and game status
-- **Team** rosters, venues, divisions, and league affiliations
-- **Player** biographical information and season/career statistics
-
-The API is read-only over HTTPS and returns JSON. CORS is enabled, so browser clients can call it directly. There is no documented authentication step and no published rate limit, but the service is shared infrastructure — keep request volume reasonable and cache where you can.
 
 ## Try it
 
@@ -49,29 +36,31 @@ gem install mlb-gumbo-sdk
 luarocks install mlb-gumbo-sdk
 ```
 
-## 30-second quickstart
+## Quickstart
 
 ### TypeScript
 
 ```ts
 import { MlbGumboSDK } from 'mlb-gumbo'
 
-const client = new MlbGumboSDK({})
+const client = new MlbGumboSDK({
+  apikey: process.env.MLB-GUMBO_APIKEY,
+})
 
 // List all gamedatas
 const gamedatas = await client.GameData().list()
+console.log(gamedatas.data)
 ```
 
-See the [TypeScript README](ts/README.md) for the
-full guide, or scroll down for the same example in other languages.
+See the [TypeScript README](ts/README.md) for the full guide.
 
-## What's in the box
+## Surfaces
 
-| Surface | Use it for | Path |
-| --- | --- | --- |
-| **SDK** (TypeScript, Python, PHP, Golang, Ruby, Lua) | App integration | `ts/` `py/` `php/` `go/` `rb/` `lua/` |
-| **CLI** | Scripts, CI, ops, one-off API calls | `go-cli/` |
-| **MCP server** | AI agents (Claude, Cursor, Cline) | `go-mcp/` |
+| Surface | Path |
+| --- | --- |
+| **SDK** (TypeScript, Python, PHP, Golang, Ruby, Lua) | `ts/` `py/` `php/` `go/` `rb/` `lua/` |
+| **CLI** | `go-cli/` |
+| **MCP server** | `go-mcp/` |
 
 ## Use it from an AI agent (MCP)
 
@@ -101,10 +90,10 @@ The API exposes 4 entities:
 
 | Entity | Description | API path |
 | --- | --- | --- |
-| **GameData** | A live or completed game in MLB's GUMBO JSON format, covering line score, box score, and play-by-play; typically served from `/game/{gamePk}/feed/live`. | `/game/{game_pk}/feed/live/timestamps` |
-| **Player** | A Major League Baseball player resource with biographical details and statistics, typically served from `/people/{personId}`. | `/people/{playerId}` |
-| **Schedule** | Game schedules filterable by date, team, sportId, or season, typically served from `/schedule`. | `/schedule` |
-| **Team** | An MLB club resource with league, division, venue, and roster references, typically served from `/teams/{teamId}`. | `/teams/{teamId}/roster` |
+| **GameData** |  | `/game/{game_pk}/feed/live/timestamps` |
+| **Player** |  | `/people/{playerId}` |
+| **Schedule** |  | `/schedule` |
+| **Team** |  | `/teams/{teamId}/roster` |
 
 Each entity supports the following operations where available: **load**,
 **list**, **create**, **update**, and **remove**.
@@ -114,17 +103,20 @@ Each entity supports the following operations where available: **load**,
 ### Python
 
 ```python
+import os
 from mlbgumbo_sdk import MlbGumboSDK
 
-client = MlbGumboSDK({})
+client = MlbGumboSDK({
+    "apikey": os.environ.get("MLB-GUMBO_APIKEY"),
+})
 
 # List all gamedatas
-gamedatas, err = client.GameData(None).list(None, None)
+gamedatas, err = client.GameData().list()
+print(gamedatas)
 
 # Load a specific gamedata
-gamedata, err = client.GameData(None).load(
-    {"id": "example_id"}, None
-)
+gamedata, err = client.GameData().load({"id": "example_id"})
+print(gamedata)
 ```
 
 ### PHP
@@ -133,15 +125,17 @@ gamedata, err = client.GameData(None).load(
 <?php
 require_once 'mlbgumbo_sdk.php';
 
-$client = new MlbGumboSDK([]);
+$client = new MlbGumboSDK([
+    "apikey" => getenv("MLB-GUMBO_APIKEY"),
+]);
 
 // List all gamedatas
-[$gamedatas, $err] = $client->GameData(null)->list(null, null);
+[$gamedatas, $err] = $client->GameData()->list();
+print_r($gamedatas);
 
 // Load a specific gamedata
-[$gamedata, $err] = $client->GameData(null)->load(
-    ["id" => "example_id"], null
-);
+[$gamedata, $err] = $client->GameData()->load(["id" => "example_id"]);
+print_r($gamedata);
 ```
 
 ### Golang
@@ -149,10 +143,13 @@ $client = new MlbGumboSDK([]);
 ```go
 import sdk "github.com/voxgig-sdk/mlb-gumbo-sdk/go"
 
-client := sdk.NewMlbGumboSDK(map[string]any{})
+client := sdk.NewMlbGumboSDK(map[string]any{
+    "apikey": os.Getenv("MLB-GUMBO_APIKEY"),
+})
 
 // List all gamedatas
 gamedatas, err := client.GameData(nil).List(nil, nil)
+fmt.Println(gamedatas)
 ```
 
 ### Ruby
@@ -160,15 +157,17 @@ gamedatas, err := client.GameData(nil).List(nil, nil)
 ```ruby
 require_relative "MlbGumbo_sdk"
 
-client = MlbGumboSDK.new({})
+client = MlbGumboSDK.new({
+  "apikey" => ENV["MLB-GUMBO_APIKEY"],
+})
 
 # List all gamedatas
-gamedatas, err = client.GameData(nil).list(nil, nil)
+gamedatas, err = client.GameData().list
+puts gamedatas
 
 # Load a specific gamedata
-gamedata, err = client.GameData(nil).load(
-  { "id" => "example_id" }, nil
-)
+gamedata, err = client.GameData().load({ "id" => "example_id" })
+puts gamedata
 ```
 
 ### Lua
@@ -176,15 +175,17 @@ gamedata, err = client.GameData(nil).load(
 ```lua
 local sdk = require("mlb-gumbo_sdk")
 
-local client = sdk.new({})
+local client = sdk.new({
+  apikey = os.getenv("MLB-GUMBO_APIKEY"),
+})
 
 -- List all gamedatas
-local gamedatas, err = client:GameData(nil):list(nil, nil)
+local gamedatas, err = client:GameData():list()
+print(gamedatas)
 
 -- Load a specific gamedata
-local gamedata, err = client:GameData(nil):load(
-  { id = "example_id" }, nil
-)
+local gamedata, err = client:GameData():load({ id = "example_id" })
+print(gamedata)
 ```
 
 ## Unit testing in offline mode
@@ -203,25 +204,21 @@ const result = await client.GameData().load({ id: 'test01' })
 ### Python
 
 ```python
-client = MlbGumboSDK.test(None, None)
-result, err = client.GameData(None).load(
-    {"id": "test01"}, None
-)
+client = MlbGumboSDK.test()
+result, err = client.GameData().load({"id": "test01"})
 ```
 
 ### PHP
 
 ```php
-$client = MlbGumboSDK::test(null, null);
-[$result, $err] = $client->GameData(null)->load(
-    ["id" => "test01"], null
-);
+$client = MlbGumboSDK::test();
+[$result, $err] = $client->GameData()->load(["id" => "test01"]);
 ```
 
 ### Golang
 
 ```go
-client := sdk.TestSDK(nil, nil)
+client := sdk.Test()
 result, err := client.GameData(nil).Load(
     map[string]any{"id": "test01"}, nil,
 )
@@ -230,19 +227,15 @@ result, err := client.GameData(nil).Load(
 ### Ruby
 
 ```ruby
-client = MlbGumboSDK.test(nil, nil)
-result, err = client.GameData(nil).load(
-  { "id" => "test01" }, nil
-)
+client = MlbGumboSDK.test
+result, err = client.GameData().load({ "id" => "test01" })
 ```
 
 ### Lua
 
 ```lua
-local client = sdk.test(nil, nil)
-local result, err = client:GameData(nil):load(
-  { id = "test01" }, nil
-)
+local client = sdk.test()
+local result, err = client:GameData():load({ id = "test01" })
 ```
 
 ## How it works
@@ -346,16 +339,6 @@ local result, err = client:direct({
 - [Golang](go/README.md)
 - [Ruby](rb/README.md)
 - [Lua](lua/README.md)
-
-## Using the MLB GUMBO API
-
-- Upstream: [https://statsapi.mlb.com/api/v1.1](https://statsapi.mlb.com/api/v1.1)
-- API docs: [https://statsapi.mlb.com/docs/](https://statsapi.mlb.com/docs/)
-
-- The MLB Stats API is operated by MLB Advanced Media and is publicly reachable, but no formal open-data licence is published.
-- Data and trademarks (team names, logos, player likenesses) remain property of MLB and its clubs.
-- Treat as best-effort: endpoints, fields, and availability can change without notice.
-- Check MLB's terms of service before using the data in a commercial product.
 
 ---
 

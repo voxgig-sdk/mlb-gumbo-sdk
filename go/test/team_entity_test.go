@@ -131,6 +131,7 @@ func teamBasicSetup(extra map[string]any) *entityTestSetup {
 		"MLBGUMBO_TEST_TEAM_ENTID": idmap,
 		"MLBGUMBO_TEST_LIVE":      "FALSE",
 		"MLBGUMBO_TEST_EXPLAIN":   "FALSE",
+		"MLBGUMBO_APIKEY":         "NONE",
 	})
 
 	idmapResolved := core.ToMapAny(env["MLBGUMBO_TEST_TEAM_ENTID"])
@@ -141,6 +142,7 @@ func teamBasicSetup(extra map[string]any) *entityTestSetup {
 	if env["MLBGUMBO_TEST_LIVE"] == "TRUE" {
 		mergedOpts := vs.Merge([]any{
 			map[string]any{
+				"apikey": env["MLBGUMBO_APIKEY"],
 			},
 			extra,
 		})

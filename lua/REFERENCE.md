@@ -30,12 +30,12 @@ Create a new SDK client instance.
 
 ### Static Methods
 
-#### `sdk.test(testopts, sdkopts)`
+#### `sdk.test(testopts?, sdkopts?)`
 
-Create a test client with mock features active. Both arguments may be `nil`.
+Create a test client with mock features active. Both arguments are optional.
 
 ```lua
-local client = sdk.test(nil, nil)
+local client = sdk.test()
 ```
 
 
@@ -114,7 +114,7 @@ local game_data = client:GameData(nil)
 List entities matching the given criteria. Returns an array.
 
 ```lua
-local results, err = client:GameData(nil):list(nil, nil)
+local results, err = client:GameData():list()
 ```
 
 #### `load(reqmatch, ctrl) -> any, err`
@@ -122,7 +122,7 @@ local results, err = client:GameData(nil):list(nil, nil)
 Load a single entity matching the given criteria.
 
 ```lua
-local result, err = client:GameData(nil):load({ id = "game_data_id" }, nil)
+local result, err = client:GameData():load({ id = "game_data_id" })
 ```
 
 ### Common Methods
@@ -174,7 +174,7 @@ local player = client:Player(nil)
 Load a single entity matching the given criteria.
 
 ```lua
-local result, err = client:Player(nil):load({ id = "player_id" }, nil)
+local result, err = client:Player():load({ id = "player_id" })
 ```
 
 ### Common Methods
@@ -227,7 +227,7 @@ local schedule = client:Schedule(nil)
 List entities matching the given criteria. Returns an array.
 
 ```lua
-local results, err = client:Schedule(nil):list(nil, nil)
+local results, err = client:Schedule():list()
 ```
 
 ### Common Methods
@@ -283,7 +283,7 @@ local team = client:Team(nil)
 List entities matching the given criteria. Returns an array.
 
 ```lua
-local results, err = client:Team(nil):list(nil, nil)
+local results, err = client:Team():list()
 ```
 
 #### `load(reqmatch, ctrl) -> any, err`
@@ -291,7 +291,7 @@ local results, err = client:Team(nil):list(nil, nil)
 Load a single entity matching the given criteria.
 
 ```lua
-local result, err = client:Team(nil):load({ id = "team_id" }, nil)
+local result, err = client:Team():load({ id = "team_id" })
 ```
 
 ### Common Methods

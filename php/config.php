@@ -20,6 +20,9 @@ class MlbGumboConfig
             ],
             "options" => [
                 "base" => "https://statsapi.mlb.com/api/v1.1",
+                "auth" => [
+                    "prefix" => "Bearer",
+                ],
                 "headers" => [
           'content-type' => 'application/json',
         ],
@@ -34,43 +37,45 @@ class MlbGumboConfig
         'game_data' => [
           'fields' => [
             [
+              'active' => true,
               'name' => 'game_data',
               'req' => false,
               'type' => '`$OBJECT`',
-              'active' => true,
               'index$' => 0,
             ],
             [
+              'active' => true,
               'name' => 'live_data',
               'req' => false,
               'type' => '`$OBJECT`',
-              'active' => true,
               'index$' => 1,
             ],
             [
+              'active' => true,
               'name' => 'timestamp',
               'req' => false,
               'type' => '`$ARRAY`',
-              'active' => true,
               'index$' => 2,
             ],
           ],
           'name' => 'game_data',
           'op' => [
             'list' => [
+              'input' => 'data',
               'name' => 'list',
               'points' => [
                 [
+                  'active' => true,
                   'args' => [
                     'params' => [
                       [
+                        'active' => true,
                         'example' => '716463',
                         'kind' => 'param',
                         'name' => 'game_pk',
                         'orig' => 'game_pk',
                         'reqd' => true,
                         'type' => '`$STRING`',
-                        'active' => true,
                       ],
                     ],
                   ],
@@ -92,55 +97,55 @@ class MlbGumboConfig
                     'req' => '`reqdata`',
                     'res' => '`body`',
                   ],
-                  'active' => true,
                   'index$' => 0,
                 ],
               ],
-              'input' => 'data',
               'key$' => 'list',
             ],
             'load' => [
+              'input' => 'data',
               'name' => 'load',
               'points' => [
                 [
+                  'active' => true,
                   'args' => [
                     'params' => [
                       [
+                        'active' => true,
                         'example' => '716463',
                         'kind' => 'param',
                         'name' => 'game_pk',
                         'orig' => 'game_pk',
                         'reqd' => true,
                         'type' => '`$STRING`',
-                        'active' => true,
                       ],
                     ],
                     'query' => [
                       [
+                        'active' => true,
                         'kind' => 'query',
                         'name' => 'field',
                         'orig' => 'field',
                         'reqd' => false,
                         'type' => '`$STRING`',
-                        'active' => true,
                       ],
                       [
+                        'active' => true,
                         'example' => 'stats,team',
                         'kind' => 'query',
                         'name' => 'hydrate',
                         'orig' => 'hydrate',
                         'reqd' => false,
                         'type' => '`$STRING`',
-                        'active' => true,
                       ],
                       [
+                        'active' => true,
                         'example' => '20240315_123456',
                         'kind' => 'query',
                         'name' => 'timecode',
                         'orig' => 'timecode',
                         'reqd' => false,
                         'type' => '`$STRING`',
-                        'active' => true,
                       ],
                     ],
                   ],
@@ -164,11 +169,9 @@ class MlbGumboConfig
                     'req' => '`reqdata`',
                     'res' => '`body`',
                   ],
-                  'active' => true,
                   'index$' => 0,
                 ],
               ],
-              'input' => 'data',
               'key$' => 'load',
             ],
           ],
@@ -183,49 +186,51 @@ class MlbGumboConfig
         'player' => [
           'fields' => [
             [
+              'active' => true,
               'name' => 'person',
               'req' => false,
               'type' => '`$ARRAY`',
-              'active' => true,
               'index$' => 0,
             ],
           ],
           'name' => 'player',
           'op' => [
             'load' => [
+              'input' => 'data',
               'name' => 'load',
               'points' => [
                 [
+                  'active' => true,
                   'args' => [
                     'params' => [
                       [
+                        'active' => true,
                         'example' => 660271,
                         'kind' => 'param',
                         'name' => 'player_id',
                         'orig' => 'player_id',
                         'reqd' => true,
                         'type' => '`$INTEGER`',
-                        'active' => true,
                       ],
                     ],
                     'query' => [
                       [
+                        'active' => true,
                         'example' => 'stats,currentTeam',
                         'kind' => 'query',
                         'name' => 'hydrate',
                         'orig' => 'hydrate',
                         'reqd' => false,
                         'type' => '`$STRING`',
-                        'active' => true,
                       ],
                       [
+                        'active' => true,
                         'example' => 2024,
                         'kind' => 'query',
                         'name' => 'season',
                         'orig' => 'season',
                         'reqd' => false,
                         'type' => '`$INTEGER`',
-                        'active' => true,
                       ],
                     ],
                   ],
@@ -251,11 +256,9 @@ class MlbGumboConfig
                     'req' => '`reqdata`',
                     'res' => '`body`',
                   ],
-                  'active' => true,
                   'index$' => 0,
                 ],
               ],
-              'input' => 'data',
               'key$' => 'load',
             ],
           ],
@@ -270,71 +273,73 @@ class MlbGumboConfig
         'schedule' => [
           'fields' => [
             [
+              'active' => true,
               'name' => 'date',
               'req' => false,
               'type' => '`$STRING`',
-              'active' => true,
               'index$' => 0,
             ],
             [
+              'active' => true,
               'name' => 'game',
               'req' => false,
               'type' => '`$ARRAY`',
-              'active' => true,
               'index$' => 1,
             ],
           ],
           'name' => 'schedule',
           'op' => [
             'list' => [
+              'input' => 'data',
               'name' => 'list',
               'points' => [
                 [
+                  'active' => true,
                   'args' => [
                     'query' => [
                       [
+                        'active' => true,
                         'example' => '03/15/2024',
                         'kind' => 'query',
                         'name' => 'date',
                         'orig' => 'date',
                         'reqd' => false,
                         'type' => '`$STRING`',
-                        'active' => true,
                       ],
                       [
+                        'active' => true,
                         'example' => 'R',
                         'kind' => 'query',
                         'name' => 'game_type',
                         'orig' => 'game_type',
                         'reqd' => false,
                         'type' => '`$STRING`',
-                        'active' => true,
                       ],
                       [
+                        'active' => true,
                         'kind' => 'query',
                         'name' => 'hydrate',
                         'orig' => 'hydrate',
                         'reqd' => false,
                         'type' => '`$STRING`',
-                        'active' => true,
                       ],
                       [
+                        'active' => true,
                         'example' => 2024,
                         'kind' => 'query',
                         'name' => 'season',
                         'orig' => 'season',
                         'reqd' => false,
                         'type' => '`$INTEGER`',
-                        'active' => true,
                       ],
                       [
+                        'active' => true,
                         'example' => 1,
                         'kind' => 'query',
                         'name' => 'sport_id',
                         'orig' => 'sport_id',
                         'reqd' => false,
                         'type' => '`$INTEGER`',
-                        'active' => true,
                       ],
                     ],
                   ],
@@ -356,11 +361,9 @@ class MlbGumboConfig
                     'req' => '`reqdata`',
                     'res' => '`body`',
                   ],
-                  'active' => true,
                   'index$' => 0,
                 ],
               ],
-              'input' => 'data',
               'key$' => 'list',
             ],
           ],
@@ -371,76 +374,78 @@ class MlbGumboConfig
         'team' => [
           'fields' => [
             [
+              'active' => true,
               'name' => 'jersey_number',
               'req' => false,
               'type' => '`$STRING`',
-              'active' => true,
               'index$' => 0,
             ],
             [
+              'active' => true,
               'name' => 'person',
               'req' => false,
               'type' => '`$OBJECT`',
-              'active' => true,
               'index$' => 1,
             ],
             [
+              'active' => true,
               'name' => 'position',
               'req' => false,
               'type' => '`$OBJECT`',
-              'active' => true,
               'index$' => 2,
             ],
             [
+              'active' => true,
               'name' => 'status',
               'req' => false,
               'type' => '`$OBJECT`',
-              'active' => true,
               'index$' => 3,
             ],
             [
+              'active' => true,
               'name' => 'team',
               'req' => false,
               'type' => '`$ARRAY`',
-              'active' => true,
               'index$' => 4,
             ],
           ],
           'name' => 'team',
           'op' => [
             'list' => [
+              'input' => 'data',
               'name' => 'list',
               'points' => [
                 [
+                  'active' => true,
                   'args' => [
                     'params' => [
                       [
+                        'active' => true,
                         'example' => 119,
                         'kind' => 'param',
                         'name' => 'id',
                         'orig' => 'team_id',
                         'reqd' => true,
                         'type' => '`$INTEGER`',
-                        'active' => true,
                       ],
                     ],
                     'query' => [
                       [
+                        'active' => true,
                         'kind' => 'query',
                         'name' => 'hydrate',
                         'orig' => 'hydrate',
                         'reqd' => false,
                         'type' => '`$STRING`',
-                        'active' => true,
                       ],
                       [
+                        'active' => true,
                         'example' => 2024,
                         'kind' => 'query',
                         'name' => 'season',
                         'orig' => 'season',
                         'reqd' => false,
                         'type' => '`$INTEGER`',
-                        'active' => true,
                       ],
                     ],
                   ],
@@ -468,46 +473,46 @@ class MlbGumboConfig
                     'req' => '`reqdata`',
                     'res' => '`body`',
                   ],
-                  'active' => true,
                   'index$' => 0,
                 ],
               ],
-              'input' => 'data',
               'key$' => 'list',
             ],
             'load' => [
+              'input' => 'data',
               'name' => 'load',
               'points' => [
                 [
+                  'active' => true,
                   'args' => [
                     'params' => [
                       [
+                        'active' => true,
                         'example' => 119,
                         'kind' => 'param',
                         'name' => 'id',
                         'orig' => 'team_id',
                         'reqd' => true,
                         'type' => '`$INTEGER`',
-                        'active' => true,
                       ],
                     ],
                     'query' => [
                       [
+                        'active' => true,
                         'kind' => 'query',
                         'name' => 'hydrate',
                         'orig' => 'hydrate',
                         'reqd' => false,
                         'type' => '`$STRING`',
-                        'active' => true,
                       ],
                       [
+                        'active' => true,
                         'example' => 2024,
                         'kind' => 'query',
                         'name' => 'season',
                         'orig' => 'season',
                         'reqd' => false,
                         'type' => '`$INTEGER`',
-                        'active' => true,
                       ],
                     ],
                   ],
@@ -533,11 +538,9 @@ class MlbGumboConfig
                     'req' => '`reqdata`',
                     'res' => '`body`',
                   ],
-                  'active' => true,
                   'index$' => 0,
                 ],
               ],
-              'input' => 'data',
               'key$' => 'load',
             ],
           ],

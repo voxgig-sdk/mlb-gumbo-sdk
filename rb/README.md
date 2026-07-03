@@ -1,6 +1,11 @@
 # MlbGumbo Ruby SDK
 
-The Ruby SDK for the MlbGumbo API. Provides an entity-oriented interface using idiomatic Ruby conventions.
+
+
+The Ruby SDK for the MlbGumbo API — an entity-oriented client using idiomatic Ruby conventions.
+
+> Other languages, the CLI, and MCP server live alongside this one — see
+> the [top-level README](../README.md).
 
 
 ## Install
@@ -31,13 +36,15 @@ loading a specific record.
 ```ruby
 require_relative "MlbGumbo_sdk"
 
-client = MlbGumboSDK.new({})
+client = MlbGumboSDK.new({
+  "apikey" => ENV["MLB-GUMBO_APIKEY"],
+})
 ```
 
 ### 2. List gamedatas
 
 ```ruby
-result, err = client.GameData(nil).list(nil, nil)
+result, err = client.GameData().list
 raise err if err
 
 if result.is_a?(Array)
@@ -51,7 +58,7 @@ end
 ### 3. Load a gamedata
 
 ```ruby
-result, err = client.GameData(nil).load({ "id" => "example_id" }, nil)
+result, err = client.GameData().load({ "id" => "example_id" })
 raise err if err
 puts result
 ```
@@ -97,11 +104,9 @@ puts fetchdef["headers"]
 Create a mock client for unit testing — no server required:
 
 ```ruby
-client = MlbGumboSDK.test(nil, nil)
+client = MlbGumboSDK.test
 
-result, err = client.MlbGumbo(nil).load(
-  { "id" => "test01" }, nil
-)
+result, err = client.MlbGumbo().load({ "id" => "test01" })
 # result contains mock response data
 ```
 
@@ -133,6 +138,7 @@ Create a `.env.local` file at the project root:
 
 ```
 MLB-GUMBO_TEST_LIVE=TRUE
+MLB-GUMBO_APIKEY=<your-key>
 ```
 
 Then run:
@@ -155,6 +161,7 @@ Creates a new SDK client.
 
 | Option | Type | Description |
 | --- | --- | --- |
+| `apikey` | `String` | API key for authentication. |
 | `base` | `String` | Base URL of the API server. |
 | `prefix` | `String` | URL path prefix prepended to all requests. |
 | `suffix` | `String` | URL path suffix appended to all requests. |

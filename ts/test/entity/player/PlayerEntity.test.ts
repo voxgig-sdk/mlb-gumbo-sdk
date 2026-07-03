@@ -111,6 +111,7 @@ function basicSetup(extra?: any) {
     'MLB_GUMBO_TEST_PLAYER_ENTID': idmap,
     'MLB_GUMBO_TEST_LIVE': 'FALSE',
     'MLB_GUMBO_TEST_EXPLAIN': 'FALSE',
+    'MLB_GUMBO_APIKEY': 'NONE',
   })
 
   idmap = env['MLB_GUMBO_TEST_PLAYER_ENTID']
@@ -120,6 +121,7 @@ function basicSetup(extra?: any) {
   if (live) {
     client = new MlbGumboSDK(merge([
       {
+        apikey: env.MLB_GUMBO_APIKEY,
       },
       extra
     ]))
