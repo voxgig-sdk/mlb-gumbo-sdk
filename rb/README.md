@@ -28,16 +28,14 @@ require_relative "MlbGumbo_sdk"
 client = MlbGumboSDK.new
 ```
 
-### 2. List gamedatas
+### 2. List gamedata records
 
 ```ruby
 begin
-  result = client.gamedata.list
-  if result.is_a?(Array)
-    result.each do |item|
-      d = item.data_get
-      puts "#{d["id"]} #{d["name"]}"
-    end
+  # list returns an Array of GameData records — iterate directly.
+  gamedatas = client.GameData.list
+  gamedatas.each do |item|
+    puts "#{item["id"]} #{item["name"]}"
   end
 rescue => err
   warn "list failed: #{err}"
@@ -48,8 +46,9 @@ end
 
 ```ruby
 begin
-  result = client.gamedata.load({ "id" => "example_id" })
-  puts result
+  # load returns the bare GameData record (raises on error).
+  gamedata = client.GameData.load({ "id" => "example_id" })
+  puts gamedata
 rescue => err
   warn "load failed: #{err}"
 end
@@ -96,13 +95,17 @@ end
 
 ### Use test mode
 
-Create a mock client for unit testing — no server required:
+Create a mock client for unit testing — no server required. Seed fixture
+data via the `entity` option so offline calls resolve without a live server:
 
 ```ruby
-client = MlbGumboSDK.test
+client = MlbGumboSDK.test({
+  "entity" => { "gamedata" => { "test01" => { "id" => "test01" } } },
+})
 
-result = client.gamedata.load({ "id" => "test01" })
-# result contains mock response data
+# load returns the bare mock record (raises on error).
+gamedata = client.GameData.load({ "id" => "test01" })
+puts gamedata
 ```
 
 ### Use a custom fetch function
@@ -274,7 +277,7 @@ API path: `/teams/{teamId}/roster`
 
 ### GameData
 
-Create an instance: `const game_data = client.game_data`
+Create an instance: `game_data = client.GameData`
 
 #### Operations
 
@@ -293,20 +296,22 @@ Create an instance: `const game_data = client.game_data`
 
 #### Example: Load
 
-```ts
-const game_data = await client.game_data.load({ id: 'game_data_id' })
+```ruby
+# load returns the bare GameData record (raises on error).
+game_data = client.GameData.load({ "id" => "game_data_id" })
 ```
 
 #### Example: List
 
-```ts
-const game_datas = await client.game_data.list()
+```ruby
+# list returns an Array of GameData records (raises on error).
+game_datas = client.GameData.list
 ```
 
 
 ### Player
 
-Create an instance: `const player = client.player`
+Create an instance: `player = client.Player`
 
 #### Operations
 
@@ -322,14 +327,15 @@ Create an instance: `const player = client.player`
 
 #### Example: Load
 
-```ts
-const player = await client.player.load({ id: 'player_id' })
+```ruby
+# load returns the bare Player record (raises on error).
+player = client.Player.load({ "id" => "player_id" })
 ```
 
 
 ### Schedule
 
-Create an instance: `const schedule = client.schedule`
+Create an instance: `schedule = client.Schedule`
 
 #### Operations
 
@@ -346,14 +352,15 @@ Create an instance: `const schedule = client.schedule`
 
 #### Example: List
 
-```ts
-const schedules = await client.schedule.list()
+```ruby
+# list returns an Array of Schedule records (raises on error).
+schedules = client.Schedule.list
 ```
 
 
 ### Team
 
-Create an instance: `const team = client.team`
+Create an instance: `team = client.Team`
 
 #### Operations
 
@@ -374,14 +381,16 @@ Create an instance: `const team = client.team`
 
 #### Example: Load
 
-```ts
-const team = await client.team.load({ id: 'team_id' })
+```ruby
+# load returns the bare Team record (raises on error).
+team = client.Team.load({ "id" => "team_id" })
 ```
 
 #### Example: List
 
-```ts
-const teams = await client.team.list()
+```ruby
+# list returns an Array of Team records (raises on error).
+teams = client.Team.list
 ```
 
 
@@ -456,7 +465,7 @@ Entity instances are stateful. After a successful `load`, the entity
 stores the returned data and match criteria internally.
 
 ```ruby
-gamedata = client.gamedata
+gamedata = client.GameData
 gamedata.load({ "id" => "example_id" })
 
 # gamedata.data_get now returns the loaded gamedata data

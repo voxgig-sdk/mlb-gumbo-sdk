@@ -220,73 +220,33 @@ class MlbGumboSDK:
         }
 
 
-    @property
-    def game_data(self):
-        """Idiomatic facade: client.game_data.list() / client.game_data.load({"id": ...})."""
-        from entity.game_data_entity import GameDataEntity
-        cached = getattr(self, "_game_data", None)
-        if cached is None:
-            cached = GameDataEntity(self, None)
-            self._game_data = cached
-        return cached
-
-    def GameData(self, data=None):
-        # Deprecated: use client.game_data instead.
+    def GameData(self, data=None) -> "GameDataEntity":
+        """Entity factory: client.GameData().list({}) / client.GameData().load({"id": ...})."""
         from entity.game_data_entity import GameDataEntity
         return GameDataEntity(self, data)
 
 
-    @property
-    def player(self):
-        """Idiomatic facade: client.player.list() / client.player.load({"id": ...})."""
-        from entity.player_entity import PlayerEntity
-        cached = getattr(self, "_player", None)
-        if cached is None:
-            cached = PlayerEntity(self, None)
-            self._player = cached
-        return cached
-
-    def Player(self, data=None):
-        # Deprecated: use client.player instead.
+    def Player(self, data=None) -> "PlayerEntity":
+        """Entity factory: client.Player().list({}) / client.Player().load({"id": ...})."""
         from entity.player_entity import PlayerEntity
         return PlayerEntity(self, data)
 
 
-    @property
-    def schedule(self):
-        """Idiomatic facade: client.schedule.list() / client.schedule.load({"id": ...})."""
-        from entity.schedule_entity import ScheduleEntity
-        cached = getattr(self, "_schedule", None)
-        if cached is None:
-            cached = ScheduleEntity(self, None)
-            self._schedule = cached
-        return cached
-
-    def Schedule(self, data=None):
-        # Deprecated: use client.schedule instead.
+    def Schedule(self, data=None) -> "ScheduleEntity":
+        """Entity factory: client.Schedule().list({}) / client.Schedule().load({"id": ...})."""
         from entity.schedule_entity import ScheduleEntity
         return ScheduleEntity(self, data)
 
 
-    @property
-    def team(self):
-        """Idiomatic facade: client.team.list() / client.team.load({"id": ...})."""
-        from entity.team_entity import TeamEntity
-        cached = getattr(self, "_team", None)
-        if cached is None:
-            cached = TeamEntity(self, None)
-            self._team = cached
-        return cached
-
-    def Team(self, data=None):
-        # Deprecated: use client.team instead.
+    def Team(self, data=None) -> "TeamEntity":
+        """Entity factory: client.Team().list({}) / client.Team().load({"id": ...})."""
         from entity.team_entity import TeamEntity
         return TeamEntity(self, data)
 
 
 
     @classmethod
-    def test(cls, testopts=None, sdkopts=None):
+    def test(cls, testopts=None, sdkopts=None) -> "MlbGumboSDK":
         if sdkopts is None:
             sdkopts = {}
         sdkopts = vs.clone(sdkopts)
@@ -306,3 +266,12 @@ class MlbGumboSDK:
         sdk.mode = "test"
 
         return sdk
+
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from entity.game_data_entity import GameDataEntity
+    from entity.player_entity import PlayerEntity
+    from entity.schedule_entity import ScheduleEntity
+    from entity.team_entity import TeamEntity

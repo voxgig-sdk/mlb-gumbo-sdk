@@ -244,8 +244,9 @@ end
 
 
 
--- Idiomatic facade: client:game_data():list() / client:game_data():load({ id = ... })
-function MlbGumboSDK:game_data(data)
+-- Idiomatic facade: client:GameData():list() / client:GameData():load({ id = ... })
+-- Entity access is capitalised (PascalCase) for parity with the other SDKs.
+function MlbGumboSDK:GameData(data)
   local EntityMod = require("entity.game_data_entity")
   if data == nil then
     if self._game_data == nil then
@@ -256,15 +257,10 @@ function MlbGumboSDK:game_data(data)
   return EntityMod.new(self, data)
 end
 
--- Deprecated: use client:game_data() instead.
-function MlbGumboSDK:GameData(data)
-  local EntityMod = require("entity.game_data_entity")
-  return EntityMod.new(self, data)
-end
 
-
--- Idiomatic facade: client:player():list() / client:player():load({ id = ... })
-function MlbGumboSDK:player(data)
+-- Idiomatic facade: client:Player():list() / client:Player():load({ id = ... })
+-- Entity access is capitalised (PascalCase) for parity with the other SDKs.
+function MlbGumboSDK:Player(data)
   local EntityMod = require("entity.player_entity")
   if data == nil then
     if self._player == nil then
@@ -275,15 +271,10 @@ function MlbGumboSDK:player(data)
   return EntityMod.new(self, data)
 end
 
--- Deprecated: use client:player() instead.
-function MlbGumboSDK:Player(data)
-  local EntityMod = require("entity.player_entity")
-  return EntityMod.new(self, data)
-end
 
-
--- Idiomatic facade: client:schedule():list() / client:schedule():load({ id = ... })
-function MlbGumboSDK:schedule(data)
+-- Idiomatic facade: client:Schedule():list() / client:Schedule():load({ id = ... })
+-- Entity access is capitalised (PascalCase) for parity with the other SDKs.
+function MlbGumboSDK:Schedule(data)
   local EntityMod = require("entity.schedule_entity")
   if data == nil then
     if self._schedule == nil then
@@ -294,15 +285,10 @@ function MlbGumboSDK:schedule(data)
   return EntityMod.new(self, data)
 end
 
--- Deprecated: use client:schedule() instead.
-function MlbGumboSDK:Schedule(data)
-  local EntityMod = require("entity.schedule_entity")
-  return EntityMod.new(self, data)
-end
 
-
--- Idiomatic facade: client:team():list() / client:team():load({ id = ... })
-function MlbGumboSDK:team(data)
+-- Idiomatic facade: client:Team():list() / client:Team():load({ id = ... })
+-- Entity access is capitalised (PascalCase) for parity with the other SDKs.
+function MlbGumboSDK:Team(data)
   local EntityMod = require("entity.team_entity")
   if data == nil then
     if self._team == nil then
@@ -310,12 +296,6 @@ function MlbGumboSDK:team(data)
     end
     return self._team
   end
-  return EntityMod.new(self, data)
-end
-
--- Deprecated: use client:team() instead.
-function MlbGumboSDK:Team(data)
-  local EntityMod = require("entity.team_entity")
   return EntityMod.new(self, data)
 end
 

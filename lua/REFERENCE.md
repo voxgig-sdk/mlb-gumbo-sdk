@@ -95,7 +95,7 @@ same parameters as `direct()`.
 ## GameDataEntity
 
 ```lua
-local game_data = client:game_data(nil)
+local game_data = client:GameData(nil)
 ```
 
 ### Fields
@@ -113,7 +113,7 @@ local game_data = client:game_data(nil)
 List entities matching the given criteria. Returns an array.
 
 ```lua
-local results, err = client:game_data():list()
+local results, err = client:GameData():list()
 ```
 
 #### `load(reqmatch, ctrl) -> any, err`
@@ -121,7 +121,7 @@ local results, err = client:game_data():list()
 Load a single entity matching the given criteria.
 
 ```lua
-local result, err = client:game_data():load({ id = "game_data_id" })
+local result, err = client:GameData():load({ id = "game_data_id" })
 ```
 
 ### Common Methods
@@ -157,7 +157,7 @@ Return the entity name.
 ## PlayerEntity
 
 ```lua
-local player = client:player(nil)
+local player = client:Player(nil)
 ```
 
 ### Fields
@@ -173,7 +173,7 @@ local player = client:player(nil)
 Load a single entity matching the given criteria.
 
 ```lua
-local result, err = client:player():load({ id = "player_id" })
+local result, err = client:Player():load({ id = "player_id" })
 ```
 
 ### Common Methods
@@ -209,7 +209,7 @@ Return the entity name.
 ## ScheduleEntity
 
 ```lua
-local schedule = client:schedule(nil)
+local schedule = client:Schedule(nil)
 ```
 
 ### Fields
@@ -226,7 +226,7 @@ local schedule = client:schedule(nil)
 List entities matching the given criteria. Returns an array.
 
 ```lua
-local results, err = client:schedule():list()
+local results, err = client:Schedule():list()
 ```
 
 ### Common Methods
@@ -262,7 +262,7 @@ Return the entity name.
 ## TeamEntity
 
 ```lua
-local team = client:team(nil)
+local team = client:Team(nil)
 ```
 
 ### Fields
@@ -282,7 +282,7 @@ local team = client:team(nil)
 List entities matching the given criteria. Returns an array.
 
 ```lua
-local results, err = client:team():list()
+local results, err = client:Team():list()
 ```
 
 #### `load(reqmatch, ctrl) -> any, err`
@@ -290,7 +290,7 @@ local results, err = client:team():list()
 Load a single entity matching the given criteria.
 
 ```lua
-local result, err = client:team():load({ id = "team_id" })
+local result, err = client:Team():load({ id = "team_id" })
 ```
 
 ### Common Methods

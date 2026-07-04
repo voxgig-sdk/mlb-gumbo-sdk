@@ -207,56 +207,28 @@ class MlbGumboSDK {
 
 
 
-  _game_data?: GameDataEntity
-
-  // Idiomatic facade: `client.game_data.list()` / `client.game_data.load({ id })`.
-  get game_data(): GameDataEntity {
-    return (this._game_data ??= new GameDataEntity(this, undefined))
-  }
-
-  /** @deprecated Use `client.game_data` instead. */
+  // Entity access: `client.GameData().list()` / `client.GameData().load({ id })`.
   GameData(data?: any) {
     const self = this
     return new GameDataEntity(self,data)
   }
 
 
-  _player?: PlayerEntity
-
-  // Idiomatic facade: `client.player.list()` / `client.player.load({ id })`.
-  get player(): PlayerEntity {
-    return (this._player ??= new PlayerEntity(this, undefined))
-  }
-
-  /** @deprecated Use `client.player` instead. */
+  // Entity access: `client.Player().list()` / `client.Player().load({ id })`.
   Player(data?: any) {
     const self = this
     return new PlayerEntity(self,data)
   }
 
 
-  _schedule?: ScheduleEntity
-
-  // Idiomatic facade: `client.schedule.list()` / `client.schedule.load({ id })`.
-  get schedule(): ScheduleEntity {
-    return (this._schedule ??= new ScheduleEntity(this, undefined))
-  }
-
-  /** @deprecated Use `client.schedule` instead. */
+  // Entity access: `client.Schedule().list()` / `client.Schedule().load({ id })`.
   Schedule(data?: any) {
     const self = this
     return new ScheduleEntity(self,data)
   }
 
 
-  _team?: TeamEntity
-
-  // Idiomatic facade: `client.team.list()` / `client.team.load({ id })`.
-  get team(): TeamEntity {
-    return (this._team ??= new TeamEntity(this, undefined))
-  }
-
-  /** @deprecated Use `client.team` instead. */
+  // Entity access: `client.Team().list()` / `client.Team().load({ id })`.
   Team(data?: any) {
     const self = this
     return new TeamEntity(self,data)

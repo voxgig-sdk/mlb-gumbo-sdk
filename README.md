@@ -26,9 +26,11 @@ import { MlbGumboSDK } from '@voxgig-sdk/mlb-gumbo'
 
 const client = new MlbGumboSDK()
 
-// List all gamedatas
-const gamedatas = await client.gamedata.list()
-console.log(gamedatas.data)
+// List all gamedatas (returns GameData[])
+const gamedatas = await client.GameData().list()
+for (const gamedata of gamedatas) {
+  console.log(gamedata)
+}
 ```
 
 See the [TypeScript README](ts/README.md) for the full guide.
@@ -86,12 +88,13 @@ from mlbgumbo_sdk import MlbGumboSDK
 
 client = MlbGumboSDK()
 
-# List all gamedatas
-gamedatas = client.gamedata.list()
-print(gamedatas)
+# List all gamedatas (returns a list, raises on error)
+gamedatas = client.GameData().list({})
+for gamedata in gamedatas:
+    print(gamedata)
 
-# Load a specific gamedata
-gamedata = client.gamedata.load({"id": "example_id"})
+# Load a specific gamedata (returns the record, raises on error)
+gamedata = client.GameData().load({"id": "example_id"})
 print(gamedata)
 ```
 
@@ -103,12 +106,12 @@ require_once 'mlbgumbo_sdk.php';
 
 $client = new MlbGumboSDK();
 
-// List all gamedatas (throws on error)
-$gamedatas = $client->gamedata()->list();
+// List all gamedatas (returns an array; throws on error)
+$gamedatas = $client->GameData()->list();
 print_r($gamedatas);
 
-// Load a specific gamedata
-$gamedata = $client->gamedata()->load(["id" => "example_id"]);
+// Load a specific gamedata (returns the bare record; throws on error)
+$gamedata = $client->GameData()->load(["id" => "example_id"]);
 print_r($gamedata);
 ```
 
@@ -131,12 +134,12 @@ require_relative "MlbGumbo_sdk"
 
 client = MlbGumboSDK.new
 
-# List all gamedatas
-gamedatas = client.gamedata.list
+# List all gamedatas (returns an Array; raises on error)
+gamedatas = client.GameData.list
 puts gamedatas
 
-# Load a specific gamedata
-gamedata = client.gamedata.load({ "id" => "example_id" })
+# Load a specific gamedata (returns the bare record; raises on error)
+gamedata = client.GameData.load({ "id" => "example_id" })
 puts gamedata
 ```
 
@@ -148,11 +151,11 @@ local sdk = require("mlb-gumbo_sdk")
 local client = sdk.new()
 
 -- List all gamedatas
-local gamedatas, err = client:gamedata():list()
+local gamedatas, err = client:GameData():list()
 print(gamedatas)
 
 -- Load a specific gamedata
-local gamedata, err = client:gamedata():load({ id = "example_id" })
+local gamedata, err = client:GameData():load({ id = "example_id" })
 print(gamedata)
 ```
 
@@ -165,22 +168,27 @@ in-memory mock, so unit tests run offline.
 
 ```ts
 const client = MlbGumboSDK.test()
-const result = await client.gamedata.load({ id: 'test01' })
-// result.ok === true, result.data contains mock data
+const gamedata = await client.GameData().load({ id: 'test01' })
+// gamedata is a bare GameData populated with mock data
+console.log(gamedata)
 ```
 
 ### Python
 
 ```python
 client = MlbGumboSDK.test()
-result = client.gamedata.load({"id": "test01"})
+gamedata = client.GameData().load({"id": "test01"})
+print(gamedata)
 ```
 
 ### PHP
 
 ```php
-$client = MlbGumboSDK::test();
-$result = $client->gamedata()->load(["id" => "test01"]);
+// Seed fixture data so offline calls resolve without a live server.
+$client = MlbGumboSDK::test([
+    "entity" => ["gamedata" => ["test01" => ["id" => "test01"]]],
+]);
+$gamedata = $client->GameData()->load(["id" => "test01"]);
 ```
 
 ### Golang
@@ -195,15 +203,18 @@ result, err := client.GameData(nil).Load(
 ### Ruby
 
 ```ruby
-client = MlbGumboSDK.test
-result = client.gamedata.load({ "id" => "test01" })
+# Seed fixture data so offline calls resolve without a live server.
+client = MlbGumboSDK.test({
+  "entity" => { "gamedata" => { "test01" => { "id" => "test01" } } },
+})
+gamedata = client.GameData.load({ "id" => "test01" })
 ```
 
 ### Lua
 
 ```lua
 local client = sdk.test()
-local result, err = client:gamedata():load({ id = "test01" })
+local result, err = client:GameData():load({ id = "test01" })
 ```
 
 ## How it works
@@ -251,6 +262,9 @@ const result = await client.direct({
   method: 'GET',
   params: { id: 'example' },
 })
+if (result instanceof Error) {
+  throw result
+}
 console.log(result.data)
 ```
 

@@ -31,24 +31,28 @@ from mlbgumbo_sdk import MlbGumboSDK
 client = MlbGumboSDK()
 ```
 
-### 2. List gamedatas
+### 2. List gamedata records
+
+`list()` returns a `list` of records (each a `dict`) and raises on
+error — iterate it directly.
 
 ```python
 try:
-    result = client.gamedata.list()
-    for item in result:
-        d = item.data_get()
-        print(d["id"], d["name"])
+    gamedatas = client.GameData().list({})
+    for gamedata in gamedatas:
+        print(gamedata)
 except Exception as err:
     print(f"list failed: {err}")
 ```
 
 ### 3. Load a gamedata
 
+`load()` returns the bare record (a `dict`) and raises on error.
+
 ```python
 try:
-    result = client.gamedata.load({"id": "example_id"})
-    print(result)
+    gamedata = client.GameData().load({"id": "example_id"})
+    print(gamedata)
 except Exception as err:
     print(f"load failed: {err}")
 ```
@@ -96,8 +100,9 @@ Create a mock client for unit testing — no server required:
 ```python
 client = MlbGumboSDK.test()
 
-result = client.gamedata.load({"id": "test01"})
-# result contains mock response data
+# Entity ops return the bare record and raise on error.
+gamedata = client.GameData().load({"id": "test01"})
+# gamedata contains the mock response record
 ```
 
 ### Use a custom fetch function
@@ -270,7 +275,7 @@ API path: `/teams/{teamId}/roster`
 
 ### GameData
 
-Create an instance: `const game_data = client.game_data`
+Create an instance: `game_data = client.GameData()`
 
 #### Operations
 
@@ -289,20 +294,20 @@ Create an instance: `const game_data = client.game_data`
 
 #### Example: Load
 
-```ts
-const game_data = await client.game_data.load({ id: 'game_data_id' })
+```python
+game_data = client.GameData().load({"id": "game_data_id"})
 ```
 
 #### Example: List
 
-```ts
-const game_datas = await client.game_data.list()
+```python
+game_datas = client.GameData().list({})
 ```
 
 
 ### Player
 
-Create an instance: `const player = client.player`
+Create an instance: `player = client.Player()`
 
 #### Operations
 
@@ -318,14 +323,14 @@ Create an instance: `const player = client.player`
 
 #### Example: Load
 
-```ts
-const player = await client.player.load({ id: 'player_id' })
+```python
+player = client.Player().load({"id": "player_id"})
 ```
 
 
 ### Schedule
 
-Create an instance: `const schedule = client.schedule`
+Create an instance: `schedule = client.Schedule()`
 
 #### Operations
 
@@ -342,14 +347,14 @@ Create an instance: `const schedule = client.schedule`
 
 #### Example: List
 
-```ts
-const schedules = await client.schedule.list()
+```python
+schedules = client.Schedule().list({})
 ```
 
 
 ### Team
 
-Create an instance: `const team = client.team`
+Create an instance: `team = client.Team()`
 
 #### Operations
 
@@ -370,14 +375,14 @@ Create an instance: `const team = client.team`
 
 #### Example: Load
 
-```ts
-const team = await client.team.load({ id: 'team_id' })
+```python
+team = client.Team().load({"id": "team_id"})
 ```
 
 #### Example: List
 
-```ts
-const teams = await client.team.list()
+```python
+teams = client.Team().list({})
 ```
 
 
@@ -451,7 +456,7 @@ Entity instances are stateful. After a successful `load`, the entity
 stores the returned data and match criteria internally.
 
 ```python
-gamedata = client.gamedata
+gamedata = client.GameData()
 gamedata.load({"id": "example_id"})
 
 # gamedata.data_get() now returns the loaded gamedata data

@@ -208,52 +208,28 @@ class MlbGumboSDK
   end
 
 
-  # Idiomatic facade: client.game_data.list / client.game_data.load({ "id" => ... })
-  def game_data
-    require_relative 'entity/game_data_entity'
-    @game_data ||= GameDataEntity.new(self, nil)
-  end
-
-  # Deprecated: use client.game_data instead.
+  # Canonical facade: client.GameData.list / client.GameData.load({ "id" => ... })
   def GameData(data = nil)
     require_relative 'entity/game_data_entity'
     GameDataEntity.new(self, data)
   end
 
 
-  # Idiomatic facade: client.player.list / client.player.load({ "id" => ... })
-  def player
-    require_relative 'entity/player_entity'
-    @player ||= PlayerEntity.new(self, nil)
-  end
-
-  # Deprecated: use client.player instead.
+  # Canonical facade: client.Player.list / client.Player.load({ "id" => ... })
   def Player(data = nil)
     require_relative 'entity/player_entity'
     PlayerEntity.new(self, data)
   end
 
 
-  # Idiomatic facade: client.schedule.list / client.schedule.load({ "id" => ... })
-  def schedule
-    require_relative 'entity/schedule_entity'
-    @schedule ||= ScheduleEntity.new(self, nil)
-  end
-
-  # Deprecated: use client.schedule instead.
+  # Canonical facade: client.Schedule.list / client.Schedule.load({ "id" => ... })
   def Schedule(data = nil)
     require_relative 'entity/schedule_entity'
     ScheduleEntity.new(self, data)
   end
 
 
-  # Idiomatic facade: client.team.list / client.team.load({ "id" => ... })
-  def team
-    require_relative 'entity/team_entity'
-    @team ||= TeamEntity.new(self, nil)
-  end
-
-  # Deprecated: use client.team instead.
+  # Canonical facade: client.Team.list / client.Team.load({ "id" => ... })
   def Team(data = nil)
     require_relative 'entity/team_entity'
     TeamEntity.new(self, data)

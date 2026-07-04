@@ -4,67 +4,61 @@
 # params (op.<name>.points[].args.params[]). Field/param types come from the
 # canonical type sentinels via @voxgig/sdkgen canonToType (source of truth:
 # @voxgig/apidef VALID_CANON). Do not edit by hand.
+#
+# These are TypedDicts, not dataclasses: the SDK ops return/accept plain dicts
+# at runtime, and a TypedDict IS a dict shape, so the types match the runtime.
+# Optional (req:false) keys are modelled as TypedDict key-optionality
+# (total=False), split into a required base + total=False subclass when a type
+# has both required and optional keys.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Optional, Any
+from typing import TypedDict, Any
 
 
-@dataclass
-class GameData:
-    game_data: Optional[dict] = None
-    live_data: Optional[dict] = None
-    timestamp: Optional[list] = None
+class GameData(TypedDict, total=False):
+    game_data: dict
+    live_data: dict
+    timestamp: list
 
 
-@dataclass
-class GameDataLoadMatch:
+class GameDataLoadMatch(TypedDict):
     game_pk: str
 
 
-@dataclass
-class GameDataListMatch:
+class GameDataListMatch(TypedDict):
     game_pk: str
 
 
-@dataclass
-class Player:
-    person: Optional[list] = None
+class Player(TypedDict, total=False):
+    person: list
 
 
-@dataclass
-class PlayerLoadMatch:
+class PlayerLoadMatch(TypedDict):
     player_id: int
 
 
-@dataclass
-class Schedule:
-    date: Optional[str] = None
-    game: Optional[list] = None
+class Schedule(TypedDict, total=False):
+    date: str
+    game: list
 
 
-@dataclass
-class ScheduleListMatch:
-    date: Optional[str] = None
-    game: Optional[list] = None
+class ScheduleListMatch(TypedDict, total=False):
+    date: str
+    game: list
 
 
-@dataclass
-class Team:
-    jersey_number: Optional[str] = None
-    person: Optional[dict] = None
-    position: Optional[dict] = None
-    status: Optional[dict] = None
-    team: Optional[list] = None
+class Team(TypedDict, total=False):
+    jersey_number: str
+    person: dict
+    position: dict
+    status: dict
+    team: list
 
 
-@dataclass
-class TeamLoadMatch:
+class TeamLoadMatch(TypedDict):
     id: int
 
 
-@dataclass
-class TeamListMatch:
+class TeamListMatch(TypedDict):
     id: int
-

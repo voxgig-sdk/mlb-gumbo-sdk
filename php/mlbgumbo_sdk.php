@@ -233,10 +233,10 @@ class MlbGumboSDK
 
     private $_game_data = null;
 
-    // Idiomatic facade: $client->game_data()->list() / ->load(["id" => ...]).
-    // Also serves the deprecated PascalCase alias GameData() (PHP method
-    // names are case-insensitive).
-    public function game_data($data = null)
+    // Canonical facade: $client->GameData()->list() / ->load(["id" => ...]).
+    // PHP method names are case-insensitive, so lowercase $client->game_data()
+    // resolves here too.
+    public function GameData($data = null)
     {
         require_once __DIR__ . '/entity/game_data_entity.php';
         if ($data === null) {
@@ -251,10 +251,10 @@ class MlbGumboSDK
 
     private $_player = null;
 
-    // Idiomatic facade: $client->player()->list() / ->load(["id" => ...]).
-    // Also serves the deprecated PascalCase alias Player() (PHP method
-    // names are case-insensitive).
-    public function player($data = null)
+    // Canonical facade: $client->Player()->list() / ->load(["id" => ...]).
+    // PHP method names are case-insensitive, so lowercase $client->player()
+    // resolves here too.
+    public function Player($data = null)
     {
         require_once __DIR__ . '/entity/player_entity.php';
         if ($data === null) {
@@ -269,10 +269,10 @@ class MlbGumboSDK
 
     private $_schedule = null;
 
-    // Idiomatic facade: $client->schedule()->list() / ->load(["id" => ...]).
-    // Also serves the deprecated PascalCase alias Schedule() (PHP method
-    // names are case-insensitive).
-    public function schedule($data = null)
+    // Canonical facade: $client->Schedule()->list() / ->load(["id" => ...]).
+    // PHP method names are case-insensitive, so lowercase $client->schedule()
+    // resolves here too.
+    public function Schedule($data = null)
     {
         require_once __DIR__ . '/entity/schedule_entity.php';
         if ($data === null) {
@@ -287,10 +287,10 @@ class MlbGumboSDK
 
     private $_team = null;
 
-    // Idiomatic facade: $client->team()->list() / ->load(["id" => ...]).
-    // Also serves the deprecated PascalCase alias Team() (PHP method
-    // names are case-insensitive).
-    public function team($data = null)
+    // Canonical facade: $client->Team()->list() / ->load(["id" => ...]).
+    // PHP method names are case-insensitive, so lowercase $client->team()
+    // resolves here too.
+    public function Team($data = null)
     {
         require_once __DIR__ . '/entity/team_entity.php';
         if ($data === null) {

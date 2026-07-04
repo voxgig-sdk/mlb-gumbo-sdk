@@ -29,18 +29,16 @@ require_once 'mlbgumbo_sdk.php';
 $client = new MlbGumboSDK();
 ```
 
-### 2. List gamedatas
+### 2. List gamedata records
 
 ```php
 try {
-    $result = $client->gamedata()->list();
-    if (is_array($result)) {
-        foreach ($result as $item) {
-            $d = $item->data_get();
-            echo $d["id"] . " " . $d["name"] . "\n";
-        }
+    // list() returns an array of GameData records — iterate directly.
+    $gamedatas = $client->GameData()->list();
+    foreach ($gamedatas as $item) {
+        echo $item["id"] . " " . $item["name"] . "\n";
     }
-} catch (\Exception $err) {
+} catch (\Throwable $err) {
     echo "Error: " . $err->getMessage();
 }
 ```
@@ -49,9 +47,10 @@ try {
 
 ```php
 try {
-    $result = $client->gamedata()->load(["id" => "example_id"]);
-    print_r($result);
-} catch (\Exception $err) {
+    // load() returns the bare GameData record (throws on error).
+    $gamedata = $client->GameData()->load(["id" => "example_id"]);
+    print_r($gamedata);
+} catch (\Throwable $err) {
     echo "Error: " . $err->getMessage();
 }
 ```
@@ -97,13 +96,17 @@ print_r($fetchdef["headers"]);
 
 ### Use test mode
 
-Create a mock client for unit testing — no server required:
+Create a mock client for unit testing — no server required. Seed fixture
+data via the `entity` option so offline calls resolve without a live server:
 
 ```php
-$client = MlbGumboSDK::test();
+$client = MlbGumboSDK::test([
+    "entity" => ["gamedata" => ["test01" => ["id" => "test01"]]],
+]);
 
-$result = $client->gamedata()->load(["id" => "test01"]);
-// $result contains mock response data
+// load() returns the bare mock record (throws on error).
+$gamedata = $client->GameData()->load(["id" => "test01"]);
+print_r($gamedata);
 ```
 
 ### Use a custom fetch function
@@ -279,7 +282,7 @@ API path: `/teams/{teamId}/roster`
 
 ### GameData
 
-Create an instance: `const game_data = client.game_data`
+Create an instance: `$game_data = $client->GameData();`
 
 #### Operations
 
@@ -298,20 +301,22 @@ Create an instance: `const game_data = client.game_data`
 
 #### Example: Load
 
-```ts
-const game_data = await client.game_data.load({ id: 'game_data_id' })
+```php
+// load() returns the bare GameData record (throws on error).
+$game_data = $client->GameData()->load(["id" => "game_data_id"]);
 ```
 
 #### Example: List
 
-```ts
-const game_datas = await client.game_data.list()
+```php
+// list() returns an array of GameData records (throws on error).
+$game_datas = $client->GameData()->list();
 ```
 
 
 ### Player
 
-Create an instance: `const player = client.player`
+Create an instance: `$player = $client->Player();`
 
 #### Operations
 
@@ -327,14 +332,15 @@ Create an instance: `const player = client.player`
 
 #### Example: Load
 
-```ts
-const player = await client.player.load({ id: 'player_id' })
+```php
+// load() returns the bare Player record (throws on error).
+$player = $client->Player()->load(["id" => "player_id"]);
 ```
 
 
 ### Schedule
 
-Create an instance: `const schedule = client.schedule`
+Create an instance: `$schedule = $client->Schedule();`
 
 #### Operations
 
@@ -351,14 +357,15 @@ Create an instance: `const schedule = client.schedule`
 
 #### Example: List
 
-```ts
-const schedules = await client.schedule.list()
+```php
+// list() returns an array of Schedule records (throws on error).
+$schedules = $client->Schedule()->list();
 ```
 
 
 ### Team
 
-Create an instance: `const team = client.team`
+Create an instance: `$team = $client->Team();`
 
 #### Operations
 
@@ -379,14 +386,16 @@ Create an instance: `const team = client.team`
 
 #### Example: Load
 
-```ts
-const team = await client.team.load({ id: 'team_id' })
+```php
+// load() returns the bare Team record (throws on error).
+$team = $client->Team()->load(["id" => "team_id"]);
 ```
 
 #### Example: List
 
-```ts
-const teams = await client.team.list()
+```php
+// list() returns an array of Team records (throws on error).
+$teams = $client->Team()->list();
 ```
 
 
@@ -461,7 +470,7 @@ Entity instances are stateful. After a successful `load`, the entity
 stores the returned data and match criteria internally.
 
 ```php
-$gamedata = $client->gamedata();
+$gamedata = $client->GameData();
 $gamedata->load(["id" => "example_id"]);
 
 // $gamedata->dataGet() now returns the loaded gamedata data
