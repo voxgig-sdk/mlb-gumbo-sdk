@@ -49,8 +49,7 @@ class PlayerEntityTest extends TestCase
         // LOAD
         $player_ref01_ent = $client->Player(null);
         $player_ref01_match_dt0 = [];
-        [$player_ref01_data_dt0_loaded, $err] = $player_ref01_ent->load($player_ref01_match_dt0, null);
-        $this->assertNull($err);
+        $player_ref01_data_dt0_loaded = $player_ref01_ent->load($player_ref01_match_dt0, null);
         $this->assertNotNull($player_ref01_data_dt0_loaded);
 
     }
@@ -85,7 +84,6 @@ function player_basic_setup($extra)
         "MLBGUMBO_TEST_PLAYER_ENTID" => $idmap,
         "MLBGUMBO_TEST_LIVE" => "FALSE",
         "MLBGUMBO_TEST_EXPLAIN" => "FALSE",
-        "MLBGUMBO_APIKEY" => "NONE",
     ]);
 
     $idmap_resolved = Helpers::to_map(
@@ -97,7 +95,6 @@ function player_basic_setup($extra)
     if ($env["MLBGUMBO_TEST_LIVE"] === "TRUE") {
         $merged_opts = Vs::merge([
             [
-                "apikey" => $env["MLBGUMBO_APIKEY"],
             ],
             $extra ?? [],
         ]);

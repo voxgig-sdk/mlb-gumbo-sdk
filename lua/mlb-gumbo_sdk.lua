@@ -244,24 +244,76 @@ end
 
 
 
+-- Idiomatic facade: client:game_data():list() / client:game_data():load({ id = ... })
+function MlbGumboSDK:game_data(data)
+  local EntityMod = require("entity.game_data_entity")
+  if data == nil then
+    if self._game_data == nil then
+      self._game_data = EntityMod.new(self, nil)
+    end
+    return self._game_data
+  end
+  return EntityMod.new(self, data)
+end
+
+-- Deprecated: use client:game_data() instead.
 function MlbGumboSDK:GameData(data)
   local EntityMod = require("entity.game_data_entity")
   return EntityMod.new(self, data)
 end
 
 
+-- Idiomatic facade: client:player():list() / client:player():load({ id = ... })
+function MlbGumboSDK:player(data)
+  local EntityMod = require("entity.player_entity")
+  if data == nil then
+    if self._player == nil then
+      self._player = EntityMod.new(self, nil)
+    end
+    return self._player
+  end
+  return EntityMod.new(self, data)
+end
+
+-- Deprecated: use client:player() instead.
 function MlbGumboSDK:Player(data)
   local EntityMod = require("entity.player_entity")
   return EntityMod.new(self, data)
 end
 
 
+-- Idiomatic facade: client:schedule():list() / client:schedule():load({ id = ... })
+function MlbGumboSDK:schedule(data)
+  local EntityMod = require("entity.schedule_entity")
+  if data == nil then
+    if self._schedule == nil then
+      self._schedule = EntityMod.new(self, nil)
+    end
+    return self._schedule
+  end
+  return EntityMod.new(self, data)
+end
+
+-- Deprecated: use client:schedule() instead.
 function MlbGumboSDK:Schedule(data)
   local EntityMod = require("entity.schedule_entity")
   return EntityMod.new(self, data)
 end
 
 
+-- Idiomatic facade: client:team():list() / client:team():load({ id = ... })
+function MlbGumboSDK:team(data)
+  local EntityMod = require("entity.team_entity")
+  if data == nil then
+    if self._team == nil then
+      self._team = EntityMod.new(self, nil)
+    end
+    return self._team
+  end
+  return EntityMod.new(self, data)
+end
+
+-- Deprecated: use client:team() instead.
 function MlbGumboSDK:Team(data)
   local EntityMod = require("entity.team_entity")
   return EntityMod.new(self, data)

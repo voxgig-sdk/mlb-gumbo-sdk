@@ -4,6 +4,7 @@
 main: {
   kit: {
     info: {
+      auth: false
       contact: {
         name: "MLB GUMBO API"
         url: "https://github.com/MajorLeagueBaseball/google-cloud-mlb-hackathon"

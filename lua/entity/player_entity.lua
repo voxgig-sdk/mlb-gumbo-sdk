@@ -79,6 +79,10 @@ end
 
 
 
+---@param reqmatch PlayerLoadMatch
+---@param ctrl? table
+---@return Player
+---@return string? err
 function PlayerEntity:load(reqmatch, ctrl)
   local utility = self._utility
   local ctx = utility.make_context({

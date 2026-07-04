@@ -103,7 +103,7 @@ class MlbGumboSDK
         return $this->_rootctx;
     }
 
-    public function prepare(array $fetchargs = []): array
+    public function prepare(array $fetchargs = []): mixed
     {
         $utility = $this->_utility;
         $fetchargs = $fetchargs ?? [];
@@ -149,19 +149,27 @@ class MlbGumboSDK
 
         [$_, $err] = ($utility->prepare_auth)($ctx);
         if ($err) {
-            return [null, $err];
+            return ($utility->make_error)($ctx, $err);
         }
 
-        return ($utility->make_fetch_def)($ctx);
+        [$fetchdef, $fd_err] = ($utility->make_fetch_def)($ctx);
+        if ($fd_err) {
+            return ($utility->make_error)($ctx, $fd_err);
+        }
+        return $fetchdef;
     }
 
-    public function direct(array $fetchargs = []): array
+    public function direct(array $fetchargs = []): mixed
     {
         $utility = $this->_utility;
 
-        [$fetchdef, $err] = $this->prepare($fetchargs);
-        if ($err) {
-            return [["ok" => false, "err" => $err], null];
+        // direct() is the raw-HTTP escape hatch: it never throws, it returns
+        // an {ok, err, ...} dict. prepare() now raises on error, so catch it
+        // and surface the failure through the dict instead.
+        try {
+            $fetchdef = $this->prepare($fetchargs);
+        } catch (\Throwable $err) {
+            return ["ok" => false, "err" => $err];
         }
 
         $fetchargs = $fetchargs ?? [];
@@ -176,14 +184,14 @@ class MlbGumboSDK
         [$fetched, $fetch_err] = ($utility->fetcher)($ctx, $url, $fetchdef);
 
         if ($fetch_err) {
-            return [["ok" => false, "err" => $fetch_err], null];
+            return ["ok" => false, "err" => $fetch_err];
         }
 
         if ($fetched === null) {
-            return [[
+            return [
                 "ok" => false,
                 "err" => $ctx->make_error("direct_no_response", "response: undefined"),
-            ], null];
+            ];
         }
 
         if (is_array($fetched)) {
@@ -208,45 +216,89 @@ class MlbGumboSDK
                 }
             }
 
-            return [[
+            return [
                 "ok" => $status >= 200 && $status < 300,
                 "status" => $status,
                 "headers" => Struct::getprop($fetched, "headers"),
                 "data" => $json_data,
-            ], null];
+            ];
         }
 
-        return [[
+        return [
             "ok" => false,
             "err" => $ctx->make_error("direct_invalid", "invalid response type"),
-        ], null];
+        ];
     }
 
 
-    public function GameData($data = null)
+    private $_game_data = null;
+
+    // Idiomatic facade: $client->game_data()->list() / ->load(["id" => ...]).
+    // Also serves the deprecated PascalCase alias GameData() (PHP method
+    // names are case-insensitive).
+    public function game_data($data = null)
     {
         require_once __DIR__ . '/entity/game_data_entity.php';
+        if ($data === null) {
+            if ($this->_game_data === null) {
+                $this->_game_data = new GameDataEntity($this, null);
+            }
+            return $this->_game_data;
+        }
         return new GameDataEntity($this, $data);
     }
 
 
-    public function Player($data = null)
+    private $_player = null;
+
+    // Idiomatic facade: $client->player()->list() / ->load(["id" => ...]).
+    // Also serves the deprecated PascalCase alias Player() (PHP method
+    // names are case-insensitive).
+    public function player($data = null)
     {
         require_once __DIR__ . '/entity/player_entity.php';
+        if ($data === null) {
+            if ($this->_player === null) {
+                $this->_player = new PlayerEntity($this, null);
+            }
+            return $this->_player;
+        }
         return new PlayerEntity($this, $data);
     }
 
 
-    public function Schedule($data = null)
+    private $_schedule = null;
+
+    // Idiomatic facade: $client->schedule()->list() / ->load(["id" => ...]).
+    // Also serves the deprecated PascalCase alias Schedule() (PHP method
+    // names are case-insensitive).
+    public function schedule($data = null)
     {
         require_once __DIR__ . '/entity/schedule_entity.php';
+        if ($data === null) {
+            if ($this->_schedule === null) {
+                $this->_schedule = new ScheduleEntity($this, null);
+            }
+            return $this->_schedule;
+        }
         return new ScheduleEntity($this, $data);
     }
 
 
-    public function Team($data = null)
+    private $_team = null;
+
+    // Idiomatic facade: $client->team()->list() / ->load(["id" => ...]).
+    // Also serves the deprecated PascalCase alias Team() (PHP method
+    // names are case-insensitive).
+    public function team($data = null)
     {
         require_once __DIR__ . '/entity/team_entity.php';
+        if ($data === null) {
+            if ($this->_team === null) {
+                $this->_team = new TeamEntity($this, null);
+            }
+            return $this->_team;
+        }
         return new TeamEntity($this, $data);
     }
 

@@ -52,14 +52,12 @@ class GameDataEntityTest extends TestCase
             "game_pk" => $setup["idmap"]["game_pk01"],
         ];
 
-        [$game_data_ref01_list_result, $err] = $game_data_ref01_ent->list($game_data_ref01_match, null);
-        $this->assertNull($err);
+        $game_data_ref01_list_result = $game_data_ref01_ent->list($game_data_ref01_match, null);
         $this->assertIsArray($game_data_ref01_list_result);
 
         // LOAD
         $game_data_ref01_match_dt0 = [];
-        [$game_data_ref01_data_dt0_loaded, $err] = $game_data_ref01_ent->load($game_data_ref01_match_dt0, null);
-        $this->assertNull($err);
+        $game_data_ref01_data_dt0_loaded = $game_data_ref01_ent->load($game_data_ref01_match_dt0, null);
         $this->assertNotNull($game_data_ref01_data_dt0_loaded);
 
     }
@@ -94,7 +92,6 @@ function game_data_basic_setup($extra)
         "MLBGUMBO_TEST_GAME_DATA_ENTID" => $idmap,
         "MLBGUMBO_TEST_LIVE" => "FALSE",
         "MLBGUMBO_TEST_EXPLAIN" => "FALSE",
-        "MLBGUMBO_APIKEY" => "NONE",
     ]);
 
     $idmap_resolved = Helpers::to_map(
@@ -106,7 +103,6 @@ function game_data_basic_setup($extra)
     if ($env["MLBGUMBO_TEST_LIVE"] === "TRUE") {
         $merged_opts = Vs::merge([
             [
-                "apikey" => $env["MLBGUMBO_APIKEY"],
             ],
             $extra ?? [],
         ]);

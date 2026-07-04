@@ -85,6 +85,27 @@ func (e *TeamEntity) Match(args ...any) any {
 	return out
 }
 
+// DataTyped is the statically-typed accessor for this entity's data. With no
+// argument it returns the current data as an Team; with an argument it
+// sets the data and returns the stored value. It delegates to the untyped Data
+// (identical runtime) and converts at the typed boundary.
+func (e *TeamEntity) DataTyped(data ...Team) Team {
+	if len(data) > 0 {
+		return typedFrom[Team](e.Data(asMap(data[0])))
+	}
+	return typedFrom[Team](e.Data())
+}
+
+// MatchTyped mirrors DataTyped for the entity's match filter. The match is a
+// partial of the entity, so it round-trips through Team (all fields
+// optional at the wire level).
+func (e *TeamEntity) MatchTyped(match ...Team) Team {
+	if len(match) > 0 {
+		return typedFrom[Team](e.Match(asMap(match[0])))
+	}
+	return typedFrom[Team](e.Match())
+}
+
 
 func (e *TeamEntity) Load(reqmatch map[string]any, ctrl map[string]any) (any, error) {
 	utility := e.utility
@@ -111,6 +132,17 @@ func (e *TeamEntity) Load(reqmatch map[string]any, ctrl map[string]any) (any, er
 	})
 }
 
+// LoadTyped is the statically-typed variant of Load: it takes an
+// TeamLoadMatch and returns an Team. It delegates to the untyped
+// Load (identical runtime) and converts at the typed boundary.
+func (e *TeamEntity) LoadTyped(reqmatch TeamLoadMatch, ctrl map[string]any) (Team, error) {
+	res, err := e.Load(asMap(reqmatch), ctrl)
+	if err != nil {
+		return Team{}, err
+	}
+	return typedFrom[Team](res), nil
+}
+
 
 
 
@@ -131,6 +163,17 @@ func (e *TeamEntity) List(reqmatch map[string]any, ctrl map[string]any) (any, er
 			}
 		}
 	})
+}
+
+// ListTyped is the statically-typed variant of List: it takes an
+// TeamListMatch and returns []Team. It delegates to the untyped
+// List (identical runtime) and converts at the typed boundary.
+func (e *TeamEntity) ListTyped(reqmatch TeamListMatch, ctrl map[string]any) ([]Team, error) {
+	res, err := e.List(asMap(reqmatch), ctrl)
+	if err != nil {
+		return nil, err
+	}
+	return typedSliceFrom[Team](res), nil
 }
 
 

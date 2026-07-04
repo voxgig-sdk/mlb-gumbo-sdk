@@ -79,6 +79,10 @@ end
 
 
 
+---@param reqmatch GameDataLoadMatch
+---@param ctrl? table
+---@return GameData
+---@return string? err
 function GameDataEntity:load(reqmatch, ctrl)
   local utility = self._utility
   local ctx = utility.make_context({
@@ -104,6 +108,10 @@ end
 
 
 
+---@param reqmatch GameDataListMatch
+---@param ctrl? table
+---@return GameData[]
+---@return string? err
 function GameDataEntity:list(reqmatch, ctrl)
   local utility = self._utility
   local ctx = utility.make_context({

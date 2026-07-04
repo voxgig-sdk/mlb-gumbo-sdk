@@ -50,8 +50,7 @@ class TestScheduleEntity:
         schedule_ref01_ent = client.Schedule(None)
         schedule_ref01_match = {}
 
-        schedule_ref01_list_result, err = schedule_ref01_ent.list(schedule_ref01_match, None)
-        assert err is None
+        schedule_ref01_list_result = schedule_ref01_ent.list(schedule_ref01_match, None)
         assert isinstance(schedule_ref01_list_result, list)
 
 
@@ -92,7 +91,6 @@ def _schedule_basic_setup(extra):
         "MLBGUMBO_TEST_SCHEDULE_ENTID": idmap,
         "MLBGUMBO_TEST_LIVE": "FALSE",
         "MLBGUMBO_TEST_EXPLAIN": "FALSE",
-        "MLBGUMBO_APIKEY": "NONE",
     })
 
     idmap_resolved = helpers.to_map(
@@ -103,7 +101,6 @@ def _schedule_basic_setup(extra):
     if env.get("MLBGUMBO_TEST_LIVE") == "TRUE":
         merged_opts = vs.merge([
             {
-                "apikey": env.get("MLBGUMBO_APIKEY"),
             },
             extra or {},
         ])

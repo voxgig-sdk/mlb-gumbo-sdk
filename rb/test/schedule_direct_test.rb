@@ -19,7 +19,7 @@ class ScheduleDirectTest < Minitest::Test
     client = setup[:client]
 
 
-    result, err = client.direct({
+    result = client.direct({
       "path" => "schedule",
       "method" => "GET",
       "params" => {},
@@ -28,8 +28,8 @@ class ScheduleDirectTest < Minitest::Test
       # Live mode is lenient: synthetic IDs frequently 4xx and the list-
       # response shape varies wildly across public APIs. Skip rather than
       # fail when the call doesn't return a usable list.
-      if !err.nil?
-        skip("list call failed (likely synthetic IDs against live API): #{err}")
+      if !result["err"].nil?
+        skip("list call failed (likely synthetic IDs against live API): #{result["err"]}")
         return
       end
       unless result["ok"]
@@ -42,7 +42,7 @@ class ScheduleDirectTest < Minitest::Test
         return
       end
     else
-      assert_nil err
+      assert_nil result["err"]
       assert result["ok"]
       assert_equal 200, Helpers.to_int(result["status"])
       assert result["data"].is_a?(Array)
@@ -62,14 +62,12 @@ def schedule_direct_setup(mockres)
   env = Runner.env_override({
     "MLBGUMBO_TEST_SCHEDULE_ENTID" => {},
     "MLBGUMBO_TEST_LIVE" => "FALSE",
-    "MLBGUMBO_APIKEY" => "NONE",
   })
 
   live = env["MLBGUMBO_TEST_LIVE"] == "TRUE"
 
   if live
     merged_opts = {
-      "apikey" => env["MLBGUMBO_APIKEY"],
     }
     client = MlbGumboSDK.new(merged_opts)
     return {

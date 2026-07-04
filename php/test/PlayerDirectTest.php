@@ -28,7 +28,7 @@ class PlayerDirectTest extends TestCase
             $params["player_id"] = "direct01";
         }
 
-        [$result, $err] = $client->direct([
+        $result = $client->direct([
             "path" => "people/{player_id}",
             "method" => "GET",
             "params" => $params,
@@ -38,8 +38,8 @@ class PlayerDirectTest extends TestCase
             // Live mode is lenient: synthetic IDs frequently 4xx. Skip
             // rather than fail when the load endpoint isn't reachable
             // with the IDs we can construct from setup.idmap.
-            if ($err !== null) {
-                $this->markTestSkipped("load call failed (likely synthetic IDs against live API): " . (string)$err);
+            if (!empty($result["err"])) {
+                $this->markTestSkipped("load call failed (likely synthetic IDs against live API): " . (string)$result["err"]);
                 return;
             }
             if (empty($result["ok"])) {
@@ -52,7 +52,7 @@ class PlayerDirectTest extends TestCase
                 return;
             }
         } else {
-            $this->assertNull($err);
+            $this->assertArrayNotHasKey("err", $result);
             $this->assertTrue($result["ok"]);
             $this->assertEquals(200, Helpers::to_int($result["status"]));
             $this->assertNotNull($result["data"]);
@@ -75,14 +75,12 @@ function player_direct_setup($mockres)
     $env = Runner::env_override([
         "MLBGUMBO_TEST_PLAYER_ENTID" => [],
         "MLBGUMBO_TEST_LIVE" => "FALSE",
-        "MLBGUMBO_APIKEY" => "NONE",
     ]);
 
     $live = $env["MLBGUMBO_TEST_LIVE"] === "TRUE";
 
     if ($live) {
         $merged_opts = [
-            "apikey" => $env["MLBGUMBO_APIKEY"],
         ];
         $client = new MlbGumboSDK($merged_opts);
         return [

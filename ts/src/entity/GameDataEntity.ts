@@ -14,9 +14,14 @@ import type {
   Control,
 } from '../types'
 
+import type {
+  GameData,
+  GameDataLoadMatch,
+  GameDataListMatch,
+} from '../MlbGumboTypes'
 
 // TODO: needs Entity superclass
-class GameDataEntity extends MlbGumboEntityBase {
+class GameDataEntity extends MlbGumboEntityBase<GameData> {
 
   constructor(client: MlbGumboSDK, entopts: any) {
     super(client, entopts)
@@ -32,7 +37,7 @@ class GameDataEntity extends MlbGumboEntityBase {
 
 
 
-  async load(this: any, reqmatch?: any, ctrl?: Control) {
+  async load(this: any, reqmatch?: GameDataLoadMatch, ctrl?: Control): Promise<GameData> {
 
     const utility = this._utility
 
@@ -136,14 +141,16 @@ class GameDataEntity extends MlbGumboEntityBase {
         throw err
       }
       else {
-        return undefined
+        // Off-happy-path (throw disabled): typed as any so the method's
+        // Promise<GameData> return stays clean under strict null checks.
+        return undefined as any
       }
     }
   }
 
 
 
-  async list(this: any, reqmatch?: any, ctrl?: Control) {
+  async list(this: any, reqmatch?: GameDataListMatch, ctrl?: Control): Promise<GameData[]> {
 
     const utility = this._utility
 
@@ -243,7 +250,9 @@ class GameDataEntity extends MlbGumboEntityBase {
         throw err
       }
       else {
-        return undefined
+        // Off-happy-path (throw disabled): typed as any so the method's
+        // Promise<GameData[]> return stays clean under strict null checks.
+        return undefined as any
       }
     }
   }

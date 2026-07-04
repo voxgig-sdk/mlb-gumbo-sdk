@@ -9,9 +9,12 @@ The TypeScript SDK for the MlbGumbo API — a type-safe, entity-oriented client 
 
 
 ## Install
-```bash
-npm install @voxgig-sdk/mlb-gumbo
-```
+This package is not yet published to npm. Install it from the GitHub
+release tag (`ts/vX.Y.Z`):
+
+- Releases: [https://github.com/voxgig-sdk/mlb-gumbo-sdk/releases](https://github.com/voxgig-sdk/mlb-gumbo-sdk/releases)
+
+
 ## Tutorial: your first API call
 
 This tutorial walks through creating a client, listing entities, and
@@ -20,17 +23,15 @@ loading a specific record.
 ### 1. Create a client
 
 ```ts
-import { MlbGumboSDK } from 'mlb-gumbo'
+import { MlbGumboSDK } from '@voxgig-sdk/mlb-gumbo'
 
-const client = new MlbGumboSDK({
-  apikey: process.env.MLB-GUMBO_APIKEY,
-})
+const client = new MlbGumboSDK()
 ```
 
 ### 2. List gamedatas
 
 ```ts
-const result = await client.GameData().list()
+const result = await client.gamedata.list()
 
 if (result.ok) {
   for (const item of result.data) {
@@ -42,7 +43,7 @@ if (result.ok) {
 ### 3. Load a gamedata
 
 ```ts
-const result = await client.GameData().load({ id: 'example_id' })
+const result = await client.gamedata.load({ id: 'example_id' })
 
 if (result.ok) {
   console.log(result.data)
@@ -91,7 +92,7 @@ Create a mock client for unit testing — no server required:
 ```ts
 const client = MlbGumboSDK.test()
 
-const result = await client.Planet().load({ id: 'test01' })
+const result = await client.gamedata.load({ id: 'test01' })
 // result.ok === true
 // result.data contains mock response data
 ```
@@ -99,7 +100,7 @@ const result = await client.Planet().load({ id: 'test01' })
 You can also use the instance method:
 
 ```ts
-const client = new MlbGumboSDK({ apikey: '...' })
+const client = new MlbGumboSDK()
 const testClient = client.tester()
 ```
 
@@ -108,7 +109,7 @@ const testClient = client.tester()
 Entity instances remember their last match and data:
 
 ```ts
-const entity = client.Planet()
+const entity = client.gamedata
 
 // First call sets internal match
 await entity.load({ id: 'example' })
@@ -135,7 +136,6 @@ const logger = {
 }
 
 const client = new MlbGumboSDK({
-  apikey: '...',
   extend: [logger],
 })
 ```
@@ -145,8 +145,7 @@ const client = new MlbGumboSDK({
 Create a `.env.local` file at the project root:
 
 ```
-MLB-GUMBO_TEST_LIVE=TRUE
-MLB-GUMBO_APIKEY=<your-key>
+MLB_GUMBO_TEST_LIVE=TRUE
 ```
 
 Then run:
@@ -164,7 +163,6 @@ cd ts && npm test
 
 ```ts
 new MlbGumboSDK(options?: {
-  apikey?: string
   base?: string
   prefix?: string
   suffix?: string
@@ -175,7 +173,6 @@ new MlbGumboSDK(options?: {
 
 | Option | Type | Description |
 | --- | --- | --- |
-| `apikey` | `string` | API key for authentication. |
 | `base` | `string` | Base URL of the API server. |
 | `prefix` | `string` | URL path prefix prepended to all requests. |
 | `suffix` | `string` | URL path suffix appended to all requests. |
@@ -318,7 +315,7 @@ API path: `/teams/{teamId}/roster`
 
 ### GameData
 
-Create an instance: `const game_data = client.GameData()`
+Create an instance: `const game_data = client.game_data`
 
 #### Operations
 
@@ -338,19 +335,19 @@ Create an instance: `const game_data = client.GameData()`
 #### Example: Load
 
 ```ts
-const game_data = await client.GameData().load({ id: 'game_data_id' })
+const game_data = await client.game_data.load({ id: 'game_data_id' })
 ```
 
 #### Example: List
 
 ```ts
-const game_datas = await client.GameData().list()
+const game_datas = await client.game_data.list()
 ```
 
 
 ### Player
 
-Create an instance: `const player = client.Player()`
+Create an instance: `const player = client.player`
 
 #### Operations
 
@@ -367,13 +364,13 @@ Create an instance: `const player = client.Player()`
 #### Example: Load
 
 ```ts
-const player = await client.Player().load({ id: 'player_id' })
+const player = await client.player.load({ id: 'player_id' })
 ```
 
 
 ### Schedule
 
-Create an instance: `const schedule = client.Schedule()`
+Create an instance: `const schedule = client.schedule`
 
 #### Operations
 
@@ -391,13 +388,13 @@ Create an instance: `const schedule = client.Schedule()`
 #### Example: List
 
 ```ts
-const schedules = await client.Schedule().list()
+const schedules = await client.schedule.list()
 ```
 
 
 ### Team
 
-Create an instance: `const team = client.Team()`
+Create an instance: `const team = client.team`
 
 #### Operations
 
@@ -419,13 +416,13 @@ Create an instance: `const team = client.Team()`
 #### Example: Load
 
 ```ts
-const team = await client.Team().load({ id: 'team_id' })
+const team = await client.team.load({ id: 'team_id' })
 ```
 
 #### Example: List
 
 ```ts
-const teams = await client.Team().list()
+const teams = await client.team.list()
 ```
 
 
@@ -486,7 +483,7 @@ mlb-gumbo/
 Import the SDK from the package root:
 
 ```ts
-import { MlbGumboSDK } from 'mlb-gumbo'
+import { MlbGumboSDK } from '@voxgig-sdk/mlb-gumbo'
 ```
 
 ### Entity state
@@ -496,11 +493,11 @@ stores the returned data and match criteria internally. Subsequent
 calls on the same instance can rely on this state.
 
 ```ts
-const moon = client.Moon()
-await moon.load({ planet_id: 'earth', id: 'luna' })
+const gamedata = client.gamedata
+await gamedata.load({ id: "example_id" })
 
-// moon.data() now returns the loaded moon data
-// moon.match() returns { planet_id: 'earth', id: 'luna' }
+// gamedata.data() now returns the loaded gamedata data
+// gamedata.match() returns { id: "example_id" }
 ```
 
 Call `make()` to create a fresh instance with the same configuration

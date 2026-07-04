@@ -52,14 +52,12 @@ class TeamEntityTest extends TestCase
             "team_id" => $setup["idmap"]["team01"],
         ];
 
-        [$team_ref01_list_result, $err] = $team_ref01_ent->list($team_ref01_match, null);
-        $this->assertNull($err);
+        $team_ref01_list_result = $team_ref01_ent->list($team_ref01_match, null);
         $this->assertIsArray($team_ref01_list_result);
 
         // LOAD
         $team_ref01_match_dt0 = [];
-        [$team_ref01_data_dt0_loaded, $err] = $team_ref01_ent->load($team_ref01_match_dt0, null);
-        $this->assertNull($err);
+        $team_ref01_data_dt0_loaded = $team_ref01_ent->load($team_ref01_match_dt0, null);
         $this->assertNotNull($team_ref01_data_dt0_loaded);
 
     }
@@ -94,7 +92,6 @@ function team_basic_setup($extra)
         "MLBGUMBO_TEST_TEAM_ENTID" => $idmap,
         "MLBGUMBO_TEST_LIVE" => "FALSE",
         "MLBGUMBO_TEST_EXPLAIN" => "FALSE",
-        "MLBGUMBO_APIKEY" => "NONE",
     ]);
 
     $idmap_resolved = Helpers::to_map(
@@ -106,7 +103,6 @@ function team_basic_setup($extra)
     if ($env["MLBGUMBO_TEST_LIVE"] === "TRUE") {
         $merged_opts = Vs::merge([
             [
-                "apikey" => $env["MLBGUMBO_APIKEY"],
             ],
             $extra ?? [],
         ]);

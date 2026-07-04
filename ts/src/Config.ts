@@ -38,10 +38,6 @@ class Config {
   options = {
     base: 'https://statsapi.mlb.com/api/v1.1',
 
-    auth: {
-      prefix: 'Bearer',
-    },
-
     headers: {
       "content-type": "application/json"
     },
@@ -106,7 +102,8 @@ class Config {
                     "name": "game_pk",
                     "orig": "game_pk",
                     "reqd": true,
-                    "type": "`$STRING`"
+                    "type": "`$STRING`",
+                    "index$": 0
                   }
                 ]
               },
@@ -148,7 +145,8 @@ class Config {
                     "name": "game_pk",
                     "orig": "game_pk",
                     "reqd": true,
-                    "type": "`$STRING`"
+                    "type": "`$STRING`",
+                    "index$": 0
                   }
                 ],
                 "query": [
@@ -241,7 +239,8 @@ class Config {
                     "name": "player_id",
                     "orig": "player_id",
                     "reqd": true,
-                    "type": "`$INTEGER`"
+                    "type": "`$INTEGER`",
+                    "index$": 0
                   }
                 ],
                 "query": [
@@ -457,7 +456,8 @@ class Config {
                     "name": "id",
                     "orig": "team_id",
                     "reqd": true,
-                    "type": "`$INTEGER`"
+                    "type": "`$INTEGER`",
+                    "index$": 0
                   }
                 ],
                 "query": [
@@ -524,7 +524,8 @@ class Config {
                     "name": "id",
                     "orig": "team_id",
                     "reqd": true,
-                    "type": "`$INTEGER`"
+                    "type": "`$INTEGER`",
+                    "index$": 0
                   }
                 ],
                 "query": [

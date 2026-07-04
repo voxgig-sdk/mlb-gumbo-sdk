@@ -45,6 +45,7 @@ class PlayerEntity
     end
   end
 
+  # @return [Player, Hash] the current Player data
   def data_get
     @_utility.feature_hook.call(@_entctx, "GetData")
     VoxgigStruct.clone(@_data)
@@ -57,12 +58,18 @@ class PlayerEntity
     end
   end
 
+  # @return [Hash] the current match filter (any subset of Player fields)
   def match_get
     @_utility.feature_hook.call(@_entctx, "GetMatch")
     VoxgigStruct.clone(@_match)
   end
 
   
+  # Load a single Player.
+  #
+  # @param reqmatch [PlayerLoadMatch, Hash, nil] match criteria (id/query fields)
+  # @param ctrl [Object, nil] optional per-call control
+  # @return [Player, Hash] the loaded Player; raises MlbGumboError on failure
   def load(reqmatch, ctrl = nil)
     utility = @_utility
     ctx = utility.make_context.call({

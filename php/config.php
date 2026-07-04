@@ -20,9 +20,6 @@ class MlbGumboConfig
             ],
             "options" => [
                 "base" => "https://statsapi.mlb.com/api/v1.1",
-                "auth" => [
-                    "prefix" => "Bearer",
-                ],
                 "headers" => [
           'content-type' => 'application/json',
         ],
@@ -76,6 +73,7 @@ class MlbGumboConfig
                         'orig' => 'game_pk',
                         'reqd' => true,
                         'type' => '`$STRING`',
+                        'index$' => 0,
                       ],
                     ],
                   ],
@@ -118,6 +116,7 @@ class MlbGumboConfig
                         'orig' => 'game_pk',
                         'reqd' => true,
                         'type' => '`$STRING`',
+                        'index$' => 0,
                       ],
                     ],
                     'query' => [
@@ -211,6 +210,7 @@ class MlbGumboConfig
                         'orig' => 'player_id',
                         'reqd' => true,
                         'type' => '`$INTEGER`',
+                        'index$' => 0,
                       ],
                     ],
                     'query' => [
@@ -427,6 +427,7 @@ class MlbGumboConfig
                         'orig' => 'team_id',
                         'reqd' => true,
                         'type' => '`$INTEGER`',
+                        'index$' => 0,
                       ],
                     ],
                     'query' => [
@@ -494,6 +495,7 @@ class MlbGumboConfig
                         'orig' => 'team_id',
                         'reqd' => true,
                         'type' => '`$INTEGER`',
+                        'index$' => 0,
                       ],
                     ],
                     'query' => [

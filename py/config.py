@@ -15,9 +15,6 @@ def make_config():
         },
         "options": {
             "base": "https://statsapi.mlb.com/api/v1.1",
-            "auth": {
-                "prefix": "Bearer",
-            },
             "headers": {
         "content-type": "application/json",
       },
@@ -71,6 +68,7 @@ def make_config():
                       "orig": "game_pk",
                       "reqd": True,
                       "type": "`$STRING`",
+                      "index$": 0,
                     },
                   ],
                 },
@@ -113,6 +111,7 @@ def make_config():
                       "orig": "game_pk",
                       "reqd": True,
                       "type": "`$STRING`",
+                      "index$": 0,
                     },
                   ],
                   "query": [
@@ -206,6 +205,7 @@ def make_config():
                       "orig": "player_id",
                       "reqd": True,
                       "type": "`$INTEGER`",
+                      "index$": 0,
                     },
                   ],
                   "query": [
@@ -422,6 +422,7 @@ def make_config():
                       "orig": "team_id",
                       "reqd": True,
                       "type": "`$INTEGER`",
+                      "index$": 0,
                     },
                   ],
                   "query": [
@@ -489,6 +490,7 @@ def make_config():
                       "orig": "team_id",
                       "reqd": True,
                       "type": "`$INTEGER`",
+                      "index$": 0,
                     },
                   ],
                   "query": [

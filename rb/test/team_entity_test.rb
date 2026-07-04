@@ -45,14 +45,12 @@ class TeamEntityTest < Minitest::Test
       "team_id" => setup[:idmap]["team01"],
     }
 
-    team_ref01_list_result, err = team_ref01_ent.list(team_ref01_match, nil)
-    assert_nil err
+    team_ref01_list_result = team_ref01_ent.list(team_ref01_match, nil)
     assert team_ref01_list_result.is_a?(Array)
 
     # LOAD
     team_ref01_match_dt0 = {}
-    team_ref01_data_dt0_loaded, err = team_ref01_ent.load(team_ref01_match_dt0, nil)
-    assert_nil err
+    team_ref01_data_dt0_loaded = team_ref01_ent.load(team_ref01_match_dt0, nil)
     assert !team_ref01_data_dt0_loaded.nil?
 
   end
@@ -91,7 +89,6 @@ def team_basic_setup(extra)
     "MLBGUMBO_TEST_TEAM_ENTID" => idmap,
     "MLBGUMBO_TEST_LIVE" => "FALSE",
     "MLBGUMBO_TEST_EXPLAIN" => "FALSE",
-    "MLBGUMBO_APIKEY" => "NONE",
   })
 
   idmap_resolved = Helpers.to_map(
@@ -103,7 +100,6 @@ def team_basic_setup(extra)
   if env["MLBGUMBO_TEST_LIVE"] == "TRUE"
     merged_opts = Vs.merge([
       {
-        "apikey" => env["MLBGUMBO_APIKEY"],
       },
       extra || {},
     ])

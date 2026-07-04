@@ -245,21 +245,33 @@ func (sdk *MlbGumboSDK) Direct(fetchargs map[string]any) (map[string]any, error)
 }
 
 
+// GameData returns a GameData entity bound to this client.
+// Idiomatic usage: client.GameData(nil).List(nil, nil) or
+// client.GameData(nil).Load(map[string]any{"id": ...}, nil).
 func (sdk *MlbGumboSDK) GameData(data map[string]any) MlbGumboEntity {
 	return NewGameDataEntityFunc(sdk, data)
 }
 
 
+// Player returns a Player entity bound to this client.
+// Idiomatic usage: client.Player(nil).List(nil, nil) or
+// client.Player(nil).Load(map[string]any{"id": ...}, nil).
 func (sdk *MlbGumboSDK) Player(data map[string]any) MlbGumboEntity {
 	return NewPlayerEntityFunc(sdk, data)
 }
 
 
+// Schedule returns a Schedule entity bound to this client.
+// Idiomatic usage: client.Schedule(nil).List(nil, nil) or
+// client.Schedule(nil).Load(map[string]any{"id": ...}, nil).
 func (sdk *MlbGumboSDK) Schedule(data map[string]any) MlbGumboEntity {
 	return NewScheduleEntityFunc(sdk, data)
 }
 
 
+// Team returns a Team entity bound to this client.
+// Idiomatic usage: client.Team(nil).List(nil, nil) or
+// client.Team(nil).Load(map[string]any{"id": ...}, nil).
 func (sdk *MlbGumboSDK) Team(data map[string]any) MlbGumboEntity {
 	return NewTeamEntityFunc(sdk, data)
 }

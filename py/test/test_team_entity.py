@@ -52,14 +52,12 @@ class TestTeamEntity:
             "team_id": setup["idmap"]["team01"],
         }
 
-        team_ref01_list_result, err = team_ref01_ent.list(team_ref01_match, None)
-        assert err is None
+        team_ref01_list_result = team_ref01_ent.list(team_ref01_match, None)
         assert isinstance(team_ref01_list_result, list)
 
         # LOAD
         team_ref01_match_dt0 = {}
-        team_ref01_data_dt0_loaded, err = team_ref01_ent.load(team_ref01_match_dt0, None)
-        assert err is None
+        team_ref01_data_dt0_loaded = team_ref01_ent.load(team_ref01_match_dt0, None)
         assert team_ref01_data_dt0_loaded is not None
 
 
@@ -100,7 +98,6 @@ def _team_basic_setup(extra):
         "MLBGUMBO_TEST_TEAM_ENTID": idmap,
         "MLBGUMBO_TEST_LIVE": "FALSE",
         "MLBGUMBO_TEST_EXPLAIN": "FALSE",
-        "MLBGUMBO_APIKEY": "NONE",
     })
 
     idmap_resolved = helpers.to_map(
@@ -111,7 +108,6 @@ def _team_basic_setup(extra):
     if env.get("MLBGUMBO_TEST_LIVE") == "TRUE":
         merged_opts = vs.merge([
             {
-                "apikey": env.get("MLBGUMBO_APIKEY"),
             },
             extra or {},
         ])

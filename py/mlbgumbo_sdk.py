@@ -144,16 +144,23 @@ class MlbGumboSDK:
 
         _, err = utility.prepare_auth(ctx)
         if err is not None:
-            return None, err
+            raise err
 
-        return utility.make_fetch_def(ctx)
+        fetchdef, err = utility.make_fetch_def(ctx)
+        if err is not None:
+            raise err
+
+        return fetchdef
 
     def direct(self, fetchargs=None):
         utility = self._utility
 
-        fetchdef, err = self.prepare(fetchargs)
-        if err is not None:
-            return {"ok": False, "err": err}, None
+        try:
+            fetchdef = self.prepare(fetchargs)
+        except Exception as err:
+            # direct() is the raw-HTTP escape hatch: it never raises, it
+            # returns a result object callers branch on via result["ok"].
+            return {"ok": False, "err": err}
 
         if fetchargs is None:
             fetchargs = {}
@@ -170,13 +177,13 @@ class MlbGumboSDK:
         fetched, fetch_err = utility.fetcher(ctx, url, fetchdef)
 
         if fetch_err is not None:
-            return {"ok": False, "err": fetch_err}, None
+            return {"ok": False, "err": fetch_err}
 
         if fetched is None:
             return {
                 "ok": False,
                 "err": ctx.make_error("direct_no_response", "response: undefined"),
-            }, None
+            }
 
         if isinstance(fetched, dict):
             status = helpers.to_int(vs.getprop(fetched, "status"))
@@ -205,30 +212,74 @@ class MlbGumboSDK:
                 "status": status,
                 "headers": headers,
                 "data": json_data,
-            }, None
+            }
 
         return {
             "ok": False,
             "err": ctx.make_error("direct_invalid", "invalid response type"),
-        }, None
+        }
 
+
+    @property
+    def game_data(self):
+        """Idiomatic facade: client.game_data.list() / client.game_data.load({"id": ...})."""
+        from entity.game_data_entity import GameDataEntity
+        cached = getattr(self, "_game_data", None)
+        if cached is None:
+            cached = GameDataEntity(self, None)
+            self._game_data = cached
+        return cached
 
     def GameData(self, data=None):
+        # Deprecated: use client.game_data instead.
         from entity.game_data_entity import GameDataEntity
         return GameDataEntity(self, data)
 
 
+    @property
+    def player(self):
+        """Idiomatic facade: client.player.list() / client.player.load({"id": ...})."""
+        from entity.player_entity import PlayerEntity
+        cached = getattr(self, "_player", None)
+        if cached is None:
+            cached = PlayerEntity(self, None)
+            self._player = cached
+        return cached
+
     def Player(self, data=None):
+        # Deprecated: use client.player instead.
         from entity.player_entity import PlayerEntity
         return PlayerEntity(self, data)
 
 
+    @property
+    def schedule(self):
+        """Idiomatic facade: client.schedule.list() / client.schedule.load({"id": ...})."""
+        from entity.schedule_entity import ScheduleEntity
+        cached = getattr(self, "_schedule", None)
+        if cached is None:
+            cached = ScheduleEntity(self, None)
+            self._schedule = cached
+        return cached
+
     def Schedule(self, data=None):
+        # Deprecated: use client.schedule instead.
         from entity.schedule_entity import ScheduleEntity
         return ScheduleEntity(self, data)
 
 
+    @property
+    def team(self):
+        """Idiomatic facade: client.team.list() / client.team.load({"id": ...})."""
+        from entity.team_entity import TeamEntity
+        cached = getattr(self, "_team", None)
+        if cached is None:
+            cached = TeamEntity(self, None)
+            self._team = cached
+        return cached
+
     def Team(self, data=None):
+        # Deprecated: use client.team instead.
         from entity.team_entity import TeamEntity
         return TeamEntity(self, data)
 

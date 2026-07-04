@@ -43,8 +43,7 @@ class ScheduleEntityTest < Minitest::Test
     schedule_ref01_ent = client.Schedule(nil)
     schedule_ref01_match = {}
 
-    schedule_ref01_list_result, err = schedule_ref01_ent.list(schedule_ref01_match, nil)
-    assert_nil err
+    schedule_ref01_list_result = schedule_ref01_ent.list(schedule_ref01_match, nil)
     assert schedule_ref01_list_result.is_a?(Array)
 
   end
@@ -83,7 +82,6 @@ def schedule_basic_setup(extra)
     "MLBGUMBO_TEST_SCHEDULE_ENTID" => idmap,
     "MLBGUMBO_TEST_LIVE" => "FALSE",
     "MLBGUMBO_TEST_EXPLAIN" => "FALSE",
-    "MLBGUMBO_APIKEY" => "NONE",
   })
 
   idmap_resolved = Helpers.to_map(
@@ -95,7 +93,6 @@ def schedule_basic_setup(extra)
   if env["MLBGUMBO_TEST_LIVE"] == "TRUE"
     merged_opts = Vs.merge([
       {
-        "apikey" => env["MLBGUMBO_APIKEY"],
       },
       extra || {},
     ])

@@ -45,6 +45,7 @@ class TeamEntity
     end
   end
 
+  # @return [Team, Hash] the current Team data
   def data_get
     @_utility.feature_hook.call(@_entctx, "GetData")
     VoxgigStruct.clone(@_data)
@@ -57,12 +58,18 @@ class TeamEntity
     end
   end
 
+  # @return [Hash] the current match filter (any subset of Team fields)
   def match_get
     @_utility.feature_hook.call(@_entctx, "GetMatch")
     VoxgigStruct.clone(@_match)
   end
 
   
+  # Load a single Team.
+  #
+  # @param reqmatch [TeamLoadMatch, Hash, nil] match criteria (id/query fields)
+  # @param ctrl [Object, nil] optional per-call control
+  # @return [Team, Hash] the loaded Team; raises MlbGumboError on failure
   def load(reqmatch, ctrl = nil)
     utility = @_utility
     ctx = utility.make_context.call({
@@ -86,6 +93,11 @@ class TeamEntity
 
 
   
+  # List Team items matching the given filter.
+  #
+  # @param reqmatch [TeamListMatch, Hash, nil] match filter (any subset of Team fields)
+  # @param ctrl [Object, nil] optional per-call control
+  # @return [Array<Team>, Array] the matching Team items; raises MlbGumboError on failure
   def list(reqmatch, ctrl = nil)
     utility = @_utility
     ctx = utility.make_context.call({

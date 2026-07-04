@@ -81,6 +81,10 @@ end
 
 
 
+---@param reqmatch ScheduleListMatch
+---@param ctrl? table
+---@return Schedule[]
+---@return string? err
 function ScheduleEntity:list(reqmatch, ctrl)
   local utility = self._utility
   local ctx = utility.make_context({

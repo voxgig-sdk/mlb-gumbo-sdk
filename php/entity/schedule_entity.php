@@ -55,6 +55,9 @@ class ScheduleEntity
         return new ScheduleEntity($this->_client, $opts);
     }
 
+    /**
+     * @param Schedule|array $args Schedule data (assoc-array) to store.
+     */
     public function data_set($args): void
     {
         if ($args) {
@@ -63,12 +66,18 @@ class ScheduleEntity
         }
     }
 
+    /**
+     * @return Schedule|array The current Schedule data as an assoc-array.
+     */
     public function data_get()
     {
         ($this->_utility->feature_hook)($this->_entctx, "GetData");
         return Struct::clone($this->_data);
     }
 
+    /**
+     * @param array $args Match filter (any subset of Schedule fields).
+     */
     public function match_set($args): void
     {
         if ($args) {
@@ -77,6 +86,9 @@ class ScheduleEntity
         }
     }
 
+    /**
+     * @return array The current match filter (any subset of Schedule fields).
+     */
     public function match_get()
     {
         ($this->_utility->feature_hook)($this->_entctx, "GetMatch");
@@ -86,7 +98,16 @@ class ScheduleEntity
     
 
     
-    public function list($reqmatch, $ctrl = null): array
+    /**
+     * List Schedule items matching the given filter.
+     *
+     * @param ScheduleListMatch|array|null $reqmatch Match filter (any subset
+     *   of Schedule fields) as an assoc-array; ScheduleListMatch names the shape.
+     * @param mixed $ctrl Optional per-call control overrides.
+     * @return Schedule[]|array A list of Schedule items as assoc-arrays at
+     *   the SDK boundary; throws MlbGumboError on failure (item-5 convention).
+     */
+    public function list(?array $reqmatch = null, $ctrl = null): mixed
     {
         $utility = $this->_utility;
         $ctx = ($utility->make_context)([
@@ -114,7 +135,7 @@ class ScheduleEntity
 
     
 
-    private function _run_op($ctx, callable $post_done): array
+    private function _run_op($ctx, callable $post_done): mixed
     {
         $utility = $this->_utility;
 

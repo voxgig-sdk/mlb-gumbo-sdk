@@ -18,7 +18,6 @@ Create a new SDK client instance.
 | Name | Type | Description |
 | --- | --- | --- |
 | `options` | `object` | SDK configuration options. |
-| `options.apikey` | `string` | API key for authentication. |
 | `options.base` | `string` | Base URL for API requests. |
 | `options.prefix` | `string` | URL prefix appended after base. |
 | `options.suffix` | `string` | URL suffix appended after path. |
@@ -146,7 +145,7 @@ Alias for `MlbGumboSDK.test()`.
 ## GameDataEntity
 
 ```ts
-const game_data = client.GameData()
+const game_data = client.game_data
 ```
 
 ### Fields
@@ -164,7 +163,7 @@ const game_data = client.GameData()
 List entities matching the given criteria. Returns an array.
 
 ```ts
-const results = await client.GameData().list()
+const results = await client.game_data.list()
 ```
 
 #### `load(match: object, ctrl?: object)`
@@ -172,7 +171,7 @@ const results = await client.GameData().list()
 Load a single entity matching the given criteria.
 
 ```ts
-const result = await client.GameData().load({ id: 'game_data_id' })
+const result = await client.game_data.load({ id: 'game_data_id' })
 ```
 
 ### Common Methods
@@ -206,7 +205,7 @@ Return a copy of the entity options.
 ## PlayerEntity
 
 ```ts
-const player = client.Player()
+const player = client.player
 ```
 
 ### Fields
@@ -222,7 +221,7 @@ const player = client.Player()
 Load a single entity matching the given criteria.
 
 ```ts
-const result = await client.Player().load({ id: 'player_id' })
+const result = await client.player.load({ id: 'player_id' })
 ```
 
 ### Common Methods
@@ -256,7 +255,7 @@ Return a copy of the entity options.
 ## ScheduleEntity
 
 ```ts
-const schedule = client.Schedule()
+const schedule = client.schedule
 ```
 
 ### Fields
@@ -273,7 +272,7 @@ const schedule = client.Schedule()
 List entities matching the given criteria. Returns an array.
 
 ```ts
-const results = await client.Schedule().list()
+const results = await client.schedule.list()
 ```
 
 ### Common Methods
@@ -307,7 +306,7 @@ Return a copy of the entity options.
 ## TeamEntity
 
 ```ts
-const team = client.Team()
+const team = client.team
 ```
 
 ### Fields
@@ -327,7 +326,7 @@ const team = client.Team()
 List entities matching the given criteria. Returns an array.
 
 ```ts
-const results = await client.Team().list()
+const results = await client.team.list()
 ```
 
 #### `load(match: object, ctrl?: object)`
@@ -335,7 +334,7 @@ const results = await client.Team().list()
 Load a single entity matching the given criteria.
 
 ```ts
-const result = await client.Team().load({ id: 'team_id' })
+const result = await client.team.load({ id: 'team_id' })
 ```
 
 ### Common Methods

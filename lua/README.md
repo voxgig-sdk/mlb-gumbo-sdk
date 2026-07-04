@@ -9,12 +9,9 @@ The Lua SDK for the MlbGumbo API — an entity-oriented client using Lua convent
 
 
 ## Install
-```bash
-luarocks install voxgig-sdk-mlb-gumbo
-```
-
-If the module is not yet published, add the source directory to
-your `LUA_PATH`:
+This package is not yet published to LuaRocks. Install it from the
+GitHub release tag (`lua/vX.Y.Z`, see [Releases](https://github.com/voxgig-sdk/mlb-gumbo-sdk/releases)),
+or add the source directory to your `LUA_PATH`:
 
 ```bash
 export LUA_PATH="path/to/lua/?.lua;path/to/lua/?/init.lua;;"
@@ -31,15 +28,13 @@ loading a specific record.
 ```lua
 local sdk = require("mlb-gumbo_sdk")
 
-local client = sdk.new({
-  apikey = os.getenv("MLB-GUMBO_APIKEY"),
-})
+local client = sdk.new()
 ```
 
 ### 2. List gamedatas
 
 ```lua
-local result, err = client:GameData():list()
+local result, err = client:gamedata():list()
 if err then error(err) end
 
 if type(result) == "table" then
@@ -53,7 +48,7 @@ end
 ### 3. Load a gamedata
 
 ```lua
-local result, err = client:GameData():load({ id = "example_id" })
+local result, err = client:gamedata():load({ id = "example_id" })
 if err then error(err) end
 print(result)
 ```
@@ -101,7 +96,7 @@ Create a mock client for unit testing — no server required:
 ```lua
 local client = sdk.test()
 
-local result, err = client:MlbGumbo():load({ id = "test01" })
+local result, err = client:gamedata():load({ id = "test01" })
 -- result contains mock response data
 ```
 
@@ -134,8 +129,7 @@ local client = sdk.new({
 Create a `.env.local` file at the project root:
 
 ```
-MLB-GUMBO_TEST_LIVE=TRUE
-MLB-GUMBO_APIKEY=<your-key>
+MLB_GUMBO_TEST_LIVE=TRUE
 ```
 
 Then run:
@@ -158,7 +152,6 @@ Creates a new SDK client.
 
 | Option | Type | Description |
 | --- | --- | --- |
-| `apikey` | `string` | API key for authentication. |
 | `base` | `string` | Base URL of the API server. |
 | `prefix` | `string` | URL path prefix prepended to all requests. |
 | `suffix` | `string` | URL path suffix appended to all requests. |
@@ -275,7 +268,7 @@ API path: `/teams/{teamId}/roster`
 
 ### GameData
 
-Create an instance: `const game_data = client.GameData()`
+Create an instance: `const game_data = client.game_data`
 
 #### Operations
 
@@ -295,19 +288,19 @@ Create an instance: `const game_data = client.GameData()`
 #### Example: Load
 
 ```ts
-const game_data = await client.GameData().load({ id: 'game_data_id' })
+const game_data = await client.game_data.load({ id: 'game_data_id' })
 ```
 
 #### Example: List
 
 ```ts
-const game_datas = await client.GameData().list()
+const game_datas = await client.game_data.list()
 ```
 
 
 ### Player
 
-Create an instance: `const player = client.Player()`
+Create an instance: `const player = client.player`
 
 #### Operations
 
@@ -324,13 +317,13 @@ Create an instance: `const player = client.Player()`
 #### Example: Load
 
 ```ts
-const player = await client.Player().load({ id: 'player_id' })
+const player = await client.player.load({ id: 'player_id' })
 ```
 
 
 ### Schedule
 
-Create an instance: `const schedule = client.Schedule()`
+Create an instance: `const schedule = client.schedule`
 
 #### Operations
 
@@ -348,13 +341,13 @@ Create an instance: `const schedule = client.Schedule()`
 #### Example: List
 
 ```ts
-const schedules = await client.Schedule().list()
+const schedules = await client.schedule.list()
 ```
 
 
 ### Team
 
-Create an instance: `const team = client.Team()`
+Create an instance: `const team = client.team`
 
 #### Operations
 
@@ -376,13 +369,13 @@ Create an instance: `const team = client.Team()`
 #### Example: Load
 
 ```ts
-const team = await client.Team().load({ id: 'team_id' })
+const team = await client.team.load({ id: 'team_id' })
 ```
 
 #### Example: List
 
 ```ts
-const teams = await client.Team().list()
+const teams = await client.team.list()
 ```
 
 
@@ -457,11 +450,11 @@ Entity instances are stateful. After a successful `load`, the entity
 stores the returned data and match criteria internally.
 
 ```lua
-local moon = client:Moon(nil)
-moon:load({ planet_id = "earth", id = "luna" }, nil)
+local gamedata = client:gamedata()
+gamedata:load({ id = "example_id" })
 
--- moon:data_get() now returns the loaded moon data
--- moon:match_get() returns the last match criteria
+-- gamedata:data_get() now returns the loaded gamedata data
+-- gamedata:match_get() returns the last match criteria
 ```
 
 Call `make()` to create a fresh instance with the same configuration
