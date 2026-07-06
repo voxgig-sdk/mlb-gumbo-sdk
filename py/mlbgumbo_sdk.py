@@ -221,25 +221,25 @@ class MlbGumboSDK:
 
 
     def GameData(self, data=None) -> "GameDataEntity":
-        """Entity factory: client.GameData().list({}) / client.GameData().load({"id": ...})."""
+        """Entity factory: client.GameData().list() / client.GameData().load({"id": ...})."""
         from entity.game_data_entity import GameDataEntity
         return GameDataEntity(self, data)
 
 
     def Player(self, data=None) -> "PlayerEntity":
-        """Entity factory: client.Player().list({}) / client.Player().load({"id": ...})."""
+        """Entity factory: client.Player().list() / client.Player().load({"id": ...})."""
         from entity.player_entity import PlayerEntity
         return PlayerEntity(self, data)
 
 
     def Schedule(self, data=None) -> "ScheduleEntity":
-        """Entity factory: client.Schedule().list({}) / client.Schedule().load({"id": ...})."""
+        """Entity factory: client.Schedule().list() / client.Schedule().load({"id": ...})."""
         from entity.schedule_entity import ScheduleEntity
         return ScheduleEntity(self, data)
 
 
     def Team(self, data=None) -> "TeamEntity":
-        """Entity factory: client.Team().list({}) / client.Team().load({"id": ...})."""
+        """Entity factory: client.Team().list() / client.Team().load({"id": ...})."""
         from entity.team_entity import TeamEntity
         return TeamEntity(self, data)
 

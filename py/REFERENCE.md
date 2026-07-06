@@ -8,7 +8,7 @@ Complete API reference for the MlbGumbo Python SDK.
 ### Constructor
 
 ```python
-from mlb-gumbo_sdk import MlbGumboSDK
+from mlbgumbo_sdk import MlbGumboSDK
 
 client = MlbGumboSDK(options)
 ```
@@ -99,18 +99,18 @@ game_data = client.GameData()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `game_data` | ``$OBJECT`` | No |  |
-| `live_data` | ``$OBJECT`` | No |  |
-| `timestamp` | ``$ARRAY`` | No |  |
+| `game_data` | `dict` | No |  |
+| `live_data` | `dict` | No |  |
+| `timestamp` | `list` | No |  |
 
 ### Operations
 
-#### `list(reqmatch, ctrl=None) -> list`
+#### `list(reqmatch=None, ctrl=None) -> list`
 
-List entities matching the given criteria. Returns a list and raises on error.
+List entities matching the given criteria. The match is optional — call `list()` with no argument to list all records. Returns a list and raises on error.
 
 ```python
-results = client.GameData().list({})
+results = client.GameData().list()
 for game_data in results:
     print(game_data)
 ```
@@ -120,7 +120,7 @@ for game_data in results:
 Load a single entity matching the given criteria. Returns the entity data and raises on error.
 
 ```python
-result = client.GameData().load({"id": "game_data_id"})
+result = client.GameData().load()
 ```
 
 ### Common Methods
@@ -162,7 +162,7 @@ player = client.Player()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `person` | ``$ARRAY`` | No |  |
+| `person` | `list` | No |  |
 
 ### Operations
 
@@ -171,7 +171,7 @@ player = client.Player()
 Load a single entity matching the given criteria. Returns the entity data and raises on error.
 
 ```python
-result = client.Player().load({"id": "player_id"})
+result = client.Player().load()
 ```
 
 ### Common Methods
@@ -213,17 +213,17 @@ schedule = client.Schedule()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `date` | ``$STRING`` | No |  |
-| `game` | ``$ARRAY`` | No |  |
+| `date` | `str` | No |  |
+| `game` | `list` | No |  |
 
 ### Operations
 
-#### `list(reqmatch, ctrl=None) -> list`
+#### `list(reqmatch=None, ctrl=None) -> list`
 
-List entities matching the given criteria. Returns a list and raises on error.
+List entities matching the given criteria. The match is optional — call `list()` with no argument to list all records. Returns a list and raises on error.
 
 ```python
-results = client.Schedule().list({})
+results = client.Schedule().list()
 for schedule in results:
     print(schedule)
 ```
@@ -267,20 +267,20 @@ team = client.Team()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `jersey_number` | ``$STRING`` | No |  |
-| `person` | ``$OBJECT`` | No |  |
-| `position` | ``$OBJECT`` | No |  |
-| `status` | ``$OBJECT`` | No |  |
-| `team` | ``$ARRAY`` | No |  |
+| `jersey_number` | `str` | No |  |
+| `person` | `dict` | No |  |
+| `position` | `dict` | No |  |
+| `status` | `dict` | No |  |
+| `team` | `list` | No |  |
 
 ### Operations
 
-#### `list(reqmatch, ctrl=None) -> list`
+#### `list(reqmatch=None, ctrl=None) -> list`
 
-List entities matching the given criteria. Returns a list and raises on error.
+List entities matching the given criteria. The match is optional — call `list()` with no argument to list all records. Returns a list and raises on error.
 
 ```python
-results = client.Team().list({})
+results = client.Team().list()
 for team in results:
     print(team)
 ```

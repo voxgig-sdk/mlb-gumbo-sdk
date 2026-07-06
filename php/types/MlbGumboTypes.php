@@ -51,7 +51,7 @@ class Schedule
     public ?array $game = null;
 }
 
-/** Match filter for Schedule#list (any subset of Schedule fields). */
+/** Request payload for Schedule#list. */
 class ScheduleListMatch
 {
     public ?string $date = null;

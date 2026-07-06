@@ -102,9 +102,9 @@ local game_data = client:GameData(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `game_data` | ``$OBJECT`` | No |  |
-| `live_data` | ``$OBJECT`` | No |  |
-| `timestamp` | ``$ARRAY`` | No |  |
+| `game_data` | `table` | No |  |
+| `live_data` | `table` | No |  |
+| `timestamp` | `table` | No |  |
 
 ### Operations
 
@@ -121,7 +121,7 @@ local results, err = client:GameData():list()
 Load a single entity matching the given criteria.
 
 ```lua
-local result, err = client:GameData():load({ id = "game_data_id" })
+local result, err = client:GameData():load()
 ```
 
 ### Common Methods
@@ -164,7 +164,7 @@ local player = client:Player(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `person` | ``$ARRAY`` | No |  |
+| `person` | `table` | No |  |
 
 ### Operations
 
@@ -173,7 +173,7 @@ local player = client:Player(nil)
 Load a single entity matching the given criteria.
 
 ```lua
-local result, err = client:Player():load({ id = "player_id" })
+local result, err = client:Player():load()
 ```
 
 ### Common Methods
@@ -216,8 +216,8 @@ local schedule = client:Schedule(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `date` | ``$STRING`` | No |  |
-| `game` | ``$ARRAY`` | No |  |
+| `date` | `string` | No |  |
+| `game` | `table` | No |  |
 
 ### Operations
 
@@ -269,11 +269,11 @@ local team = client:Team(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `jersey_number` | ``$STRING`` | No |  |
-| `person` | ``$OBJECT`` | No |  |
-| `position` | ``$OBJECT`` | No |  |
-| `status` | ``$OBJECT`` | No |  |
-| `team` | ``$ARRAY`` | No |  |
+| `jersey_number` | `string` | No |  |
+| `person` | `table` | No |  |
+| `position` | `table` | No |  |
+| `status` | `table` | No |  |
+| `team` | `table` | No |  |
 
 ### Operations
 

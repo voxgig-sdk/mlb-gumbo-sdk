@@ -8,7 +8,7 @@ Complete API reference for the MlbGumbo Ruby SDK.
 ### Constructor
 
 ```ruby
-require_relative 'mlb-gumbo_sdk'
+require_relative 'MlbGumbo_sdk'
 
 client = MlbGumboSDK.new(options)
 ```
@@ -105,18 +105,18 @@ game_data = client.GameData
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `game_data` | ``$OBJECT`` | No |  |
-| `live_data` | ``$OBJECT`` | No |  |
-| `timestamp` | ``$ARRAY`` | No |  |
+| `game_data` | `Hash` | No |  |
+| `live_data` | `Hash` | No |  |
+| `timestamp` | `Array` | No |  |
 
 ### Operations
 
-#### `list(reqmatch, ctrl = nil) -> Array`
+#### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria. Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
 
 ```ruby
-results = client.GameData.list(nil)
+results = client.GameData.list
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
@@ -124,7 +124,7 @@ results = client.GameData.list(nil)
 Load a single entity matching the given criteria. Raises on error.
 
 ```ruby
-result = client.GameData.load({ "id" => "game_data_id" })
+result = client.GameData.load()
 ```
 
 ### Common Methods
@@ -167,7 +167,7 @@ player = client.Player
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `person` | ``$ARRAY`` | No |  |
+| `person` | `Array` | No |  |
 
 ### Operations
 
@@ -176,7 +176,7 @@ player = client.Player
 Load a single entity matching the given criteria. Raises on error.
 
 ```ruby
-result = client.Player.load({ "id" => "player_id" })
+result = client.Player.load()
 ```
 
 ### Common Methods
@@ -219,17 +219,17 @@ schedule = client.Schedule
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `date` | ``$STRING`` | No |  |
-| `game` | ``$ARRAY`` | No |  |
+| `date` | `String` | No |  |
+| `game` | `Array` | No |  |
 
 ### Operations
 
-#### `list(reqmatch, ctrl = nil) -> Array`
+#### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria. Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
 
 ```ruby
-results = client.Schedule.list(nil)
+results = client.Schedule.list
 ```
 
 ### Common Methods
@@ -272,20 +272,20 @@ team = client.Team
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `jersey_number` | ``$STRING`` | No |  |
-| `person` | ``$OBJECT`` | No |  |
-| `position` | ``$OBJECT`` | No |  |
-| `status` | ``$OBJECT`` | No |  |
-| `team` | ``$ARRAY`` | No |  |
+| `jersey_number` | `String` | No |  |
+| `person` | `Hash` | No |  |
+| `position` | `Hash` | No |  |
+| `status` | `Hash` | No |  |
+| `team` | `Array` | No |  |
 
 ### Operations
 
-#### `list(reqmatch, ctrl = nil) -> Array`
+#### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-List entities matching the given criteria. Returns an array. Raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
 
 ```ruby
-results = client.Team.list(nil)
+results = client.Team.list
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`

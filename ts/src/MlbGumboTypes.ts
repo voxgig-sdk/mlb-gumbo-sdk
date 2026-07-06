@@ -32,7 +32,10 @@ export interface Schedule {
   game?: any[]
 }
 
-export type ScheduleListMatch = Partial<Schedule>
+export interface ScheduleListMatch {
+  date?: string
+  game?: any[]
+}
 
 export interface Team {
   jersey_number?: string

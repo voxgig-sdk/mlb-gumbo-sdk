@@ -4,6 +4,8 @@
 
 The PHP SDK for the MlbGumbo API — an entity-oriented client using PHP conventions.
 
+The SDK exposes the API as capitalised, semantic **Entities** — for example `$client->GameData()` — with named operations (`list`/`load`) instead of raw URL paths and query strings. Working with resources and verbs keeps call sites self-describing and reduces cognitive load.
+
 > Other languages, the CLI, and MCP server live alongside this one — see
 > the [top-level README](../README.md).
 
@@ -36,7 +38,7 @@ try {
     // list() returns an array of GameData records — iterate directly.
     $gamedatas = $client->GameData()->list();
     foreach ($gamedatas as $item) {
-        echo $item["id"] . " " . $item["name"] . "\n";
+        echo $item["game_data"] . "\n";
     }
 } catch (\Throwable $err) {
     echo "Error: " . $err->getMessage();
@@ -48,10 +50,41 @@ try {
 ```php
 try {
     // load() returns the bare GameData record (throws on error).
-    $gamedata = $client->GameData()->load(["id" => "example_id"]);
+    $gamedata = $client->GameData()->load();
     print_r($gamedata);
 } catch (\Throwable $err) {
     echo "Error: " . $err->getMessage();
+}
+```
+
+
+## Error handling
+
+Entity operations throw a `\Throwable` on failure, so wrap them in
+`try` / `catch`:
+
+```php
+try {
+    $gamedatas = $client->GameData()->list();
+} catch (\Throwable $err) {
+    echo "Error: " . $err->getMessage();
+}
+```
+
+`direct()` does **not** throw — it returns the result array. Branch on
+`ok`; on failure `status` holds the HTTP status (for error responses) and
+`err` holds a transport error, so read both defensively:
+
+```php
+$result = $client->direct([
+    "path" => "/api/resource/{id}",
+    "method" => "GET",
+    "params" => ["id" => "example_id"],
+]);
+
+if (! $result["ok"]) {
+    $err = $result["err"] ?? null;
+    echo "request failed: " . ($err ? $err->getMessage() : "HTTP " . $result["status"]);
 }
 ```
 
@@ -75,7 +108,10 @@ if ($result["ok"]) {
     echo $result["status"];  // 200
     print_r($result["data"]);  // response body
 } else {
-    echo "Error: " . $result["err"]->getMessage();
+    // On an HTTP error status there is no err (only a transport failure sets
+    // it), so fall back to the status code.
+    $err = $result["err"] ?? null;
+    echo "Error: " . ($err ? $err->getMessage() : "HTTP " . $result["status"]);
 }
 ```
 
@@ -96,16 +132,13 @@ print_r($fetchdef["headers"]);
 
 ### Use test mode
 
-Create a mock client for unit testing — no server required. Seed fixture
-data via the `entity` option so offline calls resolve without a live server:
+Create a mock client for unit testing — no server required:
 
 ```php
-$client = MlbGumboSDK::test([
-    "entity" => ["gamedata" => ["test01" => ["id" => "test01"]]],
-]);
+$client = MlbGumboSDK::test();
 
-// load() returns the bare mock record (throws on error).
-$gamedata = $client->GameData()->load(["id" => "test01"]);
+// Entity ops return the bare mock record (throws on error).
+$gamedata = $client->GameData()->list();
 print_r($gamedata);
 ```
 
@@ -197,10 +230,7 @@ All entities share the same interface.
 | Method | Signature | Description |
 | --- | --- | --- |
 | `load` | `($reqmatch, $ctrl): array` | Load a single entity by match criteria. |
-| `list` | `($reqmatch, $ctrl): array` | List entities matching the criteria. |
-| `create` | `($reqdata, $ctrl): array` | Create a new entity. |
-| `update` | `($reqdata, $ctrl): array` | Update an existing entity. |
-| `remove` | `($reqmatch, $ctrl): array` | Remove an entity. |
+| `list` | `(?array $reqmatch = null, $ctrl): array` | List entities matching the criteria (call with no argument to list all). |
 | `data_get` | `(): array` | Get entity data. |
 | `data_set` | `($data): void` | Set entity data. |
 | `match_get` | `(): array` | Get entity match criteria. |
@@ -295,15 +325,15 @@ Create an instance: `$game_data = $client->GameData();`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `game_data` | ``$OBJECT`` |  |
-| `live_data` | ``$OBJECT`` |  |
-| `timestamp` | ``$ARRAY`` |  |
+| `game_data` | `array` |  |
+| `live_data` | `array` |  |
+| `timestamp` | `array` |  |
 
 #### Example: Load
 
 ```php
 // load() returns the bare GameData record (throws on error).
-$game_data = $client->GameData()->load(["id" => "game_data_id"]);
+$game_data = $client->GameData()->load();
 ```
 
 #### Example: List
@@ -328,13 +358,13 @@ Create an instance: `$player = $client->Player();`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `person` | ``$ARRAY`` |  |
+| `person` | `array` |  |
 
 #### Example: Load
 
 ```php
 // load() returns the bare Player record (throws on error).
-$player = $client->Player()->load(["id" => "player_id"]);
+$player = $client->Player()->load();
 ```
 
 
@@ -352,8 +382,8 @@ Create an instance: `$schedule = $client->Schedule();`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `date` | ``$STRING`` |  |
-| `game` | ``$ARRAY`` |  |
+| `date` | `string` |  |
+| `game` | `array` |  |
 
 #### Example: List
 
@@ -378,11 +408,11 @@ Create an instance: `$team = $client->Team();`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `jersey_number` | ``$STRING`` |  |
-| `person` | ``$OBJECT`` |  |
-| `position` | ``$OBJECT`` |  |
-| `status` | ``$OBJECT`` |  |
-| `team` | ``$ARRAY`` |  |
+| `jersey_number` | `string` |  |
+| `person` | `array` |  |
+| `position` | `array` |  |
+| `status` | `array` |  |
+| `team` | `array` |  |
 
 #### Example: Load
 
@@ -399,12 +429,16 @@ $teams = $client->Team()->list();
 ```
 
 
-## Explanation
+## Advanced
+
+> The sections above cover everyday use. The material below explains the
+> SDK's internals — useful when extending it with custom features, but not
+> needed for normal use.
 
 ### The operation pipeline
 
-Every entity operation (load, list, create, update, remove) follows a
-six-stage pipeline. Each stage fires a feature hook before executing:
+Every entity operation follows a six-stage pipeline. Each stage fires a
+feature hook before executing:
 
 ```
 PrePoint → PreSpec → PreRequest → PreResponse → PreResult → PreDone
@@ -421,8 +455,9 @@ PrePoint → PreSpec → PreRequest → PreResponse → PreResult → PreDone
 - **PreDone**: Final stage before returning to the caller. Entity
   state (match, data) is updated here.
 
-If any stage returns an error, the pipeline short-circuits and the
-error is returned to the caller as the second element in the return array.
+If any stage errors, the pipeline short-circuits and the error surfaces
+to the caller — see [Error handling](#error-handling) for how that looks
+in this language.
 
 ### Features and hooks
 
@@ -466,15 +501,15 @@ when needed.
 
 ### Entity state
 
-Entity instances are stateful. After a successful `load`, the entity
+Entity instances are stateful. After a successful `list`, the entity
 stores the returned data and match criteria internally.
 
 ```php
 $gamedata = $client->GameData();
-$gamedata->load(["id" => "example_id"]);
+$gamedata->list();
 
-// $gamedata->dataGet() now returns the loaded gamedata data
-// $gamedata->matchGet() returns the last match criteria
+// $gamedata->data_get() now returns the gamedata data from the last list
+// $gamedata->match_get() returns the last match criteria
 ```
 
 Call `make()` to create a fresh instance with the same configuration

@@ -28,6 +28,8 @@
 ---@field game? table
 
 ---@class ScheduleListMatch
+---@field date? string
+---@field game? table
 
 ---@class Team
 ---@field jersey_number? string

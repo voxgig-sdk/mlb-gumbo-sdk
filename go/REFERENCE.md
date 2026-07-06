@@ -109,9 +109,9 @@ game_data := client.GameData(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `game_data` | ``$OBJECT`` | No |  |
-| `live_data` | ``$OBJECT`` | No |  |
-| `timestamp` | ``$ARRAY`` | No |  |
+| `game_data` | `map[string]any` | No |  |
+| `live_data` | `map[string]any` | No |  |
+| `timestamp` | `[]any` | No |  |
 
 ### Operations
 
@@ -128,7 +128,7 @@ results, err := client.GameData(nil).List(nil, nil)
 Load a single entity matching the given criteria.
 
 ```go
-result, err := client.GameData(nil).Load(map[string]any{"id": "game_data_id"}, nil)
+result, err := client.GameData(nil).Load(nil, nil)
 ```
 
 ### Common Methods
@@ -165,7 +165,7 @@ player := client.Player(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `person` | ``$ARRAY`` | No |  |
+| `person` | `[]any` | No |  |
 
 ### Operations
 
@@ -174,7 +174,7 @@ player := client.Player(nil)
 Load a single entity matching the given criteria.
 
 ```go
-result, err := client.Player(nil).Load(map[string]any{"id": "player_id"}, nil)
+result, err := client.Player(nil).Load(nil, nil)
 ```
 
 ### Common Methods
@@ -211,8 +211,8 @@ schedule := client.Schedule(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `date` | ``$STRING`` | No |  |
-| `game` | ``$ARRAY`` | No |  |
+| `date` | `string` | No |  |
+| `game` | `[]any` | No |  |
 
 ### Operations
 
@@ -258,11 +258,11 @@ team := client.Team(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `jersey_number` | ``$STRING`` | No |  |
-| `person` | ``$OBJECT`` | No |  |
-| `position` | ``$OBJECT`` | No |  |
-| `status` | ``$OBJECT`` | No |  |
-| `team` | ``$ARRAY`` | No |  |
+| `jersey_number` | `string` | No |  |
+| `person` | `map[string]any` | No |  |
+| `position` | `map[string]any` | No |  |
+| `status` | `map[string]any` | No |  |
+| `team` | `[]any` | No |  |
 
 ### Operations
 

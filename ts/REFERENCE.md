@@ -152,9 +152,9 @@ const game_data = client.GameData()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `game_data` | ``$OBJECT`` | No |  |
-| `live_data` | ``$OBJECT`` | No |  |
-| `timestamp` | ``$ARRAY`` | No |  |
+| `game_data` | `Record<string, any>` | No |  |
+| `live_data` | `Record<string, any>` | No |  |
+| `timestamp` | `any[]` | No |  |
 
 ### Operations
 
@@ -171,7 +171,7 @@ const results = await client.GameData().list()
 Load a single entity matching the given criteria.
 
 ```ts
-const result = await client.GameData().load({ id: 'game_data_id' })
+const result = await client.GameData().load()
 ```
 
 ### Common Methods
@@ -212,7 +212,7 @@ const player = client.Player()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `person` | ``$ARRAY`` | No |  |
+| `person` | `any[]` | No |  |
 
 ### Operations
 
@@ -221,7 +221,7 @@ const player = client.Player()
 Load a single entity matching the given criteria.
 
 ```ts
-const result = await client.Player().load({ id: 'player_id' })
+const result = await client.Player().load()
 ```
 
 ### Common Methods
@@ -262,8 +262,8 @@ const schedule = client.Schedule()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `date` | ``$STRING`` | No |  |
-| `game` | ``$ARRAY`` | No |  |
+| `date` | `string` | No |  |
+| `game` | `any[]` | No |  |
 
 ### Operations
 
@@ -313,11 +313,11 @@ const team = client.Team()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `jersey_number` | ``$STRING`` | No |  |
-| `person` | ``$OBJECT`` | No |  |
-| `position` | ``$OBJECT`` | No |  |
-| `status` | ``$OBJECT`` | No |  |
-| `team` | ``$ARRAY`` | No |  |
+| `jersey_number` | `string` | No |  |
+| `person` | `Record<string, any>` | No |  |
+| `position` | `Record<string, any>` | No |  |
+| `status` | `Record<string, any>` | No |  |
+| `team` | `any[]` | No |  |
 
 ### Operations
 
@@ -334,7 +334,7 @@ const results = await client.Team().list()
 Load a single entity matching the given criteria.
 
 ```ts
-const result = await client.Team().load({ id: 'team_id' })
+const result = await client.Team().load({ id: 1 })
 ```
 
 ### Common Methods
