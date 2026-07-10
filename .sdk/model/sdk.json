@@ -6,9 +6,6 @@
     },
     "kit": {
       "config": {
-        "auth": {
-          "prefix": "Bearer"
-        },
         "docs_order": [
           "ts",
           "py",
@@ -790,6 +787,7 @@
           "url": "https://github.com/MajorLeagueBaseball/google-cloud-mlb-hackathon"
         },
         "description": "The MLB GUMBO API provides real-time access to comprehensive Major League Baseball data, including live game information and player statistics. Developers can utilize this API to create applications that enhance fan engagement using advanced data insights and machine learning capabilities. The GUMBO (Grand Unified Master Baseball Object) live data feed provides a standardized JSON response that summarizes the entire state of a selected game upon each update.",
+        "meta_source": "https://www.freepublicapis.com",
         "servers": [
           {
             "description": "MLB Stats API v1.1 Server",
@@ -800,8 +798,10 @@
             "url": "https://statsapi.mlb.com/api/v1"
           }
         ],
+        "summary": "The MLB GUMBO API provides real-time access to comprehensive Major League Baseball data, including live game information and player statistics.",
         "title": "MLB GUMBO API",
-        "version": "1.1.0"
+        "version": "1.1.0",
+        "website": "https://github.com/MajorLeagueBaseball/google-cloud-mlb-hackathon"
       },
       "option": {},
       "target": {
@@ -854,6 +854,9 @@
           },
           "name": "go-cli",
           "phase": {
+            "agentguide": {
+              "active": false
+            },
             "entity": {
               "active": false
             },
@@ -904,6 +907,9 @@
           },
           "name": "go-mcp",
           "phase": {
+            "agentguide": {
+              "active": false
+            },
             "entity": {
               "active": false
             },

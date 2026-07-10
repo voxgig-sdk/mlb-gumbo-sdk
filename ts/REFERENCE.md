@@ -171,7 +171,7 @@ const results = await client.GameData().list()
 Load a single entity matching the given criteria.
 
 ```ts
-const result = await client.GameData().load()
+const result = await client.GameData().load({ game_pk: 'game_pk' })
 ```
 
 ### Common Methods
@@ -221,7 +221,7 @@ const player = client.Player()
 Load a single entity matching the given criteria.
 
 ```ts
-const result = await client.Player().load()
+const result = await client.Player().load({ player_id: 1 })
 ```
 
 ### Common Methods

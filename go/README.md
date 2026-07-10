@@ -50,21 +50,21 @@ import (
 func main() {
     client := sdk.New()
 
-    // List gamedata records — the value is the array of records itself.
-    gamedatas, err := client.GameData(nil).List(nil, nil)
+    // List gameData records — the value is the array of records itself.
+    gameDatas, err := client.GameData(nil).List(nil, nil)
     if err != nil {
         panic(err)
     }
-    for _, item := range gamedatas.([]any) {
+    for _, item := range gameDatas.([]any) {
         fmt.Println(item)
     }
 
-    // Load a single gamedata — the value is the loaded record.
-    gamedata, err := client.GameData(nil).Load(nil, nil)
+    // Load a single gameData — the value is the loaded record.
+    gameData, err := client.GameData(nil).Load(map[string]any{"game_pk": "example_game_pk"}, nil)
     if err != nil {
         panic(err)
     }
-    fmt.Println(gamedata)
+    fmt.Println(gameData)
 }
 ```
 
@@ -144,13 +144,13 @@ Create a mock client for unit testing — no server required:
 ```go
 client := sdk.Test()
 
-gamedata, err := client.GameData(nil).List(
+gameData, err := client.GameData(nil).List(
     nil, nil,
 )
 if err != nil {
     panic(err)
 }
-fmt.Println(gamedata) // the returned mock data
+fmt.Println(gameData) // the returned mock data
 ```
 
 ### Use a custom fetch function
@@ -259,9 +259,9 @@ Check `err` first, then use the value directly (or the typed
 `...Typed` variants, which return the entity's model struct and a typed
 slice):
 
-    gamedata, err := client.GameData(nil).List(map[string]any{/* fields */}, nil)
+    gameData, err := client.GameData(nil).List(map[string]any{/* fields */}, nil)
     if err != nil { /* handle */ }
-    // gamedata is the returned record
+    // gameData is the returned record
 
 Only `Direct()` returns a response envelope — a `map[string]any` with
 `"ok"`, `"status"`, `"headers"`, and `"data"` keys.
@@ -322,7 +322,7 @@ API path: `/teams/{teamId}/roster`
 
 ### GameData
 
-Create an instance: `game_data := client.GameData(nil)`
+Create an instance: `gameData := client.GameData(nil)`
 
 #### Operations
 
@@ -342,21 +342,21 @@ Create an instance: `game_data := client.GameData(nil)`
 #### Example: Load
 
 ```go
-game_data, err := client.GameData(nil).Load(nil, nil)
+gameData, err := client.GameData(nil).Load(map[string]any{"game_pk": "game_pk"}, nil)
 if err != nil {
     panic(err)
 }
-fmt.Println(game_data) // the loaded record
+fmt.Println(gameData) // the loaded record
 ```
 
 #### Example: List
 
 ```go
-game_datas, err := client.GameData(nil).List(nil, nil)
+gameDatas, err := client.GameData(nil).List(nil, nil)
 if err != nil {
     panic(err)
 }
-fmt.Println(game_datas) // the array of records
+fmt.Println(gameDatas) // the array of records
 ```
 
 
@@ -379,7 +379,7 @@ Create an instance: `player := client.Player(nil)`
 #### Example: Load
 
 ```go
-player, err := client.Player(nil).Load(nil, nil)
+player, err := client.Player(nil).Load(map[string]any{"player_id": 1}, nil)
 if err != nil {
     panic(err)
 }
@@ -439,7 +439,7 @@ Create an instance: `team := client.Team(nil)`
 #### Example: Load
 
 ```go
-team, err := client.Team(nil).Load(map[string]any{"id": "team_id"}, nil)
+team, err := client.Team(nil).Load(map[string]any{"id": 1}, nil)
 if err != nil {
     panic(err)
 }

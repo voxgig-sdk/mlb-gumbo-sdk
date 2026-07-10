@@ -102,7 +102,8 @@ same parameters as `Direct()`.
 ## GameDataEntity
 
 ```go
-game_data := client.GameData(nil)
+gameData := client.GameData(nil)
+fmt.Println(gameData.GetName()) // "game_data"
 ```
 
 ### Fields
@@ -121,6 +122,10 @@ List entities matching the given criteria. Returns an array.
 
 ```go
 results, err := client.GameData(nil).List(nil, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(results)
 ```
 
 #### `Load(reqmatch, ctrl map[string]any) (any, error)`
@@ -128,7 +133,11 @@ results, err := client.GameData(nil).List(nil, nil)
 Load a single entity matching the given criteria.
 
 ```go
-result, err := client.GameData(nil).Load(nil, nil)
+result, err := client.GameData(nil).Load(map[string]any{"game_pk": "game_pk"}, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(result)
 ```
 
 ### Common Methods
@@ -159,6 +168,7 @@ Return the entity name.
 
 ```go
 player := client.Player(nil)
+fmt.Println(player.GetName()) // "player"
 ```
 
 ### Fields
@@ -174,7 +184,11 @@ player := client.Player(nil)
 Load a single entity matching the given criteria.
 
 ```go
-result, err := client.Player(nil).Load(nil, nil)
+result, err := client.Player(nil).Load(map[string]any{"player_id": 1}, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(result)
 ```
 
 ### Common Methods
@@ -205,6 +219,7 @@ Return the entity name.
 
 ```go
 schedule := client.Schedule(nil)
+fmt.Println(schedule.GetName()) // "schedule"
 ```
 
 ### Fields
@@ -222,6 +237,10 @@ List entities matching the given criteria. Returns an array.
 
 ```go
 results, err := client.Schedule(nil).List(nil, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(results)
 ```
 
 ### Common Methods
@@ -252,6 +271,7 @@ Return the entity name.
 
 ```go
 team := client.Team(nil)
+fmt.Println(team.GetName()) // "team"
 ```
 
 ### Fields
@@ -272,6 +292,10 @@ List entities matching the given criteria. Returns an array.
 
 ```go
 results, err := client.Team(nil).List(nil, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(results)
 ```
 
 #### `Load(reqmatch, ctrl map[string]any) (any, error)`
@@ -279,7 +303,11 @@ results, err := client.Team(nil).List(nil, nil)
 Load a single entity matching the given criteria.
 
 ```go
-result, err := client.Team(nil).Load(map[string]any{"id": "team_id"}, nil)
+result, err := client.Team(nil).Load(map[string]any{"id": 1}, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(result)
 ```
 
 ### Common Methods

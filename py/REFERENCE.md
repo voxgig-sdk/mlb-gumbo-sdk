@@ -120,7 +120,7 @@ for game_data in results:
 Load a single entity matching the given criteria. Returns the entity data and raises on error.
 
 ```python
-result = client.GameData().load()
+result = client.GameData().load({"game_pk": "game_pk"})
 ```
 
 ### Common Methods
@@ -171,7 +171,7 @@ player = client.Player()
 Load a single entity matching the given criteria. Returns the entity data and raises on error.
 
 ```python
-result = client.Player().load()
+result = client.Player().load({"player_id": 1})
 ```
 
 ### Common Methods
@@ -290,7 +290,7 @@ for team in results:
 Load a single entity matching the given criteria. Returns the entity data and raises on error.
 
 ```python
-result = client.Team().load({"id": "team_id"})
+result = client.Team().load({"id": 1})
 ```
 
 ### Common Methods

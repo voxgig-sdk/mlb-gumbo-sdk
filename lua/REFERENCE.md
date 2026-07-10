@@ -121,7 +121,7 @@ local results, err = client:GameData():list()
 Load a single entity matching the given criteria.
 
 ```lua
-local result, err = client:GameData():load()
+local result, err = client:GameData():load({ game_pk = "game_pk" })
 ```
 
 ### Common Methods
@@ -173,7 +173,7 @@ local player = client:Player(nil)
 Load a single entity matching the given criteria.
 
 ```lua
-local result, err = client:Player():load()
+local result, err = client:Player():load({ player_id = 1 })
 ```
 
 ### Common Methods
@@ -290,7 +290,7 @@ local results, err = client:Team():list()
 Load a single entity matching the given criteria.
 
 ```lua
-local result, err = client:Team():load({ id = "team_id" })
+local result, err = client:Team():load({ id = 1 })
 ```
 
 ### Common Methods

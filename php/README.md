@@ -47,10 +47,12 @@ try {
 
 ### 3. Load a gamedata
 
+GameData is nested under game_pk, so provide the `game_pk`.
+
 ```php
 try {
     // load() returns the bare GameData record (throws on error).
-    $gamedata = $client->GameData()->load();
+    $gamedata = $client->GameData()->load(["game_pk" => "example_game_pk"]);
     print_r($gamedata);
 } catch (\Throwable $err) {
     echo "Error: " . $err->getMessage();
@@ -333,7 +335,7 @@ Create an instance: `$game_data = $client->GameData();`
 
 ```php
 // load() returns the bare GameData record (throws on error).
-$game_data = $client->GameData()->load();
+$game_data = $client->GameData()->load(["game_pk" => "game_pk"]);
 ```
 
 #### Example: List
@@ -364,7 +366,7 @@ Create an instance: `$player = $client->Player();`
 
 ```php
 // load() returns the bare Player record (throws on error).
-$player = $client->Player()->load();
+$player = $client->Player()->load(["player_id" => 1]);
 ```
 
 
@@ -418,7 +420,7 @@ Create an instance: `$team = $client->Team();`
 
 ```php
 // load() returns the bare Team record (throws on error).
-$team = $client->Team()->load(["id" => "team_id"]);
+$team = $client->Team()->load(["id" => 1]);
 ```
 
 #### Example: List

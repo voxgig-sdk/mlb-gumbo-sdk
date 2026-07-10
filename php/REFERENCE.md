@@ -123,7 +123,7 @@ $results = $client->GameData()->list();
 Load a single entity matching the given criteria. Throws on error.
 
 ```php
-$result = $client->GameData()->load();
+$result = $client->GameData()->load(["game_pk" => "game_pk"]);
 ```
 
 ### Common Methods
@@ -175,7 +175,7 @@ $player = $client->Player();
 Load a single entity matching the given criteria. Throws on error.
 
 ```php
-$result = $client->Player()->load();
+$result = $client->Player()->load(["player_id" => 1]);
 ```
 
 ### Common Methods
@@ -292,7 +292,7 @@ $results = $client->Team()->list();
 Load a single entity matching the given criteria. Throws on error.
 
 ```php
-$result = $client->Team()->load(["id" => "team_id"]);
+$result = $client->Team()->load(["id" => 1]);
 ```
 
 ### Common Methods

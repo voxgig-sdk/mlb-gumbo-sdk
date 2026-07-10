@@ -46,10 +46,12 @@ end
 
 ### 3. Load a gamedata
 
+GameData is nested under game_pk, so provide the `game_pk`.
+
 ```ruby
 begin
   # load returns the bare GameData record (raises on error).
-  gamedata = client.GameData.load()
+  gamedata = client.GameData.load({ "game_pk" => "example_game_pk" })
   puts gamedata
 rescue => err
   warn "load failed: #{err}"
@@ -323,7 +325,7 @@ Create an instance: `game_data = client.GameData`
 
 ```ruby
 # load returns the bare GameData record (raises on error).
-game_data = client.GameData.load()
+game_data = client.GameData.load({ "game_pk" => "game_pk" })
 ```
 
 #### Example: List
@@ -354,7 +356,7 @@ Create an instance: `player = client.Player`
 
 ```ruby
 # load returns the bare Player record (raises on error).
-player = client.Player.load()
+player = client.Player.load({ "player_id" => 1 })
 ```
 
 
@@ -408,7 +410,7 @@ Create an instance: `team = client.Team`
 
 ```ruby
 # load returns the bare Team record (raises on error).
-team = client.Team.load({ "id" => "team_id" })
+team = client.Team.load({ "id" => 1 })
 ```
 
 #### Example: List

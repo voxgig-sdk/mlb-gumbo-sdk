@@ -52,11 +52,12 @@ except Exception as err:
 
 ### 3. Load a gamedata
 
+GameData is nested under game_pk, so provide the `game_pk`.
 `load()` returns the bare record (a `dict`) and raises on error.
 
 ```python
 try:
-    gamedata = client.GameData().load()
+    gamedata = client.GameData().load({"game_pk": "example_game_pk"})
     print(gamedata)
 except Exception as err:
     print(f"load failed: {err}")
@@ -328,7 +329,7 @@ Create an instance: `game_data = client.GameData()`
 #### Example: Load
 
 ```python
-game_data = client.GameData().load()
+game_data = client.GameData().load({"game_pk": "game_pk"})
 ```
 
 #### Example: List
@@ -357,7 +358,7 @@ Create an instance: `player = client.Player()`
 #### Example: Load
 
 ```python
-player = client.Player().load()
+player = client.Player().load({"player_id": 1})
 ```
 
 
@@ -409,7 +410,7 @@ Create an instance: `team = client.Team()`
 #### Example: Load
 
 ```python
-team = client.Team().load({"id": "team_id"})
+team = client.Team().load({"id": 1})
 ```
 
 #### Example: List
