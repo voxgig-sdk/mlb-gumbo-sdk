@@ -1,4 +1,4 @@
--- ProjectName SDK exists test
+-- MlbGumbo SDK exists test
 
 local sdk = require("mlb-gumbo_sdk")
 
