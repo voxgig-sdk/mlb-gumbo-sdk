@@ -21,7 +21,7 @@ class Config {
 
 
   main = {
-    name: 'ProjectName',
+    name: 'MlbGumbo',
   }
 
 
@@ -65,21 +65,21 @@ class Config {
       "fields": [
         {
           "active": true,
-          "name": "game_data",
+          "name": "gameData",
           "req": false,
           "type": "`$OBJECT`",
           "index$": 0
         },
         {
           "active": true,
-          "name": "live_data",
+          "name": "liveData",
           "req": false,
           "type": "`$OBJECT`",
           "index$": 1
         },
         {
           "active": true,
-          "name": "timestamp",
+          "name": "timestamps",
           "req": false,
           "type": "`$ARRAY`",
           "index$": 2
@@ -107,6 +107,7 @@ class Config {
                   }
                 ]
               },
+              "kind": "http",
               "method": "GET",
               "orig": "/game/{game_pk}/feed/live/timestamps",
               "parts": [
@@ -123,7 +124,7 @@ class Config {
               },
               "transform": {
                 "req": "`reqdata`",
-                "res": "`body`"
+                "res": "`body.timestamps`"
               },
               "index$": 0
             }
@@ -178,6 +179,7 @@ class Config {
                   }
                 ]
               },
+              "kind": "http",
               "method": "GET",
               "orig": "/game/{game_pk}/feed/live",
               "parts": [
@@ -216,7 +218,7 @@ class Config {
       "fields": [
         {
           "active": true,
-          "name": "person",
+          "name": "people",
           "req": false,
           "type": "`$ARRAY`",
           "index$": 0
@@ -264,6 +266,7 @@ class Config {
                   }
                 ]
               },
+              "kind": "http",
               "method": "GET",
               "orig": "/people/{playerId}",
               "parts": [
@@ -311,7 +314,7 @@ class Config {
         },
         {
           "active": true,
-          "name": "game",
+          "name": "games",
           "req": false,
           "type": "`$ARRAY`",
           "index$": 1
@@ -373,6 +376,7 @@ class Config {
                   }
                 ]
               },
+              "kind": "http",
               "method": "GET",
               "orig": "/schedule",
               "parts": [
@@ -389,7 +393,7 @@ class Config {
               },
               "transform": {
                 "req": "`reqdata`",
-                "res": "`body`"
+                "res": "`body.dates`"
               },
               "index$": 0
             }
@@ -405,7 +409,7 @@ class Config {
       "fields": [
         {
           "active": true,
-          "name": "jersey_number",
+          "name": "jerseyNumber",
           "req": false,
           "type": "`$STRING`",
           "index$": 0
@@ -433,7 +437,7 @@ class Config {
         },
         {
           "active": true,
-          "name": "team",
+          "name": "teams",
           "req": false,
           "type": "`$ARRAY`",
           "index$": 4
@@ -480,6 +484,7 @@ class Config {
                   }
                 ]
               },
+              "kind": "http",
               "method": "GET",
               "orig": "/teams/{teamId}/roster",
               "parts": [
@@ -502,7 +507,7 @@ class Config {
               },
               "transform": {
                 "req": "`reqdata`",
-                "res": "`body`"
+                "res": "`body.roster`"
               },
               "index$": 0
             }
@@ -548,6 +553,7 @@ class Config {
                   }
                 ]
               },
+              "kind": "http",
               "method": "GET",
               "orig": "/teams/{teamId}",
               "parts": [

@@ -126,11 +126,11 @@ def game_data_direct_setup(mockres)
   calls = []
 
   env = Runner.env_override({
-    "MLBGUMBO_TEST_GAME_DATA_ENTID" => {},
-    "MLBGUMBO_TEST_LIVE" => "FALSE",
+    "MLB_GUMBO_TEST_GAME_DATA_ENTID" => {},
+    "MLB_GUMBO_TEST_LIVE" => "FALSE",
   })
 
-  live = env["MLBGUMBO_TEST_LIVE"] == "TRUE"
+  live = env["MLB_GUMBO_TEST_LIVE"] == "TRUE"
 
   if live
     merged_opts = {

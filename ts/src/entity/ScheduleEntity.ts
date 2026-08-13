@@ -37,7 +37,7 @@ class ScheduleEntity extends MlbGumboEntityBase<Schedule> {
 
 
 
-  async list(this: any, reqmatch?: ScheduleListMatch, ctrl?: Control): Promise<Schedule[]> {
+  async list(this: any, reqmatch?: ScheduleListMatch, ctrl?: Control): Promise<ScheduleEntity[]> {
 
     const utility = this._utility
 

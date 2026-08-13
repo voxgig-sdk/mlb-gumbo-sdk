@@ -110,9 +110,9 @@ fmt.Println(gameData.GetName()) // "game_data"
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `game_data` | `map[string]any` | No |  |
-| `live_data` | `map[string]any` | No |  |
-| `timestamp` | `[]any` | No |  |
+| `gameData` | `map[string]any` | No |  |
+| `liveData` | `map[string]any` | No |  |
+| `timestamps` | `[]any` | No |  |
 
 ### Operations
 
@@ -175,7 +175,7 @@ fmt.Println(player.GetName()) // "player"
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `person` | `[]any` | No |  |
+| `people` | `[]any` | No |  |
 
 ### Operations
 
@@ -227,7 +227,7 @@ fmt.Println(schedule.GetName()) // "schedule"
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `date` | `string` | No |  |
-| `game` | `[]any` | No |  |
+| `games` | `[]any` | No |  |
 
 ### Operations
 
@@ -278,11 +278,11 @@ fmt.Println(team.GetName()) // "team"
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `jersey_number` | `string` | No |  |
+| `jerseyNumber` | `string` | No |  |
 | `person` | `map[string]any` | No |  |
 | `position` | `map[string]any` | No |  |
 | `status` | `map[string]any` | No |  |
-| `team` | `[]any` | No |  |
+| `teams` | `[]any` | No |  |
 
 ### Operations
 

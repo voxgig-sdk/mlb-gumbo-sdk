@@ -2,17 +2,17 @@
   "existing": {
     "player": {
       "PLAYER00": {
-        "person": [],
+        "people": [],
         "player_id": "PLAYER01",
         "id": "PLAYER00"
       },
       "PLAYER01": {
-        "person": [],
+        "people": [],
         "player_id": "PLAYER01",
         "id": "PLAYER01"
       },
       "PLAYER02": {
-        "person": [],
+        "people": [],
         "player_id": "PLAYER01",
         "id": "PLAYER02"
       }
@@ -21,7 +21,7 @@
   "new": {
     "player": {
       "player_ref01": {
-        "person": []
+        "people": []
       }
     }
   }

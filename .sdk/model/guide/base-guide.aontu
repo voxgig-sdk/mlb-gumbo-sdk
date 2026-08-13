@@ -11,6 +11,7 @@ guide: {
     }
     path: "/game/{game_pk}/feed/live/timestamps": {
       op: list: method: *GET
+      op: list: transform: res: *("`body.timestamps`")|top
     }
   }
 
@@ -24,6 +25,7 @@ guide: {
   entity: schedule: {
     path: "/schedule": {
       op: list: method: *GET
+      op: list: transform: res: *("`body.dates`")|top
     }
   }
 
@@ -36,6 +38,7 @@ guide: {
       action: "roster": {}
       rename: param: "teamId": *"id"
       op: list: method: *GET
+      op: list: transform: res: *("`body.roster`")|top
     }
   }
 

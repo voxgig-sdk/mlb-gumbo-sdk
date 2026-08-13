@@ -75,12 +75,12 @@ Every entity operation returns `(value, error)`. Check `err` before
 using the value — there is no exception to catch:
 
 ```go
-gamedatas, err := client.GameData(nil).List(nil, nil)
+schedules, err := client.Schedule(nil).List(nil, nil)
 if err != nil {
     // handle err
     return
 }
-_ = gamedatas
+_ = schedules
 ```
 
 `Direct` follows the same `(value, error)` convention:
@@ -144,13 +144,13 @@ Create a mock client for unit testing — no server required:
 ```go
 client := sdk.Test()
 
-gameData, err := client.GameData(nil).List(
+schedule, err := client.Schedule(nil).List(
     nil, nil,
 )
 if err != nil {
     panic(err)
 }
-fmt.Println(gameData) // the returned mock data
+fmt.Println(schedule) // the returned mock data
 ```
 
 ### Use a custom fetch function
@@ -272,9 +272,9 @@ Only `Direct()` returns a response envelope — a `map[string]any` with
 
 | Field | Description |
 | --- | --- |
-| `"game_data"` |  |
-| `"live_data"` |  |
-| `"timestamp"` |  |
+| `"gameData"` |  |
+| `"liveData"` |  |
+| `"timestamps"` |  |
 
 Operations: List, Load.
 
@@ -284,7 +284,7 @@ API path: `/game/{game_pk}/feed/live/timestamps`
 
 | Field | Description |
 | --- | --- |
-| `"person"` |  |
+| `"people"` |  |
 
 Operations: Load.
 
@@ -295,7 +295,7 @@ API path: `/people/{playerId}`
 | Field | Description |
 | --- | --- |
 | `"date"` |  |
-| `"game"` |  |
+| `"games"` |  |
 
 Operations: List.
 
@@ -305,11 +305,11 @@ API path: `/schedule`
 
 | Field | Description |
 | --- | --- |
-| `"jersey_number"` |  |
+| `"jerseyNumber"` |  |
 | `"person"` |  |
 | `"position"` |  |
 | `"status"` |  |
-| `"team"` |  |
+| `"teams"` |  |
 
 Operations: List, Load.
 
@@ -335,9 +335,9 @@ Create an instance: `gameData := client.GameData(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `game_data` | `map[string]any` |  |
-| `live_data` | `map[string]any` |  |
-| `timestamp` | `[]any` |  |
+| `gameData` | `map[string]any` |  |
+| `liveData` | `map[string]any` |  |
+| `timestamps` | `[]any` |  |
 
 #### Example: Load
 
@@ -374,7 +374,7 @@ Create an instance: `player := client.Player(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `person` | `[]any` |  |
+| `people` | `[]any` |  |
 
 #### Example: Load
 
@@ -402,7 +402,7 @@ Create an instance: `schedule := client.Schedule(nil)`
 | Field | Type | Description |
 | --- | --- | --- |
 | `date` | `string` |  |
-| `game` | `[]any` |  |
+| `games` | `[]any` |  |
 
 #### Example: List
 
@@ -430,11 +430,11 @@ Create an instance: `team := client.Team(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `jersey_number` | `string` |  |
+| `jerseyNumber` | `string` |  |
 | `person` | `map[string]any` |  |
 | `position` | `map[string]any` |  |
 | `status` | `map[string]any` |  |
-| `team` | `[]any` |  |
+| `teams` | `[]any` |  |
 
 #### Example: Load
 
@@ -530,11 +530,11 @@ Entity instances are stateful. After a successful `List`, the entity
 stores the returned data and match criteria internally.
 
 ```go
-gamedata := client.GameData(nil)
-gamedata.List(nil, nil)
+schedule := client.Schedule(nil)
+schedule.List(nil, nil)
 
-// gamedata.Data() now returns the gamedata data from the last list
-// gamedata.Match() returns the last match criteria
+// schedule.Data() now returns the schedule data from the last list
+// schedule.Match() returns the last match criteria
 ```
 
 Call `Make()` to create a fresh instance with the same configuration

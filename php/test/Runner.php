@@ -43,8 +43,8 @@ class MlbGumboTestRunner
 
     public static function env_override(array $m): array
     {
-        $live = self::getenv('MLBGUMBO_TEST_LIVE');
-        $override = self::getenv('MLBGUMBO_TEST_OVERRIDE');
+        $live = self::getenv('MLB_GUMBO_TEST_LIVE');
+        $override = self::getenv('MLB_GUMBO_TEST_OVERRIDE');
 
         if ($live === 'TRUE' || $override === 'TRUE') {
             foreach (array_keys($m) as $key) {
@@ -63,9 +63,9 @@ class MlbGumboTestRunner
             }
         }
 
-        $explain = self::getenv('MLBGUMBO_TEST_EXPLAIN');
+        $explain = self::getenv('MLB_GUMBO_TEST_EXPLAIN');
         if ($explain !== null && $explain !== '') {
-            $m['MLBGUMBO_TEST_EXPLAIN'] = $explain;
+            $m['MLB_GUMBO_TEST_EXPLAIN'] = $explain;
         }
 
         return $m;

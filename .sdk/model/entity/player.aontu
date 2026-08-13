@@ -6,7 +6,7 @@ main: kit: entity: player: {
 
   fields: [
     {
-      name: "person"
+      name: "people"
       req: false
       type: "`$ARRAY`"
     }

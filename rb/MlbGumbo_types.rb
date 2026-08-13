@@ -10,18 +10,18 @@
 
 # GameData entity data model.
 #
-# @!attribute [rw] game_data
+# @!attribute [rw] gameData
 #   @return [Hash, nil]
 #
-# @!attribute [rw] live_data
+# @!attribute [rw] liveData
 #   @return [Hash, nil]
 #
-# @!attribute [rw] timestamp
+# @!attribute [rw] timestamps
 #   @return [Array, nil]
 GameData = Struct.new(
-  :game_data,
-  :live_data,
-  :timestamp,
+  :gameData,
+  :liveData,
+  :timestamps,
   keyword_init: true
 )
 
@@ -45,10 +45,10 @@ GameDataListMatch = Struct.new(
 
 # Player entity data model.
 #
-# @!attribute [rw] person
+# @!attribute [rw] people
 #   @return [Array, nil]
 Player = Struct.new(
-  :person,
+  :people,
   keyword_init: true
 )
 
@@ -66,11 +66,11 @@ PlayerLoadMatch = Struct.new(
 # @!attribute [rw] date
 #   @return [String, nil]
 #
-# @!attribute [rw] game
+# @!attribute [rw] games
 #   @return [Array, nil]
 Schedule = Struct.new(
   :date,
-  :game,
+  :games,
   keyword_init: true
 )
 
@@ -79,17 +79,17 @@ Schedule = Struct.new(
 # @!attribute [rw] date
 #   @return [String, nil]
 #
-# @!attribute [rw] game
+# @!attribute [rw] games
 #   @return [Array, nil]
 ScheduleListMatch = Struct.new(
   :date,
-  :game,
+  :games,
   keyword_init: true
 )
 
 # Team entity data model.
 #
-# @!attribute [rw] jersey_number
+# @!attribute [rw] jerseyNumber
 #   @return [String, nil]
 #
 # @!attribute [rw] person
@@ -101,14 +101,14 @@ ScheduleListMatch = Struct.new(
 # @!attribute [rw] status
 #   @return [Hash, nil]
 #
-# @!attribute [rw] team
+# @!attribute [rw] teams
 #   @return [Array, nil]
 Team = Struct.new(
-  :jersey_number,
+  :jerseyNumber,
   :person,
   :position,
   :status,
-  :team,
+  :teams,
   keyword_init: true
 )
 

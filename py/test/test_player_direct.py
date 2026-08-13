@@ -3,9 +3,9 @@
 import json
 import pytest
 
-from utility.voxgig_struct import voxgig_struct as vs
+from mlbgumbo_sdk.utility.voxgig_struct import voxgig_struct as vs
 from mlbgumbo_sdk import MlbGumboSDK
-from core import helpers
+from mlbgumbo_sdk.core import helpers
 from test import runner
 
 
@@ -63,11 +63,11 @@ def _player_direct_setup(mockres):
     calls = []
 
     env = runner.env_override({
-        "MLBGUMBO_TEST_PLAYER_ENTID": {},
-        "MLBGUMBO_TEST_LIVE": "FALSE",
+        "MLB_GUMBO_TEST_PLAYER_ENTID": {},
+        "MLB_GUMBO_TEST_LIVE": "FALSE",
     })
 
-    live = env.get("MLBGUMBO_TEST_LIVE") == "TRUE"
+    live = env.get("MLB_GUMBO_TEST_LIVE") == "TRUE"
 
     if live:
         merged_opts = {

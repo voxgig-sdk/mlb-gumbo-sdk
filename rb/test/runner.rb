@@ -23,8 +23,8 @@ module MlbGumboTestRunner
   end
 
   def self.env_override(m)
-    live = getenv("MLBGUMBO_TEST_LIVE")
-    override = getenv("MLBGUMBO_TEST_OVERRIDE")
+    live = getenv("MLB_GUMBO_TEST_LIVE")
+    override = getenv("MLB_GUMBO_TEST_OVERRIDE")
 
     if live == "TRUE" || override == "TRUE"
       m.each_key do |key|
@@ -44,8 +44,8 @@ module MlbGumboTestRunner
       end
     end
 
-    explain = getenv("MLBGUMBO_TEST_EXPLAIN")
-    m["MLBGUMBO_TEST_EXPLAIN"] = explain if explain && !explain.empty?
+    explain = getenv("MLB_GUMBO_TEST_EXPLAIN")
+    m["MLB_GUMBO_TEST_EXPLAIN"] = explain if explain && !explain.empty?
 
     m
   end

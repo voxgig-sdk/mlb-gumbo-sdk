@@ -6,9 +6,9 @@
 // @voxgig/apidef VALID_CANON). Do not edit by hand.
 
 export interface GameData {
-  game_data?: Record<string, any>
-  live_data?: Record<string, any>
-  timestamp?: any[]
+  gameData?: Record<string, any>
+  liveData?: Record<string, any>
+  timestamps?: any[]
 }
 
 export interface GameDataLoadMatch {
@@ -20,7 +20,7 @@ export interface GameDataListMatch {
 }
 
 export interface Player {
-  person?: any[]
+  people?: any[]
 }
 
 export interface PlayerLoadMatch {
@@ -29,20 +29,20 @@ export interface PlayerLoadMatch {
 
 export interface Schedule {
   date?: string
-  game?: any[]
+  games?: any[]
 }
 
 export interface ScheduleListMatch {
   date?: string
-  game?: any[]
+  games?: any[]
 }
 
 export interface Team {
-  jersey_number?: string
+  jerseyNumber?: string
   person?: Record<string, any>
   position?: Record<string, any>
   status?: Record<string, any>
-  team?: any[]
+  teams?: any[]
 }
 
 export interface TeamLoadMatch {
@@ -51,5 +51,11 @@ export interface TeamLoadMatch {
 
 export interface TeamListMatch {
   id: number
+
+  // Selects a custom action instead of the plain list:
+  //   'roster'
+  // The remaining keys are that action's own payload.
+  $action?: string
+  [action: string]: any
 }
 

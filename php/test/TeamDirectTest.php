@@ -133,11 +133,11 @@ function team_direct_setup($mockres)
     $calls = new \ArrayObject();
 
     $env = Runner::env_override([
-        "MLBGUMBO_TEST_TEAM_ENTID" => [],
-        "MLBGUMBO_TEST_LIVE" => "FALSE",
+        "MLB_GUMBO_TEST_TEAM_ENTID" => [],
+        "MLB_GUMBO_TEST_LIVE" => "FALSE",
     ]);
 
-    $live = $env["MLBGUMBO_TEST_LIVE"] === "TRUE";
+    $live = $env["MLB_GUMBO_TEST_LIVE"] === "TRUE";
 
     if ($live) {
         $merged_opts = [

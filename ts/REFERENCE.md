@@ -152,9 +152,9 @@ const game_data = client.GameData()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `game_data` | `Record<string, any>` | No |  |
-| `live_data` | `Record<string, any>` | No |  |
-| `timestamp` | `any[]` | No |  |
+| `gameData` | `Record<string, any>` | No |  |
+| `liveData` | `Record<string, any>` | No |  |
+| `timestamps` | `any[]` | No |  |
 
 ### Operations
 
@@ -163,7 +163,7 @@ const game_data = client.GameData()
 List entities matching the given criteria. Returns an array.
 
 ```ts
-const results = await client.GameData().list()
+const results = await client.GameData().list({ game_pk: "example" })
 ```
 
 #### `load(match: object, ctrl?: object)`
@@ -212,7 +212,7 @@ const player = client.Player()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `person` | `any[]` | No |  |
+| `people` | `any[]` | No |  |
 
 ### Operations
 
@@ -263,7 +263,7 @@ const schedule = client.Schedule()
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `date` | `string` | No |  |
-| `game` | `any[]` | No |  |
+| `games` | `any[]` | No |  |
 
 ### Operations
 
@@ -313,11 +313,31 @@ const team = client.Team()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `jersey_number` | `string` | No |  |
+| `jerseyNumber` | `string` | No |  |
 | `person` | `Record<string, any>` | No |  |
 | `position` | `Record<string, any>` | No |  |
 | `status` | `Record<string, any>` | No |  |
-| `team` | `any[]` | No |  |
+| `teams` | `any[]` | No |  |
+
+### Actions
+
+This entity exposes custom API actions in addition to the standard
+operations. Select one with `$action` in the call's argument; the
+remaining keys are sent as that action's payload.
+
+| Action | Route | Call |
+| --- | --- | --- |
+| `roster` | `/teams/{teamId}/roster` | `client.Team().list({ $action: 'roster', ... })` |
+
+An action returns that action's OWN response, which is not necessarily a
+Team record — check the API definition for its shape.
+
+```ts
+const result = await client.Team().list({
+  $action: 'roster',
+  /* ...the action's own arguments */
+})
+```
 
 ### Operations
 
@@ -326,7 +346,7 @@ const team = client.Team()
 List entities matching the given criteria. Returns an array.
 
 ```ts
-const results = await client.Team().list()
+const results = await client.Team().list({ id: 1 })
 ```
 
 #### `load(match: object, ctrl?: object)`

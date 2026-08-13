@@ -35,10 +35,12 @@ const client = new MlbGumboSDK()
 
 ### 2. List gamedata records
 
-`list()` resolves to an array of GameData objects — iterate it directly:
+`list()` resolves to an array of GameData ENTITIES — every operation
+resolves to entities, not raw records. Iterate them directly, and call
+`.data()` on one for the record it holds:
 
 ```ts
-const gamedatas = await client.GameData().list()
+const gamedatas = await client.GameData().list({ game_pk: "example" })
 
 for (const gamedata of gamedatas) {
   console.log(gamedata)
@@ -68,8 +70,8 @@ Entity operations reject on failure, so wrap them in `try` / `catch`:
 
 ```ts
 try {
-  const gamedatas = await client.GameData().list()
-  console.log(gamedatas)
+  const schedules = await client.Schedule().list()
+  console.log(schedules)
 } catch (err) {
   console.error('list failed:', err)
 }
@@ -135,9 +137,10 @@ Create a mock client for unit testing — no server required:
 ```ts
 const client = MlbGumboSDK.test()
 
-const gamedata = await client.GameData().list()
-// gamedata is a bare entity populated with mock response data
-console.log(gamedata)
+const schedule = await client.Schedule().list()
+// schedule is the entity, populated with mock response data
+// — call schedule.data() for the record itself
+console.log(schedule)
 ```
 
 You can also use the instance method:
@@ -152,7 +155,7 @@ const testClient = client.tester()
 Entity instances remember their last match and data:
 
 ```ts
-const entity = client.GameData()
+const entity = client.Schedule()
 
 // First call runs the operation and stores its result
 await entity.list()
@@ -305,9 +308,9 @@ The `prepare()` method returns:
 
 | Field | Description |
 | --- | --- |
-| `game_data` |  |
-| `live_data` |  |
-| `timestamp` |  |
+| `gameData` |  |
+| `liveData` |  |
+| `timestamps` |  |
 
 Operations: list, load.
 
@@ -317,7 +320,7 @@ API path: `/game/{game_pk}/feed/live/timestamps`
 
 | Field | Description |
 | --- | --- |
-| `person` |  |
+| `people` |  |
 
 Operations: load.
 
@@ -328,7 +331,7 @@ API path: `/people/{playerId}`
 | Field | Description |
 | --- | --- |
 | `date` |  |
-| `game` |  |
+| `games` |  |
 
 Operations: list.
 
@@ -338,11 +341,11 @@ API path: `/schedule`
 
 | Field | Description |
 | --- | --- |
-| `jersey_number` |  |
+| `jerseyNumber` |  |
 | `person` |  |
 | `position` |  |
 | `status` |  |
-| `team` |  |
+| `teams` |  |
 
 Operations: list, load.
 
@@ -368,9 +371,9 @@ Create an instance: `const game_data = client.GameData()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `game_data` | `Record<string, any>` |  |
-| `live_data` | `Record<string, any>` |  |
-| `timestamp` | `any[]` |  |
+| `gameData` | `Record<string, any>` |  |
+| `liveData` | `Record<string, any>` |  |
+| `timestamps` | `any[]` |  |
 
 #### Example: Load
 
@@ -381,7 +384,7 @@ const game_data = await client.GameData().load({ game_pk: 'game_pk' })
 #### Example: List
 
 ```ts
-const game_datas = await client.GameData().list()
+const game_datas = await client.GameData().list({ game_pk: "example" })
 ```
 
 
@@ -399,7 +402,7 @@ Create an instance: `const player = client.Player()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `person` | `any[]` |  |
+| `people` | `any[]` |  |
 
 #### Example: Load
 
@@ -423,7 +426,7 @@ Create an instance: `const schedule = client.Schedule()`
 | Field | Type | Description |
 | --- | --- | --- |
 | `date` | `string` |  |
-| `game` | `any[]` |  |
+| `games` | `any[]` |  |
 
 #### Example: List
 
@@ -447,11 +450,11 @@ Create an instance: `const team = client.Team()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `jersey_number` | `string` |  |
+| `jerseyNumber` | `string` |  |
 | `person` | `Record<string, any>` |  |
 | `position` | `Record<string, any>` |  |
 | `status` | `Record<string, any>` |  |
-| `team` | `any[]` |  |
+| `teams` | `any[]` |  |
 
 #### Example: Load
 
@@ -462,7 +465,7 @@ const team = await client.Team().load({ id: 1 })
 #### Example: List
 
 ```ts
-const teams = await client.Team().list()
+const teams = await client.Team().list({ id: 1 })
 ```
 
 
@@ -535,11 +538,11 @@ stores the returned data and match criteria internally. Subsequent
 calls on the same instance can rely on this state.
 
 ```ts
-const gamedata = client.GameData()
-await gamedata.list()
+const schedule = client.Schedule()
+await schedule.list()
 
-// gamedata.data() now returns the gamedata data from the last `list`
-// gamedata.match() returns the last match criteria
+// schedule.data() now returns the schedule data from the last `list`
+// schedule.match() returns the last match criteria
 ```
 
 Call `make()` to create a fresh instance with the same configuration

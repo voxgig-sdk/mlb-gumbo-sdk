@@ -43,7 +43,7 @@ local gamedatas, err = client:GameData():list()
 if err then error(err) end
 
 for _, item in ipairs(gamedatas) do
-  print(item["game_data"])
+  print(item["gameData"])
 end
 ```
 
@@ -64,7 +64,7 @@ Entity operations return `(value, err)`. Check `err` before using
 the value:
 
 ```lua
-local gamedatas, err = client:GameData():list()
+local schedules, err = client:Schedule():list()
 if err then error(err) end
 ```
 
@@ -122,7 +122,7 @@ Create a mock client for unit testing — no server required:
 ```lua
 local client = sdk.test()
 
-local result, err = client:GameData():list()
+local result, err = client:Schedule():list()
 -- result is the returned data; err is set on failure
 ```
 
@@ -246,9 +246,9 @@ Only `direct()` returns a response envelope — a `table` with `ok`,
 
 | Field | Description |
 | --- | --- |
-| `game_data` |  |
-| `live_data` |  |
-| `timestamp` |  |
+| `gameData` |  |
+| `liveData` |  |
+| `timestamps` |  |
 
 Operations: List, Load.
 
@@ -258,7 +258,7 @@ API path: `/game/{game_pk}/feed/live/timestamps`
 
 | Field | Description |
 | --- | --- |
-| `person` |  |
+| `people` |  |
 
 Operations: Load.
 
@@ -269,7 +269,7 @@ API path: `/people/{playerId}`
 | Field | Description |
 | --- | --- |
 | `date` |  |
-| `game` |  |
+| `games` |  |
 
 Operations: List.
 
@@ -279,11 +279,11 @@ API path: `/schedule`
 
 | Field | Description |
 | --- | --- |
-| `jersey_number` |  |
+| `jerseyNumber` |  |
 | `person` |  |
 | `position` |  |
 | `status` |  |
-| `team` |  |
+| `teams` |  |
 
 Operations: List, Load.
 
@@ -309,9 +309,9 @@ Create an instance: `local game_data = client:GameData(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `game_data` | `table` |  |
-| `live_data` | `table` |  |
-| `timestamp` | `table` |  |
+| `gameData` | `table` |  |
+| `liveData` | `table` |  |
+| `timestamps` | `table` |  |
 
 #### Example: Load
 
@@ -340,7 +340,7 @@ Create an instance: `local player = client:Player(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `person` | `table` |  |
+| `people` | `table` |  |
 
 #### Example: Load
 
@@ -364,7 +364,7 @@ Create an instance: `local schedule = client:Schedule(nil)`
 | Field | Type | Description |
 | --- | --- | --- |
 | `date` | `string` |  |
-| `game` | `table` |  |
+| `games` | `table` |  |
 
 #### Example: List
 
@@ -388,11 +388,11 @@ Create an instance: `local team = client:Team(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `jersey_number` | `string` |  |
+| `jerseyNumber` | `string` |  |
 | `person` | `table` |  |
 | `position` | `table` |  |
 | `status` | `table` |  |
-| `team` | `table` |  |
+| `teams` | `table` |  |
 
 #### Example: Load
 
@@ -483,11 +483,11 @@ Entity instances are stateful. After a successful `list`, the entity
 stores the returned data and match criteria internally.
 
 ```lua
-local gamedata = client:GameData()
-gamedata:list()
+local schedule = client:Schedule()
+schedule:list()
 
--- gamedata:data_get() now returns the gamedata data from the last list
--- gamedata:match_get() returns the last match criteria
+-- schedule:data_get() now returns the schedule data from the last list
+-- schedule:match_get() returns the last match criteria
 ```
 
 Call `make()` to create a fresh instance with the same configuration

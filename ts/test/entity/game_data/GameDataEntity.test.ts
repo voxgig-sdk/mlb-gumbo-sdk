@@ -26,8 +26,8 @@ import {
 describe('GameDataEntity', async () => {
 
   // Per-test live pacing. Delay is read from sdk-test-control.json's
-  // `test.live.delayMs`; only sleeps when MLBGUMBO_TEST_LIVE=TRUE.
-  afterEach(liveDelay('MLBGUMBO_TEST_LIVE'))
+  // `test.live.delayMs`; only sleeps when MLB_GUMBO_TEST_LIVE=TRUE.
+  afterEach(liveDelay('MLB_GUMBO_TEST_LIVE'))
 
   test('instance', async () => {
     const testsdk = MlbGumboSDK.test()
@@ -64,7 +64,7 @@ describe('GameDataEntity', async () => {
     const game_data_ref01_match: any = {}
     game_data_ref01_match['game_pk'] = setup.idmap['game_pk01']
 
-    const game_data_ref01_list = await game_data_ref01_ent.list(game_data_ref01_match)
+    const game_data_ref01_list = (await game_data_ref01_ent.list(game_data_ref01_match)).map((e: any) => e.data())
 
 
 

@@ -43,7 +43,7 @@ error — iterate it directly.
 
 ```python
 try:
-    gamedatas = client.GameData().list()
+    gamedatas = client.GameData().list({"game_pk": "example"})
     for gamedata in gamedatas:
         print(gamedata)
 except Exception as err:
@@ -53,7 +53,7 @@ except Exception as err:
 ### 3. Load a gamedata
 
 GameData is nested under game_pk, so provide the `game_pk`.
-`load()` returns the bare record (a `dict`) and raises on error.
+`load()` returns the ENTITY — call data_get() for the record — and raises on error.
 
 ```python
 try:
@@ -70,8 +70,8 @@ Entity operations raise on failure, so wrap them in `try` / `except`:
 
 ```python
 try:
-    gamedatas = client.GameData().list()
-    print(gamedatas)
+    schedules = client.Schedule().list()
+    print(schedules)
 except Exception as err:
     print(f"list failed: {err}")
 ```
@@ -137,9 +137,10 @@ Create a mock client for unit testing — no server required:
 ```python
 client = MlbGumboSDK.test()
 
-# Entity ops return the bare record and raise on error.
-gamedata = client.GameData().list()
-# gamedata contains the mock response record
+# Entity ops return the ENTITY and raises on error;
+# call data_get() for the record.
+schedule = client.Schedule().list()
+# schedule contains the mock response record
 ```
 
 ### Use a custom fetch function
@@ -237,7 +238,7 @@ All entities share the same interface.
 
 ### Result shape
 
-Entity operations return the bare result data (a `dict` for single-entity
+Entity operations return the ENTITY (call data_get() for the record) (a `dict` for single-entity
 ops, a `list` for `list`) and raise on error. Wrap calls in
 `try`/`except` to handle failures.
 
@@ -259,9 +260,9 @@ On error, `ok` is `False` and `err` contains the error value.
 
 | Field | Description |
 | --- | --- |
-| `game_data` |  |
-| `live_data` |  |
-| `timestamp` |  |
+| `gameData` |  |
+| `liveData` |  |
+| `timestamps` |  |
 
 Operations: List, Load.
 
@@ -271,7 +272,7 @@ API path: `/game/{game_pk}/feed/live/timestamps`
 
 | Field | Description |
 | --- | --- |
-| `person` |  |
+| `people` |  |
 
 Operations: Load.
 
@@ -282,7 +283,7 @@ API path: `/people/{playerId}`
 | Field | Description |
 | --- | --- |
 | `date` |  |
-| `game` |  |
+| `games` |  |
 
 Operations: List.
 
@@ -292,11 +293,11 @@ API path: `/schedule`
 
 | Field | Description |
 | --- | --- |
-| `jersey_number` |  |
+| `jerseyNumber` |  |
 | `person` |  |
 | `position` |  |
 | `status` |  |
-| `team` |  |
+| `teams` |  |
 
 Operations: List, Load.
 
@@ -322,9 +323,9 @@ Create an instance: `game_data = client.GameData()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `game_data` | `dict` |  |
-| `live_data` | `dict` |  |
-| `timestamp` | `list` |  |
+| `gameData` | `dict` |  |
+| `liveData` | `dict` |  |
+| `timestamps` | `list` |  |
 
 #### Example: Load
 
@@ -335,7 +336,7 @@ game_data = client.GameData().load({"game_pk": "game_pk"})
 #### Example: List
 
 ```python
-game_datas = client.GameData().list()
+game_datas = client.GameData().list({"game_pk": "example"})
 ```
 
 
@@ -353,7 +354,7 @@ Create an instance: `player = client.Player()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `person` | `list` |  |
+| `people` | `list` |  |
 
 #### Example: Load
 
@@ -377,7 +378,7 @@ Create an instance: `schedule = client.Schedule()`
 | Field | Type | Description |
 | --- | --- | --- |
 | `date` | `str` |  |
-| `game` | `list` |  |
+| `games` | `list` |  |
 
 #### Example: List
 
@@ -401,11 +402,11 @@ Create an instance: `team = client.Team()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `jersey_number` | `str` |  |
+| `jerseyNumber` | `str` |  |
 | `person` | `dict` |  |
 | `position` | `dict` |  |
 | `status` | `dict` |  |
-| `team` | `list` |  |
+| `teams` | `list` |  |
 
 #### Example: Load
 
@@ -416,7 +417,7 @@ team = client.Team().load({"id": 1})
 #### Example: List
 
 ```python
-teams = client.Team().list()
+teams = client.Team().list({"id": 1})
 ```
 
 
@@ -495,11 +496,11 @@ Entity instances are stateful. After a successful `list`, the entity
 stores the returned data and match criteria internally.
 
 ```python
-gamedata = client.GameData()
-gamedata.list()
+schedule = client.Schedule()
+schedule.list()
 
-# gamedata.data_get() now returns the gamedata data from the last list
-# gamedata.match_get() returns the last match criteria
+# schedule.data_get() now returns the schedule data from the last list
+# schedule.match_get() returns the last match criteria
 ```
 
 Call `make()` to create a fresh instance with the same configuration

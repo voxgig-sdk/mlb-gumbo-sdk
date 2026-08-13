@@ -15,9 +15,9 @@ declare(strict_types=1);
 /** GameData entity data model. */
 class GameData
 {
-    public ?array $game_data = null;
-    public ?array $live_data = null;
-    public ?array $timestamp = null;
+    public ?array $gameData = null;
+    public ?array $liveData = null;
+    public ?array $timestamps = null;
 }
 
 /** Request payload for GameData#load. */
@@ -35,7 +35,7 @@ class GameDataListMatch
 /** Player entity data model. */
 class Player
 {
-    public ?array $person = null;
+    public ?array $people = null;
 }
 
 /** Request payload for Player#load. */
@@ -48,24 +48,24 @@ class PlayerLoadMatch
 class Schedule
 {
     public ?string $date = null;
-    public ?array $game = null;
+    public ?array $games = null;
 }
 
 /** Request payload for Schedule#list. */
 class ScheduleListMatch
 {
     public ?string $date = null;
-    public ?array $game = null;
+    public ?array $games = null;
 }
 
 /** Team entity data model. */
 class Team
 {
-    public ?string $jersey_number = null;
+    public ?string $jerseyNumber = null;
     public ?array $person = null;
     public ?array $position = null;
     public ?array $status = null;
-    public ?array $team = null;
+    public ?array $teams = null;
 }
 
 /** Request payload for Team#load. */

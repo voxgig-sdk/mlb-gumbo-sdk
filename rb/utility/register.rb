@@ -24,6 +24,7 @@ require_relative 'prepare_method'
 require_relative 'prepare_params'
 require_relative 'prepare_path'
 require_relative 'prepare_query'
+require_relative 'graphql'
 require_relative 'result_basic'
 require_relative 'result_body'
 require_relative 'result_headers'
@@ -55,6 +56,8 @@ MlbGumboUtility.registrar = ->(u) {
   u.prepare_params = MlbGumboUtilities::PrepareParams
   u.prepare_path = MlbGumboUtilities::PreparePath
   u.prepare_query = MlbGumboUtilities::PrepareQuery
+  u.graphql_body = MlbGumboUtilities::GraphqlBody
+  u.graphql_errors = MlbGumboUtilities::GraphqlErrors
   u.result_basic = MlbGumboUtilities::ResultBasic
   u.result_body = MlbGumboUtilities::ResultBody
   u.result_headers = MlbGumboUtilities::ResultHeaders

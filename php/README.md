@@ -38,7 +38,7 @@ try {
     // list() returns an array of GameData records — iterate directly.
     $gamedatas = $client->GameData()->list();
     foreach ($gamedatas as $item) {
-        echo $item["game_data"] . "\n";
+        echo $item["gameData"] . "\n";
     }
 } catch (\Throwable $err) {
     echo "Error: " . $err->getMessage();
@@ -51,7 +51,7 @@ GameData is nested under game_pk, so provide the `game_pk`.
 
 ```php
 try {
-    // load() returns the bare GameData record (throws on error).
+    // load() returns the ENTITY — call data_get() for the GameData record (throws on error).
     $gamedata = $client->GameData()->load(["game_pk" => "example_game_pk"]);
     print_r($gamedata);
 } catch (\Throwable $err) {
@@ -67,7 +67,7 @@ Entity operations throw a `\Throwable` on failure, so wrap them in
 
 ```php
 try {
-    $gamedatas = $client->GameData()->list();
+    $schedules = $client->Schedule()->list();
 } catch (\Throwable $err) {
     echo "Error: " . $err->getMessage();
 }
@@ -139,9 +139,10 @@ Create a mock client for unit testing — no server required:
 ```php
 $client = MlbGumboSDK::test();
 
-// Entity ops return the bare mock record (throws on error).
-$gamedata = $client->GameData()->list();
-print_r($gamedata);
+// Entity ops return the ENTITY (throws on error);
+// call data_get() for the mock record.
+$schedule = $client->Schedule()->list();
+print_r($schedule);
 ```
 
 ### Use a custom fetch function
@@ -242,7 +243,7 @@ All entities share the same interface.
 
 ### Result shape
 
-Entity operations return the bare result data (an `array` for single-entity
+Entity operations return the ENTITY (call data_get() for the record) (an `array` for single-entity
 ops, a `list` for `list`) and throw on error. Wrap calls in
 `try`/`catch` to handle failures.
 
@@ -264,9 +265,9 @@ On error, `ok` is `false` and `$err` contains the error value.
 
 | Field | Description |
 | --- | --- |
-| `game_data` |  |
-| `live_data` |  |
-| `timestamp` |  |
+| `gameData` |  |
+| `liveData` |  |
+| `timestamps` |  |
 
 Operations: List, Load.
 
@@ -276,7 +277,7 @@ API path: `/game/{game_pk}/feed/live/timestamps`
 
 | Field | Description |
 | --- | --- |
-| `person` |  |
+| `people` |  |
 
 Operations: Load.
 
@@ -287,7 +288,7 @@ API path: `/people/{playerId}`
 | Field | Description |
 | --- | --- |
 | `date` |  |
-| `game` |  |
+| `games` |  |
 
 Operations: List.
 
@@ -297,11 +298,11 @@ API path: `/schedule`
 
 | Field | Description |
 | --- | --- |
-| `jersey_number` |  |
+| `jerseyNumber` |  |
 | `person` |  |
 | `position` |  |
 | `status` |  |
-| `team` |  |
+| `teams` |  |
 
 Operations: List, Load.
 
@@ -327,14 +328,14 @@ Create an instance: `$game_data = $client->GameData();`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `game_data` | `array` |  |
-| `live_data` | `array` |  |
-| `timestamp` | `array` |  |
+| `gameData` | `array` |  |
+| `liveData` | `array` |  |
+| `timestamps` | `array` |  |
 
 #### Example: Load
 
 ```php
-// load() returns the bare GameData record (throws on error).
+// load() returns the ENTITY — call data_get() for the GameData record (throws on error).
 $game_data = $client->GameData()->load(["game_pk" => "game_pk"]);
 ```
 
@@ -360,12 +361,12 @@ Create an instance: `$player = $client->Player();`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `person` | `array` |  |
+| `people` | `array` |  |
 
 #### Example: Load
 
 ```php
-// load() returns the bare Player record (throws on error).
+// load() returns the ENTITY — call data_get() for the Player record (throws on error).
 $player = $client->Player()->load(["player_id" => 1]);
 ```
 
@@ -385,7 +386,7 @@ Create an instance: `$schedule = $client->Schedule();`
 | Field | Type | Description |
 | --- | --- | --- |
 | `date` | `string` |  |
-| `game` | `array` |  |
+| `games` | `array` |  |
 
 #### Example: List
 
@@ -410,16 +411,16 @@ Create an instance: `$team = $client->Team();`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `jersey_number` | `string` |  |
+| `jerseyNumber` | `string` |  |
 | `person` | `array` |  |
 | `position` | `array` |  |
 | `status` | `array` |  |
-| `team` | `array` |  |
+| `teams` | `array` |  |
 
 #### Example: Load
 
 ```php
-// load() returns the bare Team record (throws on error).
+// load() returns the ENTITY — call data_get() for the Team record (throws on error).
 $team = $client->Team()->load(["id" => 1]);
 ```
 
@@ -507,11 +508,11 @@ Entity instances are stateful. After a successful `list`, the entity
 stores the returned data and match criteria internally.
 
 ```php
-$gamedata = $client->GameData();
-$gamedata->list();
+$schedule = $client->Schedule();
+$schedule->list();
 
-// $gamedata->data_get() now returns the gamedata data from the last list
-// $gamedata->match_get() returns the last match criteria
+// $schedule->data_get() now returns the schedule data from the last list
+// $schedule->match_get() returns the last match criteria
 ```
 
 Call `make()` to create a fresh instance with the same configuration

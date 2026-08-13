@@ -6,17 +6,17 @@ main: kit: entity: game_data: {
 
   fields: [
     {
-      name: "game_data"
+      name: "gameData"
       req: false
       type: "`$OBJECT`"
     }
     {
-      name: "live_data"
+      name: "liveData"
       req: false
       type: "`$OBJECT`"
     }
     {
-      name: "timestamp"
+      name: "timestamps"
       req: false
       type: "`$ARRAY`"
     }
@@ -56,7 +56,7 @@ main: kit: entity: game_data: {
           }
           transform: {
             req: "`reqdata`"
-            res: "`body`"
+            res: "`body.timestamps`"
           }
         }
       ]

@@ -11,7 +11,7 @@ main: kit: entity: schedule: {
       type: "`$STRING`"
     }
     {
-      name: "game"
+      name: "games"
       req: false
       type: "`$ARRAY`"
     }
@@ -82,7 +82,7 @@ main: kit: entity: schedule: {
           }
           transform: {
             req: "`reqdata`"
-            res: "`body`"
+            res: "`body.dates`"
           }
         }
       ]

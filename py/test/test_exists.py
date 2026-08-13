@@ -1,4 +1,4 @@
-# ProjectName SDK exists test
+# MlbGumbo SDK exists test
 
 import pytest
 from mlbgumbo_sdk import MlbGumboSDK

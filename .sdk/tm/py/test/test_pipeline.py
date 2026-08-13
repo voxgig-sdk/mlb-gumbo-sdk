@@ -16,11 +16,11 @@
 import pytest
 
 from projectname_sdk import MlbGumboSDK
-from core.error import MlbGumboError
-from core.result import MlbGumboResult
-from core.response import MlbGumboResponse
-from core.spec import MlbGumboSpec
-from feature.base_feature import MlbGumboBaseFeature
+from projectname_sdk.core.error import MlbGumboError
+from projectname_sdk.core.result import MlbGumboResult
+from projectname_sdk.core.response import MlbGumboResponse
+from projectname_sdk.core.spec import MlbGumboSpec
+from projectname_sdk.feature.base_feature import MlbGumboBaseFeature
 
 
 def _client():

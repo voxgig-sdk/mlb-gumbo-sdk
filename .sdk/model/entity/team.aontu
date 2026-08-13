@@ -6,7 +6,7 @@ main: kit: entity: team: {
 
   fields: [
     {
-      name: "jersey_number"
+      name: "jerseyNumber"
       req: false
       type: "`$STRING`"
     }
@@ -26,7 +26,7 @@ main: kit: entity: team: {
       type: "`$OBJECT`"
     }
     {
-      name: "team"
+      name: "teams"
       req: false
       type: "`$ARRAY`"
     }
@@ -89,7 +89,7 @@ main: kit: entity: team: {
           }
           transform: {
             req: "`reqdata`"
-            res: "`body`"
+            res: "`body.roster`"
           }
         }
       ]

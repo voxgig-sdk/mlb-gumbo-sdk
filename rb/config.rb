@@ -30,21 +30,21 @@ module MlbGumboConfig
           "fields" => [
             {
               "active" => true,
-              "name" => "game_data",
+              "name" => "gameData",
               "req" => false,
               "type" => "`$OBJECT`",
               "index$" => 0,
             },
             {
               "active" => true,
-              "name" => "live_data",
+              "name" => "liveData",
               "req" => false,
               "type" => "`$OBJECT`",
               "index$" => 1,
             },
             {
               "active" => true,
-              "name" => "timestamp",
+              "name" => "timestamps",
               "req" => false,
               "type" => "`$ARRAY`",
               "index$" => 2,
@@ -72,6 +72,7 @@ module MlbGumboConfig
                       },
                     ],
                   },
+                  "kind" => "http",
                   "method" => "GET",
                   "orig" => "/game/{game_pk}/feed/live/timestamps",
                   "parts" => [
@@ -88,7 +89,7 @@ module MlbGumboConfig
                   },
                   "transform" => {
                     "req" => "`reqdata`",
-                    "res" => "`body`",
+                    "res" => "`body.timestamps`",
                   },
                   "index$" => 0,
                 },
@@ -143,6 +144,7 @@ module MlbGumboConfig
                       },
                     ],
                   },
+                  "kind" => "http",
                   "method" => "GET",
                   "orig" => "/game/{game_pk}/feed/live",
                   "parts" => [
@@ -181,7 +183,7 @@ module MlbGumboConfig
           "fields" => [
             {
               "active" => true,
-              "name" => "person",
+              "name" => "people",
               "req" => false,
               "type" => "`$ARRAY`",
               "index$" => 0,
@@ -229,6 +231,7 @@ module MlbGumboConfig
                       },
                     ],
                   },
+                  "kind" => "http",
                   "method" => "GET",
                   "orig" => "/people/{playerId}",
                   "parts" => [
@@ -276,7 +279,7 @@ module MlbGumboConfig
             },
             {
               "active" => true,
-              "name" => "game",
+              "name" => "games",
               "req" => false,
               "type" => "`$ARRAY`",
               "index$" => 1,
@@ -338,6 +341,7 @@ module MlbGumboConfig
                       },
                     ],
                   },
+                  "kind" => "http",
                   "method" => "GET",
                   "orig" => "/schedule",
                   "parts" => [
@@ -354,7 +358,7 @@ module MlbGumboConfig
                   },
                   "transform" => {
                     "req" => "`reqdata`",
-                    "res" => "`body`",
+                    "res" => "`body.dates`",
                   },
                   "index$" => 0,
                 },
@@ -370,7 +374,7 @@ module MlbGumboConfig
           "fields" => [
             {
               "active" => true,
-              "name" => "jersey_number",
+              "name" => "jerseyNumber",
               "req" => false,
               "type" => "`$STRING`",
               "index$" => 0,
@@ -398,7 +402,7 @@ module MlbGumboConfig
             },
             {
               "active" => true,
-              "name" => "team",
+              "name" => "teams",
               "req" => false,
               "type" => "`$ARRAY`",
               "index$" => 4,
@@ -445,6 +449,7 @@ module MlbGumboConfig
                       },
                     ],
                   },
+                  "kind" => "http",
                   "method" => "GET",
                   "orig" => "/teams/{teamId}/roster",
                   "parts" => [
@@ -467,7 +472,7 @@ module MlbGumboConfig
                   },
                   "transform" => {
                     "req" => "`reqdata`",
-                    "res" => "`body`",
+                    "res" => "`body.roster`",
                   },
                   "index$" => 0,
                 },
@@ -513,6 +518,7 @@ module MlbGumboConfig
                       },
                     ],
                   },
+                  "kind" => "http",
                   "method" => "GET",
                   "orig" => "/teams/{teamId}",
                   "parts" => [

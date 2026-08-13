@@ -7,9 +7,9 @@
 -- edit by hand.
 
 ---@class GameData
----@field game_data? table
----@field live_data? table
----@field timestamp? table
+---@field gameData? table
+---@field liveData? table
+---@field timestamps? table
 
 ---@class GameDataLoadMatch
 ---@field game_pk string
@@ -18,25 +18,25 @@
 ---@field game_pk string
 
 ---@class Player
----@field person? table
+---@field people? table
 
 ---@class PlayerLoadMatch
 ---@field player_id number
 
 ---@class Schedule
 ---@field date? string
----@field game? table
+---@field games? table
 
 ---@class ScheduleListMatch
 ---@field date? string
----@field game? table
+---@field games? table
 
 ---@class Team
----@field jersey_number? string
+---@field jerseyNumber? string
 ---@field person? table
 ---@field position? table
 ---@field status? table
----@field team? table
+---@field teams? table
 
 ---@class TeamLoadMatch
 ---@field id number

@@ -102,9 +102,9 @@ local game_data = client:GameData(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `game_data` | `table` | No |  |
-| `live_data` | `table` | No |  |
-| `timestamp` | `table` | No |  |
+| `gameData` | `table` | No |  |
+| `liveData` | `table` | No |  |
+| `timestamps` | `table` | No |  |
 
 ### Operations
 
@@ -164,7 +164,7 @@ local player = client:Player(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `person` | `table` | No |  |
+| `people` | `table` | No |  |
 
 ### Operations
 
@@ -217,7 +217,7 @@ local schedule = client:Schedule(nil)
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `date` | `string` | No |  |
-| `game` | `table` | No |  |
+| `games` | `table` | No |  |
 
 ### Operations
 
@@ -269,11 +269,11 @@ local team = client:Team(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `jersey_number` | `string` | No |  |
+| `jerseyNumber` | `string` | No |  |
 | `person` | `table` | No |  |
 | `position` | `table` | No |  |
 | `status` | `table` | No |  |
-| `team` | `table` | No |  |
+| `teams` | `table` | No |  |
 
 ### Operations
 

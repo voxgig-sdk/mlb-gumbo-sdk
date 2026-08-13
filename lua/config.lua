@@ -29,21 +29,21 @@ local function make_config()
         ["fields"] = {
           {
             ["active"] = true,
-            ["name"] = "game_data",
+            ["name"] = "gameData",
             ["req"] = false,
             ["type"] = "`$OBJECT`",
             ["index$"] = 0,
           },
           {
             ["active"] = true,
-            ["name"] = "live_data",
+            ["name"] = "liveData",
             ["req"] = false,
             ["type"] = "`$OBJECT`",
             ["index$"] = 1,
           },
           {
             ["active"] = true,
-            ["name"] = "timestamp",
+            ["name"] = "timestamps",
             ["req"] = false,
             ["type"] = "`$ARRAY`",
             ["index$"] = 2,
@@ -71,6 +71,7 @@ local function make_config()
                     },
                   },
                 },
+                ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/game/{game_pk}/feed/live/timestamps",
                 ["parts"] = {
@@ -87,7 +88,7 @@ local function make_config()
                 },
                 ["transform"] = {
                   ["req"] = "`reqdata`",
-                  ["res"] = "`body`",
+                  ["res"] = "`body.timestamps`",
                 },
                 ["index$"] = 0,
               },
@@ -142,6 +143,7 @@ local function make_config()
                     },
                   },
                 },
+                ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/game/{game_pk}/feed/live",
                 ["parts"] = {
@@ -180,7 +182,7 @@ local function make_config()
         ["fields"] = {
           {
             ["active"] = true,
-            ["name"] = "person",
+            ["name"] = "people",
             ["req"] = false,
             ["type"] = "`$ARRAY`",
             ["index$"] = 0,
@@ -228,6 +230,7 @@ local function make_config()
                     },
                   },
                 },
+                ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/people/{playerId}",
                 ["parts"] = {
@@ -275,7 +278,7 @@ local function make_config()
           },
           {
             ["active"] = true,
-            ["name"] = "game",
+            ["name"] = "games",
             ["req"] = false,
             ["type"] = "`$ARRAY`",
             ["index$"] = 1,
@@ -337,6 +340,7 @@ local function make_config()
                     },
                   },
                 },
+                ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/schedule",
                 ["parts"] = {
@@ -353,7 +357,7 @@ local function make_config()
                 },
                 ["transform"] = {
                   ["req"] = "`reqdata`",
-                  ["res"] = "`body`",
+                  ["res"] = "`body.dates`",
                 },
                 ["index$"] = 0,
               },
@@ -369,7 +373,7 @@ local function make_config()
         ["fields"] = {
           {
             ["active"] = true,
-            ["name"] = "jersey_number",
+            ["name"] = "jerseyNumber",
             ["req"] = false,
             ["type"] = "`$STRING`",
             ["index$"] = 0,
@@ -397,7 +401,7 @@ local function make_config()
           },
           {
             ["active"] = true,
-            ["name"] = "team",
+            ["name"] = "teams",
             ["req"] = false,
             ["type"] = "`$ARRAY`",
             ["index$"] = 4,
@@ -444,6 +448,7 @@ local function make_config()
                     },
                   },
                 },
+                ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/teams/{teamId}/roster",
                 ["parts"] = {
@@ -466,7 +471,7 @@ local function make_config()
                 },
                 ["transform"] = {
                   ["req"] = "`reqdata`",
-                  ["res"] = "`body`",
+                  ["res"] = "`body.roster`",
                 },
                 ["index$"] = 0,
               },
@@ -512,6 +517,7 @@ local function make_config()
                     },
                   },
                 },
+                ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/teams/{teamId}",
                 ["parts"] = {

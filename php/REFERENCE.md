@@ -104,9 +104,9 @@ $game_data = $client->GameData();
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `game_data` | `array` | No |  |
-| `live_data` | `array` | No |  |
-| `timestamp` | `array` | No |  |
+| `gameData` | `array` | No |  |
+| `liveData` | `array` | No |  |
+| `timestamps` | `array` | No |  |
 
 ### Operations
 
@@ -166,7 +166,7 @@ $player = $client->Player();
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `person` | `array` | No |  |
+| `people` | `array` | No |  |
 
 ### Operations
 
@@ -219,7 +219,7 @@ $schedule = $client->Schedule();
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `date` | `string` | No |  |
-| `game` | `array` | No |  |
+| `games` | `array` | No |  |
 
 ### Operations
 
@@ -271,11 +271,11 @@ $team = $client->Team();
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `jersey_number` | `string` | No |  |
+| `jerseyNumber` | `string` | No |  |
 | `person` | `array` | No |  |
 | `position` | `array` | No |  |
 | `status` | `array` | No |  |
-| `team` | `array` | No |  |
+| `teams` | `array` | No |  |
 
 ### Operations
 

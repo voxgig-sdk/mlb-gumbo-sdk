@@ -23,7 +23,7 @@ support (`list`, `load`):
 
 ```ts
 const client = new MlbGumboSDK()
-const items = await client.GameData().list()
+const items = await client.GameData().list({ game_pk: "example" })
 ```
 
 Thinking in entities keeps the mental model small — for people and AI agents alike —
@@ -38,18 +38,27 @@ network, and no credentials:
 ### TypeScript
 
 ```ts
-const client = MlbGumboSDK.test()
-const gamedatas = await client.GameData().list()
-// gamedatas is an array of bare GameData records populated with mock data
-console.log(gamedatas)
+// The offline mock starts EMPTY — seed it with the records the test needs.
+// Shape: { entity: { <entity-name>: { <id>: <record> } } }
+const client = MlbGumboSDK.test({
+  entity: {
+    schedule: {
+      test01: { id: 'test01' },
+    },
+  },
+})
+const schedules = await client.Schedule().list()
+// schedules is an array of Schedule entities, populated with mock data
+// — call schedules[0].data() for the record itself
+console.log(schedules)
 ```
 
 ### Python
 
 ```python
 client = MlbGumboSDK.test()
-gamedatas = client.GameData().list()
-print(gamedatas)
+schedules = client.Schedule().list()
+print(schedules)
 ```
 
 ### PHP
@@ -57,16 +66,16 @@ print(gamedatas)
 ```php
 // Seed fixture data so offline calls resolve without a live server.
 $client = MlbGumboSDK::test([
-    "entity" => ["gamedata" => ["test01" => []]],
+    "entity" => ["schedule" => ["test01" => []]],
 ]);
-$gamedatas = $client->GameData()->list();
+$schedules = $client->Schedule()->list();
 ```
 
 ### Golang
 
 ```go
 client := sdk.Test()
-result, err := client.GameData(nil).List(
+result, err := client.Schedule(nil).List(
     nil, nil,
 )
 ```
@@ -76,16 +85,16 @@ result, err := client.GameData(nil).List(
 ```ruby
 # Seed fixture data so offline calls resolve without a live server.
 client = MlbGumboSDK.test({
-  "entity" => { "gamedata" => { "test01" => {} } },
+  "entity" => { "schedule" => { "test01" => {} } },
 })
-gamedatas = client.GameData.list()
+schedules = client.Schedule.list()
 ```
 
 ### Lua
 
 ```lua
 local client = sdk.test()
-local results, err = client:GameData():list()
+local results, err = client:Schedule():list()
 ```
 
 ## Packages
@@ -110,8 +119,8 @@ import { MlbGumboSDK } from '@voxgig-sdk/mlb-gumbo'
 
 const client = new MlbGumboSDK()
 
-// List all gamedatas (returns GameData[])
-const gamedatas = await client.GameData().list()
+// List all gamedatas (returns GameDataEntity[] — .data() for the record)
+const gamedatas = await client.GameData().list({ game_pk: "example" })
 for (const gamedata of gamedatas) {
   console.log(gamedata)
 }
@@ -179,7 +188,7 @@ from mlbgumbo_sdk import MlbGumboSDK
 client = MlbGumboSDK()
 
 # List all gamedatas (returns a list, raises on error)
-gamedatas = client.GameData().list()
+gamedatas = client.GameData().list({"game_pk": "example"})
 for gamedata in gamedatas:
     print(gamedata)
 
@@ -200,7 +209,7 @@ $client = new MlbGumboSDK();
 $gamedatas = $client->GameData()->list();
 print_r($gamedatas);
 
-// Load a specific gamedata (returns the bare record; throws on error)
+// Load a specific gamedata (returns the ENTITY; call data_get() for the record; throws on error)
 $gamedata = $client->GameData()->load(["game_pk" => "example_game_pk"]);
 print_r($gamedata);
 ```
@@ -240,7 +249,7 @@ client = MlbGumboSDK.new
 gamedatas = client.GameData.list
 puts gamedatas
 
-# Load a specific gamedata (returns the bare record; raises on error)
+# Load a specific gamedata (returns the ENTITY; call data_get for the record)
 gamedata = client.GameData.load({ "game_pk" => "example_game_pk" })
 puts gamedata
 ```
@@ -377,6 +386,9 @@ Pass custom features via the `extend` option at construction time.
 
 This SDK is generated from the upstream OpenAPI specification. It is an
 unofficial client and is not affiliated with the API provider.
+
+The OpenAPI spec(s) this SDK was generated from are kept in the
+[`.sdk/def/`](.sdk/def/) folder.
 
 - Upstream API: [https://github.com/MajorLeagueBaseball/google-cloud-mlb-hackathon](https://github.com/MajorLeagueBaseball/google-cloud-mlb-hackathon)
 

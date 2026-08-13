@@ -127,11 +127,11 @@ function team_direct_setup(mockres)
   local calls = {}
 
   local env = runner.env_override({
-    ["MLBGUMBO_TEST_TEAM_ENTID"] = {},
-    ["MLBGUMBO_TEST_LIVE"] = "FALSE",
+    ["MLB_GUMBO_TEST_TEAM_ENTID"] = {},
+    ["MLB_GUMBO_TEST_LIVE"] = "FALSE",
   })
 
-  local live = env["MLBGUMBO_TEST_LIVE"] == "TRUE"
+  local live = env["MLB_GUMBO_TEST_LIVE"] == "TRUE"
 
   if live then
     local merged_opts = {

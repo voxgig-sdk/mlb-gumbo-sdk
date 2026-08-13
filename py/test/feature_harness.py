@@ -14,12 +14,12 @@ from __future__ import annotations
 
 from urllib.parse import quote
 
-from config import make_config
-from features import _make_feature
-from core.control import MlbGumboControl
-from core.error import MlbGumboError
-from core.result import MlbGumboResult
-from core.spec import MlbGumboSpec
+from mlbgumbo_sdk.config import make_config
+from mlbgumbo_sdk.features import _make_feature
+from mlbgumbo_sdk.core.control import MlbGumboControl
+from mlbgumbo_sdk.core.error import MlbGumboError
+from mlbgumbo_sdk.core.result import MlbGumboResult
+from mlbgumbo_sdk.core.spec import MlbGumboSpec
 
 
 # True when this SDK was generated with the named feature.

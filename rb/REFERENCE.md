@@ -105,9 +105,9 @@ game_data = client.GameData
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `game_data` | `Hash` | No |  |
-| `live_data` | `Hash` | No |  |
-| `timestamp` | `Array` | No |  |
+| `gameData` | `Hash` | No |  |
+| `liveData` | `Hash` | No |  |
+| `timestamps` | `Array` | No |  |
 
 ### Operations
 
@@ -167,7 +167,7 @@ player = client.Player
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `person` | `Array` | No |  |
+| `people` | `Array` | No |  |
 
 ### Operations
 
@@ -220,7 +220,7 @@ schedule = client.Schedule
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `date` | `String` | No |  |
-| `game` | `Array` | No |  |
+| `games` | `Array` | No |  |
 
 ### Operations
 
@@ -272,11 +272,11 @@ team = client.Team
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `jersey_number` | `String` | No |  |
+| `jerseyNumber` | `String` | No |  |
 | `person` | `Hash` | No |  |
 | `position` | `Hash` | No |  |
 | `status` | `Hash` | No |  |
-| `team` | `Array` | No |  |
+| `teams` | `Array` | No |  |
 
 ### Operations
 

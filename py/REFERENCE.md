@@ -99,9 +99,9 @@ game_data = client.GameData()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `game_data` | `dict` | No |  |
-| `live_data` | `dict` | No |  |
-| `timestamp` | `list` | No |  |
+| `gameData` | `dict` | No |  |
+| `liveData` | `dict` | No |  |
+| `timestamps` | `list` | No |  |
 
 ### Operations
 
@@ -110,7 +110,7 @@ game_data = client.GameData()
 List entities matching the given criteria. The match is optional — call `list()` with no argument to list all records. Returns a list and raises on error.
 
 ```python
-results = client.GameData().list()
+results = client.GameData().list({"game_pk": "example"})
 for game_data in results:
     print(game_data)
 ```
@@ -162,7 +162,7 @@ player = client.Player()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `person` | `list` | No |  |
+| `people` | `list` | No |  |
 
 ### Operations
 
@@ -214,7 +214,7 @@ schedule = client.Schedule()
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `date` | `str` | No |  |
-| `game` | `list` | No |  |
+| `games` | `list` | No |  |
 
 ### Operations
 
@@ -267,11 +267,11 @@ team = client.Team()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `jersey_number` | `str` | No |  |
+| `jerseyNumber` | `str` | No |  |
 | `person` | `dict` | No |  |
 | `position` | `dict` | No |  |
 | `status` | `dict` | No |  |
-| `team` | `list` | No |  |
+| `teams` | `list` | No |  |
 
 ### Operations
 
@@ -280,7 +280,7 @@ team = client.Team()
 List entities matching the given criteria. The match is optional — call `list()` with no argument to list all records. Returns a list and raises on error.
 
 ```python
-results = client.Team().list()
+results = client.Team().list({"id": 1})
 for team in results:
     print(team)
 ```
