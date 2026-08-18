@@ -36,7 +36,7 @@ class Config {
 
 
   options = {
-    base: 'https://statsapi.mlb.com/api/v1.1',
+    base: "https://statsapi.mlb.com/api/v1.1",
 
     headers: {
       "content-type": "application/json"
@@ -64,25 +64,16 @@ class Config {
     "game_data": {
       "fields": [
         {
-          "active": true,
           "name": "gameData",
-          "req": false,
-          "type": "`$OBJECT`",
-          "index$": 0
+          "type": "`$OBJECT`"
         },
         {
-          "active": true,
           "name": "liveData",
-          "req": false,
-          "type": "`$OBJECT`",
-          "index$": 1
+          "type": "`$OBJECT`"
         },
         {
-          "active": true,
           "name": "timestamps",
-          "req": false,
-          "type": "`$ARRAY`",
-          "index$": 2
+          "type": "`$ARRAY`"
         }
       ],
       "name": "game_data",
@@ -92,18 +83,15 @@ class Config {
           "name": "list",
           "points": [
             {
-              "active": true,
               "args": {
                 "params": [
                   {
-                    "active": true,
                     "example": "716463",
                     "kind": "param",
                     "name": "game_pk",
                     "orig": "game_pk",
                     "reqd": true,
-                    "type": "`$STRING`",
-                    "index$": 0
+                    "type": "`$STRING`"
                   }
                 ]
               },
@@ -125,56 +113,45 @@ class Config {
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body.timestamps`"
-              },
-              "index$": 0
+              }
             }
-          ],
-          "key$": "list"
+          ]
         },
         "load": {
           "input": "data",
           "name": "load",
           "points": [
             {
-              "active": true,
               "args": {
                 "params": [
                   {
-                    "active": true,
                     "example": "716463",
                     "kind": "param",
                     "name": "game_pk",
                     "orig": "game_pk",
                     "reqd": true,
-                    "type": "`$STRING`",
-                    "index$": 0
+                    "type": "`$STRING`"
                   }
                 ],
                 "query": [
                   {
-                    "active": true,
                     "kind": "query",
                     "name": "field",
                     "orig": "field",
-                    "reqd": false,
                     "type": "`$STRING`"
                   },
                   {
-                    "active": true,
                     "example": "stats,team",
                     "kind": "query",
                     "name": "hydrate",
                     "orig": "hydrate",
-                    "reqd": false,
                     "type": "`$STRING`"
                   },
                   {
-                    "active": true,
                     "example": "20240315_123456",
                     "kind": "query",
                     "name": "timecode",
                     "orig": "timecode",
-                    "reqd": false,
                     "type": "`$STRING`"
                   }
                 ]
@@ -199,11 +176,9 @@ class Config {
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body`"
-              },
-              "index$": 0
+              }
             }
-          ],
-          "key$": "load"
+          ]
         }
       },
       "relations": {
@@ -217,11 +192,8 @@ class Config {
     "player": {
       "fields": [
         {
-          "active": true,
           "name": "people",
-          "req": false,
-          "type": "`$ARRAY`",
-          "index$": 0
+          "type": "`$ARRAY`"
         }
       ],
       "name": "player",
@@ -231,37 +203,30 @@ class Config {
           "name": "load",
           "points": [
             {
-              "active": true,
               "args": {
                 "params": [
                   {
-                    "active": true,
                     "example": 660271,
                     "kind": "param",
                     "name": "player_id",
                     "orig": "player_id",
                     "reqd": true,
-                    "type": "`$INTEGER`",
-                    "index$": 0
+                    "type": "`$INTEGER`"
                   }
                 ],
                 "query": [
                   {
-                    "active": true,
                     "example": "stats,currentTeam",
                     "kind": "query",
                     "name": "hydrate",
                     "orig": "hydrate",
-                    "reqd": false,
                     "type": "`$STRING`"
                   },
                   {
-                    "active": true,
                     "example": 2024,
                     "kind": "query",
                     "name": "season",
                     "orig": "season",
-                    "reqd": false,
                     "type": "`$INTEGER`"
                   }
                 ]
@@ -288,11 +253,9 @@ class Config {
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body`"
-              },
-              "index$": 0
+              }
             }
-          ],
-          "key$": "load"
+          ]
         }
       },
       "relations": {
@@ -306,18 +269,12 @@ class Config {
     "schedule": {
       "fields": [
         {
-          "active": true,
           "name": "date",
-          "req": false,
-          "type": "`$STRING`",
-          "index$": 0
+          "type": "`$STRING`"
         },
         {
-          "active": true,
           "name": "games",
-          "req": false,
-          "type": "`$ARRAY`",
-          "index$": 1
+          "type": "`$ARRAY`"
         }
       ],
       "name": "schedule",
@@ -327,51 +284,40 @@ class Config {
           "name": "list",
           "points": [
             {
-              "active": true,
               "args": {
                 "query": [
                   {
-                    "active": true,
                     "example": "03/15/2024",
                     "kind": "query",
                     "name": "date",
                     "orig": "date",
-                    "reqd": false,
                     "type": "`$STRING`"
                   },
                   {
-                    "active": true,
                     "example": "R",
                     "kind": "query",
                     "name": "game_type",
                     "orig": "game_type",
-                    "reqd": false,
                     "type": "`$STRING`"
                   },
                   {
-                    "active": true,
                     "kind": "query",
                     "name": "hydrate",
                     "orig": "hydrate",
-                    "reqd": false,
                     "type": "`$STRING`"
                   },
                   {
-                    "active": true,
                     "example": 2024,
                     "kind": "query",
                     "name": "season",
                     "orig": "season",
-                    "reqd": false,
                     "type": "`$INTEGER`"
                   },
                   {
-                    "active": true,
                     "example": 1,
                     "kind": "query",
                     "name": "sport_id",
                     "orig": "sport_id",
-                    "reqd": false,
                     "type": "`$INTEGER`"
                   }
                 ]
@@ -394,11 +340,9 @@ class Config {
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body.dates`"
-              },
-              "index$": 0
+              }
             }
-          ],
-          "key$": "list"
+          ]
         }
       },
       "relations": {
@@ -408,39 +352,24 @@ class Config {
     "team": {
       "fields": [
         {
-          "active": true,
           "name": "jerseyNumber",
-          "req": false,
-          "type": "`$STRING`",
-          "index$": 0
+          "type": "`$STRING`"
         },
         {
-          "active": true,
           "name": "person",
-          "req": false,
-          "type": "`$OBJECT`",
-          "index$": 1
+          "type": "`$OBJECT`"
         },
         {
-          "active": true,
           "name": "position",
-          "req": false,
-          "type": "`$OBJECT`",
-          "index$": 2
+          "type": "`$OBJECT`"
         },
         {
-          "active": true,
           "name": "status",
-          "req": false,
-          "type": "`$OBJECT`",
-          "index$": 3
+          "type": "`$OBJECT`"
         },
         {
-          "active": true,
           "name": "teams",
-          "req": false,
-          "type": "`$ARRAY`",
-          "index$": 4
+          "type": "`$ARRAY`"
         }
       ],
       "name": "team",
@@ -450,36 +379,29 @@ class Config {
           "name": "list",
           "points": [
             {
-              "active": true,
               "args": {
                 "params": [
                   {
-                    "active": true,
                     "example": 119,
                     "kind": "param",
                     "name": "id",
                     "orig": "team_id",
                     "reqd": true,
-                    "type": "`$INTEGER`",
-                    "index$": 0
+                    "type": "`$INTEGER`"
                   }
                 ],
                 "query": [
                   {
-                    "active": true,
                     "kind": "query",
                     "name": "hydrate",
                     "orig": "hydrate",
-                    "reqd": false,
                     "type": "`$STRING`"
                   },
                   {
-                    "active": true,
                     "example": 2024,
                     "kind": "query",
                     "name": "season",
                     "orig": "season",
-                    "reqd": false,
                     "type": "`$INTEGER`"
                   }
                 ]
@@ -508,47 +430,38 @@ class Config {
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body.roster`"
-              },
-              "index$": 0
+              }
             }
-          ],
-          "key$": "list"
+          ]
         },
         "load": {
           "input": "data",
           "name": "load",
           "points": [
             {
-              "active": true,
               "args": {
                 "params": [
                   {
-                    "active": true,
                     "example": 119,
                     "kind": "param",
                     "name": "id",
                     "orig": "team_id",
                     "reqd": true,
-                    "type": "`$INTEGER`",
-                    "index$": 0
+                    "type": "`$INTEGER`"
                   }
                 ],
                 "query": [
                   {
-                    "active": true,
                     "kind": "query",
                     "name": "hydrate",
                     "orig": "hydrate",
-                    "reqd": false,
                     "type": "`$STRING`"
                   },
                   {
-                    "active": true,
                     "example": 2024,
                     "kind": "query",
                     "name": "season",
                     "orig": "season",
-                    "reqd": false,
                     "type": "`$INTEGER`"
                   }
                 ]
@@ -575,11 +488,9 @@ class Config {
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body`"
-              },
-              "index$": 0
+              }
             }
-          ],
-          "key$": "load"
+          ]
         }
       },
       "relations": {

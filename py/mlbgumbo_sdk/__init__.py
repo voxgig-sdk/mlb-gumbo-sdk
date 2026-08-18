@@ -23,8 +23,8 @@ class MlbGumboSDK:
         utility = MlbGumboUtility()
         self._utility = utility
 
-        from mlbgumbo_sdk.config import make_config
-        config = make_config()
+        from mlbgumbo_sdk.config import shared_config
+        config = shared_config()
 
         self._rootctx = utility.make_context({
             "client": self,

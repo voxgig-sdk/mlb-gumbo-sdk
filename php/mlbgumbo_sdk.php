@@ -40,7 +40,7 @@ class MlbGumboSDK
         $utility = new MlbGumboUtility();
         $this->_utility = $utility;
 
-        $config = MlbGumboConfig::make_config();
+        $config = MlbGumboConfig::shared_config();
 
         $this->_rootctx = ($utility->make_context)([
             "client" => $this,

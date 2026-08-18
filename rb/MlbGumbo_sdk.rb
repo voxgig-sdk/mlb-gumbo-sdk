@@ -28,7 +28,7 @@ class MlbGumboSDK
     utility = MlbGumboUtility.new
     @_utility = utility
 
-    config = MlbGumboConfig.make_config
+    config = MlbGumboConfig.shared_config
 
     @_rootctx = utility.make_context.call({
       "client" => self,

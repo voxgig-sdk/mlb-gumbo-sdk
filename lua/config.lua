@@ -1,5 +1,8 @@
 -- MlbGumbo SDK configuration
 
+-- Build a fresh, fully materialised config table. Every call rebuilds the
+-- whole structure, so prefer require("config_shared") unless you need a
+-- private copy you intend to mutate.
 local function make_config()
   return {
     main = {
@@ -28,25 +31,16 @@ local function make_config()
       ["game_data"] = {
         ["fields"] = {
           {
-            ["active"] = true,
             ["name"] = "gameData",
-            ["req"] = false,
             ["type"] = "`$OBJECT`",
-            ["index$"] = 0,
           },
           {
-            ["active"] = true,
             ["name"] = "liveData",
-            ["req"] = false,
             ["type"] = "`$OBJECT`",
-            ["index$"] = 1,
           },
           {
-            ["active"] = true,
             ["name"] = "timestamps",
-            ["req"] = false,
             ["type"] = "`$ARRAY`",
-            ["index$"] = 2,
           },
         },
         ["name"] = "game_data",
@@ -56,18 +50,15 @@ local function make_config()
             ["name"] = "list",
             ["points"] = {
               {
-                ["active"] = true,
                 ["args"] = {
                   ["params"] = {
                     {
-                      ["active"] = true,
                       ["example"] = "716463",
                       ["kind"] = "param",
                       ["name"] = "game_pk",
                       ["orig"] = "game_pk",
                       ["reqd"] = true,
                       ["type"] = "`$STRING`",
-                      ["index$"] = 0,
                     },
                   },
                 },
@@ -90,55 +81,44 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body.timestamps`",
                 },
-                ["index$"] = 0,
               },
             },
-            ["key$"] = "list",
           },
           ["load"] = {
             ["input"] = "data",
             ["name"] = "load",
             ["points"] = {
               {
-                ["active"] = true,
                 ["args"] = {
                   ["params"] = {
                     {
-                      ["active"] = true,
                       ["example"] = "716463",
                       ["kind"] = "param",
                       ["name"] = "game_pk",
                       ["orig"] = "game_pk",
                       ["reqd"] = true,
                       ["type"] = "`$STRING`",
-                      ["index$"] = 0,
                     },
                   },
                   ["query"] = {
                     {
-                      ["active"] = true,
                       ["kind"] = "query",
                       ["name"] = "field",
                       ["orig"] = "field",
-                      ["reqd"] = false,
                       ["type"] = "`$STRING`",
                     },
                     {
-                      ["active"] = true,
                       ["example"] = "stats,team",
                       ["kind"] = "query",
                       ["name"] = "hydrate",
                       ["orig"] = "hydrate",
-                      ["reqd"] = false,
                       ["type"] = "`$STRING`",
                     },
                     {
-                      ["active"] = true,
                       ["example"] = "20240315_123456",
                       ["kind"] = "query",
                       ["name"] = "timecode",
                       ["orig"] = "timecode",
-                      ["reqd"] = false,
                       ["type"] = "`$STRING`",
                     },
                   },
@@ -164,10 +144,8 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body`",
                 },
-                ["index$"] = 0,
               },
             },
-            ["key$"] = "load",
           },
         },
         ["relations"] = {
@@ -181,11 +159,8 @@ local function make_config()
       ["player"] = {
         ["fields"] = {
           {
-            ["active"] = true,
             ["name"] = "people",
-            ["req"] = false,
             ["type"] = "`$ARRAY`",
-            ["index$"] = 0,
           },
         },
         ["name"] = "player",
@@ -195,37 +170,30 @@ local function make_config()
             ["name"] = "load",
             ["points"] = {
               {
-                ["active"] = true,
                 ["args"] = {
                   ["params"] = {
                     {
-                      ["active"] = true,
                       ["example"] = 660271,
                       ["kind"] = "param",
                       ["name"] = "player_id",
                       ["orig"] = "player_id",
                       ["reqd"] = true,
                       ["type"] = "`$INTEGER`",
-                      ["index$"] = 0,
                     },
                   },
                   ["query"] = {
                     {
-                      ["active"] = true,
                       ["example"] = "stats,currentTeam",
                       ["kind"] = "query",
                       ["name"] = "hydrate",
                       ["orig"] = "hydrate",
-                      ["reqd"] = false,
                       ["type"] = "`$STRING`",
                     },
                     {
-                      ["active"] = true,
                       ["example"] = 2024,
                       ["kind"] = "query",
                       ["name"] = "season",
                       ["orig"] = "season",
-                      ["reqd"] = false,
                       ["type"] = "`$INTEGER`",
                     },
                   },
@@ -253,10 +221,8 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body`",
                 },
-                ["index$"] = 0,
               },
             },
-            ["key$"] = "load",
           },
         },
         ["relations"] = {
@@ -270,18 +236,12 @@ local function make_config()
       ["schedule"] = {
         ["fields"] = {
           {
-            ["active"] = true,
             ["name"] = "date",
-            ["req"] = false,
             ["type"] = "`$STRING`",
-            ["index$"] = 0,
           },
           {
-            ["active"] = true,
             ["name"] = "games",
-            ["req"] = false,
             ["type"] = "`$ARRAY`",
-            ["index$"] = 1,
           },
         },
         ["name"] = "schedule",
@@ -291,51 +251,40 @@ local function make_config()
             ["name"] = "list",
             ["points"] = {
               {
-                ["active"] = true,
                 ["args"] = {
                   ["query"] = {
                     {
-                      ["active"] = true,
                       ["example"] = "03/15/2024",
                       ["kind"] = "query",
                       ["name"] = "date",
                       ["orig"] = "date",
-                      ["reqd"] = false,
                       ["type"] = "`$STRING`",
                     },
                     {
-                      ["active"] = true,
                       ["example"] = "R",
                       ["kind"] = "query",
                       ["name"] = "game_type",
                       ["orig"] = "game_type",
-                      ["reqd"] = false,
                       ["type"] = "`$STRING`",
                     },
                     {
-                      ["active"] = true,
                       ["kind"] = "query",
                       ["name"] = "hydrate",
                       ["orig"] = "hydrate",
-                      ["reqd"] = false,
                       ["type"] = "`$STRING`",
                     },
                     {
-                      ["active"] = true,
                       ["example"] = 2024,
                       ["kind"] = "query",
                       ["name"] = "season",
                       ["orig"] = "season",
-                      ["reqd"] = false,
                       ["type"] = "`$INTEGER`",
                     },
                     {
-                      ["active"] = true,
                       ["example"] = 1,
                       ["kind"] = "query",
                       ["name"] = "sport_id",
                       ["orig"] = "sport_id",
-                      ["reqd"] = false,
                       ["type"] = "`$INTEGER`",
                     },
                   },
@@ -359,10 +308,8 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body.dates`",
                 },
-                ["index$"] = 0,
               },
             },
-            ["key$"] = "list",
           },
         },
         ["relations"] = {
@@ -372,39 +319,24 @@ local function make_config()
       ["team"] = {
         ["fields"] = {
           {
-            ["active"] = true,
             ["name"] = "jerseyNumber",
-            ["req"] = false,
             ["type"] = "`$STRING`",
-            ["index$"] = 0,
           },
           {
-            ["active"] = true,
             ["name"] = "person",
-            ["req"] = false,
             ["type"] = "`$OBJECT`",
-            ["index$"] = 1,
           },
           {
-            ["active"] = true,
             ["name"] = "position",
-            ["req"] = false,
             ["type"] = "`$OBJECT`",
-            ["index$"] = 2,
           },
           {
-            ["active"] = true,
             ["name"] = "status",
-            ["req"] = false,
             ["type"] = "`$OBJECT`",
-            ["index$"] = 3,
           },
           {
-            ["active"] = true,
             ["name"] = "teams",
-            ["req"] = false,
             ["type"] = "`$ARRAY`",
-            ["index$"] = 4,
           },
         },
         ["name"] = "team",
@@ -414,36 +346,29 @@ local function make_config()
             ["name"] = "list",
             ["points"] = {
               {
-                ["active"] = true,
                 ["args"] = {
                   ["params"] = {
                     {
-                      ["active"] = true,
                       ["example"] = 119,
                       ["kind"] = "param",
                       ["name"] = "id",
                       ["orig"] = "team_id",
                       ["reqd"] = true,
                       ["type"] = "`$INTEGER`",
-                      ["index$"] = 0,
                     },
                   },
                   ["query"] = {
                     {
-                      ["active"] = true,
                       ["kind"] = "query",
                       ["name"] = "hydrate",
                       ["orig"] = "hydrate",
-                      ["reqd"] = false,
                       ["type"] = "`$STRING`",
                     },
                     {
-                      ["active"] = true,
                       ["example"] = 2024,
                       ["kind"] = "query",
                       ["name"] = "season",
                       ["orig"] = "season",
-                      ["reqd"] = false,
                       ["type"] = "`$INTEGER`",
                     },
                   },
@@ -473,46 +398,37 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body.roster`",
                 },
-                ["index$"] = 0,
               },
             },
-            ["key$"] = "list",
           },
           ["load"] = {
             ["input"] = "data",
             ["name"] = "load",
             ["points"] = {
               {
-                ["active"] = true,
                 ["args"] = {
                   ["params"] = {
                     {
-                      ["active"] = true,
                       ["example"] = 119,
                       ["kind"] = "param",
                       ["name"] = "id",
                       ["orig"] = "team_id",
                       ["reqd"] = true,
                       ["type"] = "`$INTEGER`",
-                      ["index$"] = 0,
                     },
                   },
                   ["query"] = {
                     {
-                      ["active"] = true,
                       ["kind"] = "query",
                       ["name"] = "hydrate",
                       ["orig"] = "hydrate",
-                      ["reqd"] = false,
                       ["type"] = "`$STRING`",
                     },
                     {
-                      ["active"] = true,
                       ["example"] = 2024,
                       ["kind"] = "query",
                       ["name"] = "season",
                       ["orig"] = "season",
-                      ["reqd"] = false,
                       ["type"] = "`$INTEGER`",
                     },
                   },
@@ -540,10 +456,8 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body`",
                 },
-                ["index$"] = 0,
               },
             },
-            ["key$"] = "load",
           },
         },
         ["relations"] = {

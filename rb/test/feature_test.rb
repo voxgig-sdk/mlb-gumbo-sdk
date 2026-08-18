@@ -15,7 +15,7 @@ require_relative "../MlbGumbo_sdk"
 module MlbGumboFeatureHarness
   # True when this SDK was generated with the named feature.
   def self.has_feature?(name)
-    f = MlbGumboConfig.make_config["feature"]
+    f = MlbGumboConfig.shared_config["feature"]
     f.is_a?(Hash) && !f[name].nil?
   end
 
