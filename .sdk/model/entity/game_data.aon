@@ -8,16 +8,19 @@ main: kit: entity: game_data: {
     {
       name: "gameData"
       req: false
+      short: "Metadata about the game including teams, venue, and game status"
       type: "`$OBJECT`"
     }
     {
       name: "liveData"
       req: false
+      short: "Real-time game data including plays, boxscore, and current state"
       type: "`$OBJECT`"
     }
     {
       name: "timestamps"
       req: false
+      short: "Array of timestamp strings in format yyyymmdd_######"
       type: "`$ARRAY`"
     }
   ]

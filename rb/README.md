@@ -255,9 +255,9 @@ returns a result `Hash` with these keys:
 
 | Field | Description |
 | --- | --- |
-| `gameData` |  |
-| `liveData` |  |
-| `timestamps` |  |
+| `gameData` | Metadata about the game including teams, venue, and game status |
+| `liveData` | Real-time game data including plays, boxscore, and current state |
+| `timestamps` | Array of timestamp strings in format yyyymmdd_###### |
 
 Operations: List, Load.
 
@@ -318,9 +318,9 @@ Create an instance: `game_data = client.GameData`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `gameData` | `Hash` |  |
-| `liveData` | `Hash` |  |
-| `timestamps` | `Array` |  |
+| `gameData` | `Hash` | Metadata about the game including teams, venue, and game status |
+| `liveData` | `Hash` | Real-time game data including plays, boxscore, and current state |
+| `timestamps` | `Array` | Array of timestamp strings in format yyyymmdd_###### |
 
 #### Example: Load
 

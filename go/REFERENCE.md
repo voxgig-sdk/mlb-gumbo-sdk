@@ -110,9 +110,9 @@ fmt.Println(gameData.GetName()) // "game_data"
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `gameData` | `map[string]any` | No |  |
-| `liveData` | `map[string]any` | No |  |
-| `timestamps` | `[]any` | No |  |
+| `gameData` | `map[string]any` | No | Metadata about the game including teams, venue, and game status |
+| `liveData` | `map[string]any` | No | Real-time game data including plays, boxscore, and current state |
+| `timestamps` | `[]any` | No | Array of timestamp strings in format yyyymmdd_###### |
 
 ### Operations
 

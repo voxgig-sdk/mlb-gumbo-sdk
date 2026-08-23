@@ -19,6 +19,9 @@ module MlbGumboConfig
     {
       "main" => {
         "name" => "MlbGumbo",
+        "slug" => "mlb-gumbo",
+        "version" => "0.0.1",
+        "target" => "rb",
       },
       "feature" => {
         "test" => {
@@ -44,14 +47,17 @@ module MlbGumboConfig
           "fields" => [
             {
               "name" => "gameData",
+              "short" => "Metadata about the game including teams, venue, and game status",
               "type" => "`$OBJECT`",
             },
             {
               "name" => "liveData",
+              "short" => "Real-time game data including plays, boxscore, and current state",
               "type" => "`$OBJECT`",
             },
             {
               "name" => "timestamps",
+              "short" => "Array of timestamp strings in format yyyymmdd_######",
               "type" => "`$ARRAY`",
             },
           ],

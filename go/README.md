@@ -6,7 +6,7 @@ The Golang SDK for the MlbGumbo API — an entity-oriented client using standard
 
 It exposes the API as capitalised, semantic **Entities** — e.g. `client.GameData(nil)` — each with the same small set of operations (`List`, `Load`) instead of raw URL paths and query strings. You call meaning, not endpoints, which keeps the cognitive load low.
 
-> Other languages, the CLI, and MCP server live alongside this one — see
+> Also generated from this model: `go-cli`, `go-mcp`, `lua`, `php`, `py`, `rb`, `ts` — see
 > the [top-level README](../README.md).
 
 
@@ -272,9 +272,9 @@ Only `Direct()` returns a response envelope — a `map[string]any` with
 
 | Field | Description |
 | --- | --- |
-| `"gameData"` |  |
-| `"liveData"` |  |
-| `"timestamps"` |  |
+| `"gameData"` | Metadata about the game including teams, venue, and game status |
+| `"liveData"` | Real-time game data including plays, boxscore, and current state |
+| `"timestamps"` | Array of timestamp strings in format yyyymmdd_###### |
 
 Operations: List, Load.
 
@@ -335,9 +335,9 @@ Create an instance: `gameData := client.GameData(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `gameData` | `map[string]any` |  |
-| `liveData` | `map[string]any` |  |
-| `timestamps` | `[]any` |  |
+| `gameData` | `map[string]any` | Metadata about the game including teams, venue, and game status |
+| `liveData` | `map[string]any` | Real-time game data including plays, boxscore, and current state |
+| `timestamps` | `[]any` | Array of timestamp strings in format yyyymmdd_###### |
 
 #### Example: Load
 

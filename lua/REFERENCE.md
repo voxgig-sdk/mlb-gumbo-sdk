@@ -102,9 +102,9 @@ local game_data = client:GameData(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `gameData` | `table` | No |  |
-| `liveData` | `table` | No |  |
-| `timestamps` | `table` | No |  |
+| `gameData` | `table` | No | Metadata about the game including teams, venue, and game status |
+| `liveData` | `table` | No | Real-time game data including plays, boxscore, and current state |
+| `timestamps` | `table` | No | Array of timestamp strings in format yyyymmdd_###### |
 
 ### Operations
 

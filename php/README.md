@@ -265,9 +265,9 @@ On error, `ok` is `false` and `$err` contains the error value.
 
 | Field | Description |
 | --- | --- |
-| `gameData` |  |
-| `liveData` |  |
-| `timestamps` |  |
+| `gameData` | Metadata about the game including teams, venue, and game status |
+| `liveData` | Real-time game data including plays, boxscore, and current state |
+| `timestamps` | Array of timestamp strings in format yyyymmdd_###### |
 
 Operations: List, Load.
 
@@ -328,9 +328,9 @@ Create an instance: `$game_data = $client->GameData();`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `gameData` | `array` |  |
-| `liveData` | `array` |  |
-| `timestamps` | `array` |  |
+| `gameData` | `array` | Metadata about the game including teams, venue, and game status |
+| `liveData` | `array` | Real-time game data including plays, boxscore, and current state |
+| `timestamps` | `array` | Array of timestamp strings in format yyyymmdd_###### |
 
 #### Example: Load
 

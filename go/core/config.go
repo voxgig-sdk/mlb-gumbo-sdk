@@ -11,6 +11,9 @@ func MakeConfig() map[string]any {
 	return map[string]any{
 		"main": map[string]any{
 			"name": "MlbGumbo",
+			"slug": "mlb-gumbo",
+			"version": "0.0.1",
+			"target": "go",
 		},
 		"feature": map[string]any{
 			"test": map[string]any{
@@ -36,14 +39,17 @@ func MakeConfig() map[string]any {
 				"fields": []any{
 					map[string]any{
 						"name": "gameData",
+						"short": "Metadata about the game including teams, venue, and game status",
 						"type": "`$OBJECT`",
 					},
 					map[string]any{
 						"name": "liveData",
+						"short": "Real-time game data including plays, boxscore, and current state",
 						"type": "`$OBJECT`",
 					},
 					map[string]any{
 						"name": "timestamps",
+						"short": "Array of timestamp strings in format yyyymmdd_######",
 						"type": "`$ARRAY`",
 					},
 				},

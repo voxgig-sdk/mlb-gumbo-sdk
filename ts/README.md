@@ -9,7 +9,7 @@ The API is exposed as capitalised, semantic **Entities** — e.g.
 instead of raw URL paths and query parameters. This keeps the surface
 predictable and low-friction for both humans and AI agents.
 
-> Other languages, the CLI, and MCP server live alongside this one — see
+> Also generated from this model: `go`, `go-cli`, `go-mcp`, `lua`, `php`, `py`, `rb` — see
 > the [top-level README](../README.md).
 
 
@@ -308,9 +308,9 @@ The `prepare()` method returns:
 
 | Field | Description |
 | --- | --- |
-| `gameData` |  |
-| `liveData` |  |
-| `timestamps` |  |
+| `gameData` | Metadata about the game including teams, venue, and game status |
+| `liveData` | Real-time game data including plays, boxscore, and current state |
+| `timestamps` | Array of timestamp strings in format yyyymmdd_###### |
 
 Operations: list, load.
 
@@ -371,9 +371,9 @@ Create an instance: `const game_data = client.GameData()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `gameData` | `Record<string, any>` |  |
-| `liveData` | `Record<string, any>` |  |
-| `timestamps` | `any[]` |  |
+| `gameData` | `Record<string, any>` | Metadata about the game including teams, venue, and game status |
+| `liveData` | `Record<string, any>` | Real-time game data including plays, boxscore, and current state |
+| `timestamps` | `any[]` | Array of timestamp strings in format yyyymmdd_###### |
 
 #### Example: Load
 

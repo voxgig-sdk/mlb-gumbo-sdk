@@ -246,9 +246,9 @@ Only `direct()` returns a response envelope — a `table` with `ok`,
 
 | Field | Description |
 | --- | --- |
-| `gameData` |  |
-| `liveData` |  |
-| `timestamps` |  |
+| `gameData` | Metadata about the game including teams, venue, and game status |
+| `liveData` | Real-time game data including plays, boxscore, and current state |
+| `timestamps` | Array of timestamp strings in format yyyymmdd_###### |
 
 Operations: List, Load.
 
@@ -309,9 +309,9 @@ Create an instance: `local game_data = client:GameData(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `gameData` | `table` |  |
-| `liveData` | `table` |  |
-| `timestamps` | `table` |  |
+| `gameData` | `table` | Metadata about the game including teams, venue, and game status |
+| `liveData` | `table` | Real-time game data including plays, boxscore, and current state |
+| `timestamps` | `table` | Array of timestamp strings in format yyyymmdd_###### |
 
 #### Example: Load
 

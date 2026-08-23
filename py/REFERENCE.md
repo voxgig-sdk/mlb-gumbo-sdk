@@ -99,9 +99,9 @@ game_data = client.GameData()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `gameData` | `dict` | No |  |
-| `liveData` | `dict` | No |  |
-| `timestamps` | `list` | No |  |
+| `gameData` | `dict` | No | Metadata about the game including teams, venue, and game status |
+| `liveData` | `dict` | No | Real-time game data including plays, boxscore, and current state |
+| `timestamps` | `list` | No | Array of timestamp strings in format yyyymmdd_###### |
 
 ### Operations
 

@@ -104,9 +104,9 @@ $game_data = $client->GameData();
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `gameData` | `array` | No |  |
-| `liveData` | `array` | No |  |
-| `timestamps` | `array` | No |  |
+| `gameData` | `array` | No | Metadata about the game including teams, venue, and game status |
+| `liveData` | `array` | No | Real-time game data including plays, boxscore, and current state |
+| `timestamps` | `array` | No | Array of timestamp strings in format yyyymmdd_###### |
 
 ### Operations
 

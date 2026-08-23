@@ -260,9 +260,9 @@ On error, `ok` is `False` and `err` contains the error value.
 
 | Field | Description |
 | --- | --- |
-| `gameData` |  |
-| `liveData` |  |
-| `timestamps` |  |
+| `gameData` | Metadata about the game including teams, venue, and game status |
+| `liveData` | Real-time game data including plays, boxscore, and current state |
+| `timestamps` | Array of timestamp strings in format yyyymmdd_###### |
 
 Operations: List, Load.
 
@@ -323,9 +323,9 @@ Create an instance: `game_data = client.GameData()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `gameData` | `dict` |  |
-| `liveData` | `dict` |  |
-| `timestamps` | `list` |  |
+| `gameData` | `dict` | Metadata about the game including teams, venue, and game status |
+| `liveData` | `dict` | Real-time game data including plays, boxscore, and current state |
+| `timestamps` | `list` | Array of timestamp strings in format yyyymmdd_###### |
 
 #### Example: Load
 

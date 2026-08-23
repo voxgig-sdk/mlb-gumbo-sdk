@@ -7,6 +7,9 @@ local function make_config()
   return {
     main = {
       name = "MlbGumbo",
+      slug = "mlb-gumbo",
+      version = "0.0.1",
+      target = "lua",
     },
     feature = {
       ["test"] = {
@@ -32,14 +35,17 @@ local function make_config()
         ["fields"] = {
           {
             ["name"] = "gameData",
+            ["short"] = "Metadata about the game including teams, venue, and game status",
             ["type"] = "`$OBJECT`",
           },
           {
             ["name"] = "liveData",
+            ["short"] = "Real-time game data including plays, boxscore, and current state",
             ["type"] = "`$OBJECT`",
           },
           {
             ["name"] = "timestamps",
+            ["short"] = "Array of timestamp strings in format yyyymmdd_######",
             ["type"] = "`$ARRAY`",
           },
         },

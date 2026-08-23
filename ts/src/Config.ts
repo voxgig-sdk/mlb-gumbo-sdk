@@ -19,9 +19,20 @@ class Config {
     return fi
   }
 
+  // False for a feature added at runtime via options.extend (station's
+  // adopt path) - the constructor uses this to skip makeFeature for names
+  // no generated class backs.
+  hasFeature(this: any, fn: string) {
+    return null != FEATURE_CLASS[fn]
+  }
+
 
   main = {
     name: 'MlbGumbo',
+        slug: "mlb-gumbo",
+    version: "0.0.1",
+    target: "ts",
+
   }
 
 
@@ -65,14 +76,17 @@ class Config {
       "fields": [
         {
           "name": "gameData",
+          "short": "Metadata about the game including teams, venue, and game status",
           "type": "`$OBJECT`"
         },
         {
           "name": "liveData",
+          "short": "Real-time game data including plays, boxscore, and current state",
           "type": "`$OBJECT`"
         },
         {
           "name": "timestamps",
+          "short": "Array of timestamp strings in format yyyymmdd_######",
           "type": "`$ARRAY`"
         }
       ],

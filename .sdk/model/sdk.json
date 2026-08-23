@@ -36,18 +36,21 @@
               "active": true,
               "name": "gameData",
               "req": false,
+              "short": "Metadata about the game including teams, venue, and game status",
               "type": "`$OBJECT`"
             },
             {
               "active": true,
               "name": "liveData",
               "req": false,
+              "short": "Real-time game data including plays, boxscore, and current state",
               "type": "`$OBJECT`"
             },
             {
               "active": true,
               "name": "timestamps",
               "req": false,
+              "short": "Array of timestamp strings in format yyyymmdd_######",
               "type": "`$ARRAY`"
             }
           ],
