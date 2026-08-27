@@ -288,6 +288,7 @@ API path: `/schedule`
 
 | Field | Description |
 | --- | --- |
+| `id` |  |
 | `jerseyNumber` |  |
 | `person` |  |
 | `position` |  |
@@ -401,6 +402,7 @@ Create an instance: `team = client.Team`
 
 | Field | Type | Description |
 | --- | --- | --- |
+| `id` | `String` |  |
 | `jerseyNumber` | `String` |  |
 | `person` | `Hash` |  |
 | `position` | `Hash` |  |

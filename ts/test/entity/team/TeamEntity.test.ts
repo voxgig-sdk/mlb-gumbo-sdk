@@ -67,6 +67,12 @@ describe('TeamEntity', async () => {
     const team_ref01_list = (await team_ref01_ent.list(team_ref01_match)).map((e: any) => e.data())
 
 
+    // LOAD
+    const team_ref01_match_dt0: any = {}
+    team_ref01_match_dt0.id = team_ref01_data.id
+    const team_ref01_data_dt0 = (await team_ref01_ent.load(team_ref01_match_dt0)).data()
+    assert(team_ref01_data_dt0.id === team_ref01_data.id)
+
 
   })
 })

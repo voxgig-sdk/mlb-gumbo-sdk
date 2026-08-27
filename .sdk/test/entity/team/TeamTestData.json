@@ -2,35 +2,35 @@
   "existing": {
     "team": {
       "TEAM00": {
-        "jerseyNumber": "s32",
+        "id": "TEAM00",
+        "jerseyNumber": "s3d",
         "person": {},
         "position": {},
         "status": {},
-        "teams": [],
-        "id": "TEAM00"
+        "teams": []
       },
       "TEAM01": {
-        "jerseyNumber": "s64",
+        "id": "TEAM01",
+        "jerseyNumber": "s79",
         "person": {},
         "position": {},
         "status": {},
-        "teams": [],
-        "id": "TEAM01"
+        "teams": []
       },
       "TEAM02": {
-        "jerseyNumber": "s96",
+        "id": "TEAM02",
+        "jerseyNumber": "sb5",
         "person": {},
         "position": {},
         "status": {},
-        "teams": [],
-        "id": "TEAM02"
+        "teams": []
       }
     }
   },
   "new": {
     "team": {
       "team_ref01": {
-        "jerseyNumber": "sc8",
+        "jerseyNumber": "sf1",
         "person": {},
         "position": {},
         "status": {},

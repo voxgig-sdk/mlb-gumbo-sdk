@@ -279,6 +279,7 @@ API path: `/schedule`
 
 | Field | Description |
 | --- | --- |
+| `id` |  |
 | `jerseyNumber` |  |
 | `person` |  |
 | `position` |  |
@@ -388,6 +389,7 @@ Create an instance: `local team = client:Team(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
+| `id` | `string` |  |
 | `jerseyNumber` | `string` |  |
 | `person` | `table` |  |
 | `position` | `table` |  |

@@ -85,9 +85,13 @@ class TeamEntityTest < Minitest::Test
     assert team_ref01_list_result.is_a?(Array)
 
     # LOAD
-    team_ref01_match_dt0 = {}
+    team_ref01_match_dt0 = {
+      "id" => team_ref01_data["id"],
+    }
     team_ref01_data_dt0_loaded = team_ref01_ent.load(team_ref01_match_dt0, nil)
-    assert !team_ref01_data_dt0_loaded.nil?
+    team_ref01_data_dt0_load_result = Helpers.to_map(team_ref01_data_dt0_loaded.respond_to?(:data_get) ? team_ref01_data_dt0_loaded.data_get : team_ref01_data_dt0_loaded)
+    assert !team_ref01_data_dt0_load_result.nil?
+    assert_equal team_ref01_data_dt0_load_result["id"], team_ref01_data["id"]
 
   end
 end

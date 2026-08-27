@@ -272,6 +272,7 @@ team = client.Team
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
+| `id` | `String` | No |  |
 | `jerseyNumber` | `String` | No |  |
 | `person` | `Hash` | No |  |
 | `position` | `Hash` | No |  |

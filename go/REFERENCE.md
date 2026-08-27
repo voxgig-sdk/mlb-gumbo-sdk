@@ -278,6 +278,7 @@ fmt.Println(team.GetName()) // "team"
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
+| `id` | `string` | No |  |
 | `jerseyNumber` | `string` | No |  |
 | `person` | `map[string]any` | No |  |
 | `position` | `map[string]any` | No |  |

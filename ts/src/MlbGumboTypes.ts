@@ -38,6 +38,7 @@ export interface ScheduleListMatch {
 }
 
 export interface Team {
+  id?: string
   jerseyNumber?: string
   person?: Record<string, any>
   position?: Record<string, any>

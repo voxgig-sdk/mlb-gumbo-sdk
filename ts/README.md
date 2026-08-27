@@ -341,6 +341,7 @@ API path: `/schedule`
 
 | Field | Description |
 | --- | --- |
+| `id` |  |
 | `jerseyNumber` |  |
 | `person` |  |
 | `position` |  |
@@ -450,6 +451,7 @@ Create an instance: `const team = client.Team()`
 
 | Field | Type | Description |
 | --- | --- | --- |
+| `id` | `string` |  |
 | `jerseyNumber` | `string` |  |
 | `person` | `Record<string, any>` |  |
 | `position` | `Record<string, any>` |  |

@@ -28,6 +28,7 @@ module MlbGumboConfig
           "options" => {
             "active" => false,
           },
+          "transport" => "base",
         },
       },
       "options" => {
@@ -336,6 +337,10 @@ module MlbGumboConfig
         },
         "team" => {
           "fields" => [
+            {
+              "name" => "id",
+              "type" => "`$STRING`",
+            },
             {
               "name" => "jerseyNumber",
               "type" => "`$STRING`",

@@ -61,6 +61,7 @@ class ScheduleListMatch
 /** Team entity data model. */
 class Team
 {
+    public ?string $id = null;
     public ?string $jerseyNumber = null;
     public ?array $person = null;
     public ?array $position = null;

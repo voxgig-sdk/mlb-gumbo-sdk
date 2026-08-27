@@ -90,9 +90,13 @@ class TestTeamEntity:
         assert isinstance(team_ref01_list_result, list)
 
         # LOAD
-        team_ref01_match_dt0 = {}
+        team_ref01_match_dt0 = {
+            "id": team_ref01_data["id"],
+        }
         team_ref01_data_dt0_loaded = team_ref01_ent.load(team_ref01_match_dt0, None)
-        assert team_ref01_data_dt0_loaded is not None
+        team_ref01_data_dt0_load_result = helpers.to_map(runner.entity_data(team_ref01_data_dt0_loaded))
+        assert team_ref01_data_dt0_load_result is not None
+        assert team_ref01_data_dt0_load_result["id"] == team_ref01_data["id"]
 
 
 

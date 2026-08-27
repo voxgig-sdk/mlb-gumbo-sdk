@@ -32,6 +32,7 @@
 ---@field games? table
 
 ---@class Team
+---@field id? string
 ---@field jerseyNumber? string
 ---@field person? table
 ---@field position? table

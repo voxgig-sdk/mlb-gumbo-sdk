@@ -49,6 +49,7 @@ class ScheduleListMatch(TypedDict, total=False):
 
 
 class Team(TypedDict, total=False):
+    id: str
     jerseyNumber: str
     person: dict
     position: dict

@@ -313,6 +313,7 @@ const team = client.Team()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
+| `id` | `string` | No |  |
 | `jerseyNumber` | `string` | No |  |
 | `person` | `Record<string, any>` | No |  |
 | `position` | `Record<string, any>` | No |  |

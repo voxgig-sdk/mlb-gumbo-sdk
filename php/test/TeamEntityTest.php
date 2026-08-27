@@ -95,9 +95,13 @@ class TeamEntityTest extends TestCase
         $this->assertIsArray($team_ref01_list_result);
 
         // LOAD
-        $team_ref01_match_dt0 = [];
+        $team_ref01_match_dt0 = [
+            "id" => $team_ref01_data["id"],
+        ];
         $team_ref01_data_dt0_loaded = $team_ref01_ent->load($team_ref01_match_dt0, null);
-        $this->assertNotNull($team_ref01_data_dt0_loaded);
+        $team_ref01_data_dt0_load_result = Helpers::to_map(is_object($team_ref01_data_dt0_loaded) && method_exists($team_ref01_data_dt0_loaded, 'data_get') ? $team_ref01_data_dt0_loaded->data_get() : $team_ref01_data_dt0_loaded);
+        $this->assertNotNull($team_ref01_data_dt0_load_result);
+        $this->assertEquals($team_ref01_data_dt0_load_result["id"], $team_ref01_data["id"]);
 
     }
 }

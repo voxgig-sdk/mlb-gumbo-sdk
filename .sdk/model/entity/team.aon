@@ -6,6 +6,11 @@ main: kit: entity: team: {
 
   fields: [
     {
+      name: "id"
+      req: false
+      type: "`$STRING`"
+    }
+    {
       name: "jerseyNumber"
       req: false
       type: "`$STRING`"
@@ -31,6 +36,11 @@ main: kit: entity: team: {
       type: "`$ARRAY`"
     }
   ]
+
+  id: {
+    field: "id"
+    name: "id"
+  }
 
   name: "team"
   op: {

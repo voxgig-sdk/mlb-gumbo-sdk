@@ -53,6 +53,7 @@ type ScheduleListMatch struct {
 
 // Team is the typed data model for the team entity.
 type Team struct {
+	Id *string `json:"id,omitempty"`
 	JerseyNumber *string `json:"jerseyNumber,omitempty"`
 	Person *map[string]any `json:"person,omitempty"`
 	Position *map[string]any `json:"position,omitempty"`

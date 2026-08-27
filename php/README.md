@@ -298,6 +298,7 @@ API path: `/schedule`
 
 | Field | Description |
 | --- | --- |
+| `id` |  |
 | `jerseyNumber` |  |
 | `person` |  |
 | `position` |  |
@@ -411,6 +412,7 @@ Create an instance: `$team = $client->Team();`
 
 | Field | Type | Description |
 | --- | --- | --- |
+| `id` | `string` |  |
 | `jerseyNumber` | `string` |  |
 | `person` | `array` |  |
 | `position` | `array` |  |

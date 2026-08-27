@@ -271,6 +271,7 @@ $team = $client->Team();
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
+| `id` | `string` | No |  |
 | `jerseyNumber` | `string` | No |  |
 | `person` | `array` | No |  |
 | `position` | `array` | No |  |

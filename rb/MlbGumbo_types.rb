@@ -89,6 +89,9 @@ ScheduleListMatch = Struct.new(
 
 # Team entity data model.
 #
+# @!attribute [rw] id
+#   @return [String, nil]
+#
 # @!attribute [rw] jerseyNumber
 #   @return [String, nil]
 #
@@ -104,6 +107,7 @@ ScheduleListMatch = Struct.new(
 # @!attribute [rw] teams
 #   @return [Array, nil]
 Team = Struct.new(
+  :id,
   :jerseyNumber,
   :person,
   :position,
