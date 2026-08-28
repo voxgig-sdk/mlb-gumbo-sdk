@@ -22,6 +22,9 @@ type GameData struct {
 // GameDataLoadMatch is the typed request payload for GameData.LoadTyped.
 type GameDataLoadMatch struct {
 	GamePk string `json:"game_pk"`
+	Field *string `json:"field,omitempty"`
+	Hydrate *string `json:"hydrate,omitempty"`
+	Timecode *string `json:"timecode,omitempty"`
 }
 
 // GameDataListMatch is the typed request payload for GameData.ListTyped.
@@ -37,6 +40,8 @@ type Player struct {
 // PlayerLoadMatch is the typed request payload for Player.LoadTyped.
 type PlayerLoadMatch struct {
 	PlayerId int `json:"player_id"`
+	Hydrate *string `json:"hydrate,omitempty"`
+	Season *int `json:"season,omitempty"`
 }
 
 // Schedule is the typed data model for the schedule entity.
@@ -48,7 +53,10 @@ type Schedule struct {
 // ScheduleListMatch is the typed request payload for Schedule.ListTyped.
 type ScheduleListMatch struct {
 	Date *string `json:"date,omitempty"`
-	Games *[]any `json:"games,omitempty"`
+	GameType *string `json:"game_type,omitempty"`
+	Hydrate *string `json:"hydrate,omitempty"`
+	Season *int `json:"season,omitempty"`
+	SportId *int `json:"sport_id,omitempty"`
 }
 
 // Team is the typed data model for the team entity.
@@ -64,11 +72,15 @@ type Team struct {
 // TeamLoadMatch is the typed request payload for Team.LoadTyped.
 type TeamLoadMatch struct {
 	Id int `json:"id"`
+	Hydrate *string `json:"hydrate,omitempty"`
+	Season *int `json:"season,omitempty"`
 }
 
 // TeamListMatch is the typed request payload for Team.ListTyped.
 type TeamListMatch struct {
 	Id int `json:"id"`
+	Hydrate *string `json:"hydrate,omitempty"`
+	Season *int `json:"season,omitempty"`
 }
 
 // asMap turns a typed request/data struct into the map[string]any the

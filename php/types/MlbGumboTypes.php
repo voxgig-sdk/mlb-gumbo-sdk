@@ -24,6 +24,9 @@ class GameData
 class GameDataLoadMatch
 {
     public string $game_pk;
+    public ?string $field = null;
+    public ?string $hydrate = null;
+    public ?string $timecode = null;
 }
 
 /** Request payload for GameData#list. */
@@ -42,6 +45,8 @@ class Player
 class PlayerLoadMatch
 {
     public int $player_id;
+    public ?string $hydrate = null;
+    public ?int $season = null;
 }
 
 /** Schedule entity data model. */
@@ -55,7 +60,10 @@ class Schedule
 class ScheduleListMatch
 {
     public ?string $date = null;
-    public ?array $games = null;
+    public ?string $game_type = null;
+    public ?string $hydrate = null;
+    public ?int $season = null;
+    public ?int $sport_id = null;
 }
 
 /** Team entity data model. */
@@ -73,11 +81,15 @@ class Team
 class TeamLoadMatch
 {
     public int $id;
+    public ?string $hydrate = null;
+    public ?int $season = null;
 }
 
 /** Request payload for Team#list. */
 class TeamListMatch
 {
     public int $id;
+    public ?string $hydrate = null;
+    public ?int $season = null;
 }
 

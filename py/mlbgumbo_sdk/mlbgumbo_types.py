@@ -22,8 +22,14 @@ class GameData(TypedDict, total=False):
     timestamps: list
 
 
-class GameDataLoadMatch(TypedDict):
+class GameDataLoadMatchRequired(TypedDict):
     game_pk: str
+
+
+class GameDataLoadMatch(GameDataLoadMatchRequired, total=False):
+    field: str
+    hydrate: str
+    timecode: str
 
 
 class GameDataListMatch(TypedDict):
@@ -34,8 +40,13 @@ class Player(TypedDict, total=False):
     people: list
 
 
-class PlayerLoadMatch(TypedDict):
+class PlayerLoadMatchRequired(TypedDict):
     player_id: int
+
+
+class PlayerLoadMatch(PlayerLoadMatchRequired, total=False):
+    hydrate: str
+    season: int
 
 
 class Schedule(TypedDict, total=False):
@@ -45,7 +56,10 @@ class Schedule(TypedDict, total=False):
 
 class ScheduleListMatch(TypedDict, total=False):
     date: str
-    games: list
+    game_type: str
+    hydrate: str
+    season: int
+    sport_id: int
 
 
 class Team(TypedDict, total=False):
@@ -57,9 +71,19 @@ class Team(TypedDict, total=False):
     teams: list
 
 
-class TeamLoadMatch(TypedDict):
+class TeamLoadMatchRequired(TypedDict):
     id: int
 
 
-class TeamListMatch(TypedDict):
+class TeamLoadMatch(TeamLoadMatchRequired, total=False):
+    hydrate: str
+    season: int
+
+
+class TeamListMatchRequired(TypedDict):
     id: int
+
+
+class TeamListMatch(TeamListMatchRequired, total=False):
+    hydrate: str
+    season: int

@@ -13,6 +13,9 @@
 
 ---@class GameDataLoadMatch
 ---@field game_pk string
+---@field field? string
+---@field hydrate? string
+---@field timecode? string
 
 ---@class GameDataListMatch
 ---@field game_pk string
@@ -22,6 +25,8 @@
 
 ---@class PlayerLoadMatch
 ---@field player_id number
+---@field hydrate? string
+---@field season? number
 
 ---@class Schedule
 ---@field date? string
@@ -29,7 +34,10 @@
 
 ---@class ScheduleListMatch
 ---@field date? string
----@field games? table
+---@field game_type? string
+---@field hydrate? string
+---@field season? number
+---@field sport_id? number
 
 ---@class Team
 ---@field id? string
@@ -41,9 +49,13 @@
 
 ---@class TeamLoadMatch
 ---@field id number
+---@field hydrate? string
+---@field season? number
 
 ---@class TeamListMatch
 ---@field id number
+---@field hydrate? string
+---@field season? number
 
 local M = {}
 

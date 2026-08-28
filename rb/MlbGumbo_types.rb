@@ -29,8 +29,20 @@ GameData = Struct.new(
 #
 # @!attribute [rw] game_pk
 #   @return [String]
+#
+# @!attribute [rw] field
+#   @return [String, nil]
+#
+# @!attribute [rw] hydrate
+#   @return [String, nil]
+#
+# @!attribute [rw] timecode
+#   @return [String, nil]
 GameDataLoadMatch = Struct.new(
   :game_pk,
+  :field,
+  :hydrate,
+  :timecode,
   keyword_init: true
 )
 
@@ -56,8 +68,16 @@ Player = Struct.new(
 #
 # @!attribute [rw] player_id
 #   @return [Integer]
+#
+# @!attribute [rw] hydrate
+#   @return [String, nil]
+#
+# @!attribute [rw] season
+#   @return [Integer, nil]
 PlayerLoadMatch = Struct.new(
   :player_id,
+  :hydrate,
+  :season,
   keyword_init: true
 )
 
@@ -79,11 +99,23 @@ Schedule = Struct.new(
 # @!attribute [rw] date
 #   @return [String, nil]
 #
-# @!attribute [rw] games
-#   @return [Array, nil]
+# @!attribute [rw] game_type
+#   @return [String, nil]
+#
+# @!attribute [rw] hydrate
+#   @return [String, nil]
+#
+# @!attribute [rw] season
+#   @return [Integer, nil]
+#
+# @!attribute [rw] sport_id
+#   @return [Integer, nil]
 ScheduleListMatch = Struct.new(
   :date,
-  :games,
+  :game_type,
+  :hydrate,
+  :season,
+  :sport_id,
   keyword_init: true
 )
 
@@ -120,8 +152,16 @@ Team = Struct.new(
 #
 # @!attribute [rw] id
 #   @return [Integer]
+#
+# @!attribute [rw] hydrate
+#   @return [String, nil]
+#
+# @!attribute [rw] season
+#   @return [Integer, nil]
 TeamLoadMatch = Struct.new(
   :id,
+  :hydrate,
+  :season,
   keyword_init: true
 )
 
@@ -129,8 +169,16 @@ TeamLoadMatch = Struct.new(
 #
 # @!attribute [rw] id
 #   @return [Integer]
+#
+# @!attribute [rw] hydrate
+#   @return [String, nil]
+#
+# @!attribute [rw] season
+#   @return [Integer, nil]
 TeamListMatch = Struct.new(
   :id,
+  :hydrate,
+  :season,
   keyword_init: true
 )
 

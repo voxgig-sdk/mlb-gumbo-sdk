@@ -13,6 +13,9 @@ export interface GameData {
 
 export interface GameDataLoadMatch {
   game_pk: string
+  field?: string
+  hydrate?: string
+  timecode?: string
 }
 
 export interface GameDataListMatch {
@@ -25,6 +28,8 @@ export interface Player {
 
 export interface PlayerLoadMatch {
   player_id: number
+  hydrate?: string
+  season?: number
 }
 
 export interface Schedule {
@@ -34,7 +39,10 @@ export interface Schedule {
 
 export interface ScheduleListMatch {
   date?: string
-  games?: any[]
+  game_type?: string
+  hydrate?: string
+  season?: number
+  sport_id?: number
 }
 
 export interface Team {
@@ -48,10 +56,14 @@ export interface Team {
 
 export interface TeamLoadMatch {
   id: number
+  hydrate?: string
+  season?: number
 }
 
 export interface TeamListMatch {
   id: number
+  hydrate?: string
+  season?: number
 
   // Selects a custom action instead of the plain list:
   //   'roster'
