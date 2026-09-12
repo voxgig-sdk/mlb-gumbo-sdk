@@ -1,0 +1,571 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FEATURE_PLUGINS = exports.config = void 0;
+const TestFeature_1 = require("./feature/test/TestFeature");
+const FEATURE_CLASS = {
+    test: TestFeature_1.TestFeature,
+};
+// Per-feature plugin DEFINITIONS (voxgig/plugin `Definition` values), from
+// the model's active plugin groups. A feature that takes a `plugins` option
+// (secrets over sekreto) reads its own entry; a feature with no plugins has
+// none. Named imports above make each definition statically reachable, so
+// an SDK carries exactly the plugin modules its model selects — the same
+// leanness the old side-effect registry imports bought, without a registry.
+const FEATURE_PLUGINS = {};
+exports.FEATURE_PLUGINS = FEATURE_PLUGINS;
+class Config {
+    makeFeature(fn) {
+        const fc = FEATURE_CLASS[fn];
+        const fi = new fc();
+        // TODO: errors etc
+        return fi;
+    }
+    // False for a feature added at runtime via options.extend (station's
+    // adopt path) - the constructor uses this to skip makeFeature for names
+    // no generated class backs.
+    hasFeature(fn) {
+        return null != FEATURE_CLASS[fn];
+    }
+    main = {
+        name: 'MlbGumbo',
+        slug: "mlb-gumbo",
+        version: "0.0.1",
+        target: "ts",
+    };
+    feature = {
+        test: {
+            "options": {
+                "active": false
+            },
+            "transport": "base"
+        },
+    };
+    options = {
+        base: "https://statsapi.mlb.com/api/v1.1",
+        headers: {
+            "content-type": "application/json"
+        },
+        entity: {
+            game_data: {},
+            player: {},
+            schedule: {},
+            team: {},
+        }
+    };
+    entity = {
+        "game_data": {
+            "fields": [
+                {
+                    "name": "gameData",
+                    "short": "Metadata about the game including teams, venue, and game status",
+                    "type": "`$OBJECT`"
+                },
+                {
+                    "name": "liveData",
+                    "short": "Real-time game data including plays, boxscore, and current state",
+                    "type": "`$OBJECT`"
+                },
+                {
+                    "name": "timestamps",
+                    "short": "Array of timestamp strings in format yyyymmdd_######",
+                    "type": "`$ARRAY`"
+                }
+            ],
+            "name": "game_data",
+            "op": {
+                "list": {
+                    "input": "data",
+                    "name": "list",
+                    "points": [
+                        {
+                            "args": {
+                                "params": [
+                                    {
+                                        "example": "716463",
+                                        "kind": "param",
+                                        "name": "game_pk",
+                                        "orig": "game_pk",
+                                        "reqd": true,
+                                        "type": "`$STRING`"
+                                    }
+                                ]
+                            },
+                            "kind": "http",
+                            "method": "GET",
+                            "orig": "/game/{game_pk}/feed/live/timestamps",
+                            "segments": [
+                                {
+                                    "lit": "game"
+                                },
+                                {
+                                    "var": "game_pk"
+                                },
+                                {
+                                    "lit": "feed"
+                                },
+                                {
+                                    "lit": "live"
+                                },
+                                {
+                                    "lit": "timestamps"
+                                }
+                            ],
+                            "select": {
+                                "exist": [
+                                    "game_pk"
+                                ]
+                            },
+                            "transform": {
+                                "req": "`reqdata`",
+                                "res": "`body.timestamps`"
+                            },
+                            "parts": [
+                                "game",
+                                "{game_pk}",
+                                "feed",
+                                "live",
+                                "timestamps"
+                            ]
+                        }
+                    ]
+                },
+                "load": {
+                    "input": "data",
+                    "name": "load",
+                    "points": [
+                        {
+                            "args": {
+                                "params": [
+                                    {
+                                        "example": "716463",
+                                        "kind": "param",
+                                        "name": "game_pk",
+                                        "orig": "game_pk",
+                                        "reqd": true,
+                                        "type": "`$STRING`"
+                                    }
+                                ],
+                                "query": [
+                                    {
+                                        "kind": "query",
+                                        "name": "field",
+                                        "orig": "field",
+                                        "type": "`$STRING`"
+                                    },
+                                    {
+                                        "example": "stats,team",
+                                        "kind": "query",
+                                        "name": "hydrate",
+                                        "orig": "hydrate",
+                                        "type": "`$STRING`"
+                                    },
+                                    {
+                                        "example": "20240315_123456",
+                                        "kind": "query",
+                                        "name": "timecode",
+                                        "orig": "timecode",
+                                        "type": "`$STRING`"
+                                    }
+                                ]
+                            },
+                            "kind": "http",
+                            "method": "GET",
+                            "orig": "/game/{game_pk}/feed/live",
+                            "segments": [
+                                {
+                                    "lit": "game"
+                                },
+                                {
+                                    "var": "game_pk"
+                                },
+                                {
+                                    "lit": "feed"
+                                },
+                                {
+                                    "lit": "live"
+                                }
+                            ],
+                            "select": {
+                                "exist": [
+                                    "field",
+                                    "game_pk",
+                                    "hydrate",
+                                    "timecode"
+                                ]
+                            },
+                            "transform": {
+                                "req": "`reqdata`",
+                                "res": "`body`"
+                            },
+                            "parts": [
+                                "game",
+                                "{game_pk}",
+                                "feed",
+                                "live"
+                            ]
+                        }
+                    ]
+                }
+            },
+            "relations": {
+                "ancestors": [
+                    [
+                        "game"
+                    ]
+                ]
+            }
+        },
+        "player": {
+            "fields": [
+                {
+                    "name": "people",
+                    "type": "`$ARRAY`"
+                }
+            ],
+            "name": "player",
+            "op": {
+                "load": {
+                    "input": "data",
+                    "name": "load",
+                    "points": [
+                        {
+                            "args": {
+                                "params": [
+                                    {
+                                        "example": 660271,
+                                        "kind": "param",
+                                        "name": "player_id",
+                                        "orig": "player_id",
+                                        "reqd": true,
+                                        "type": "`$INTEGER`"
+                                    }
+                                ],
+                                "query": [
+                                    {
+                                        "example": "stats,currentTeam",
+                                        "kind": "query",
+                                        "name": "hydrate",
+                                        "orig": "hydrate",
+                                        "type": "`$STRING`"
+                                    },
+                                    {
+                                        "example": 2024,
+                                        "kind": "query",
+                                        "name": "season",
+                                        "orig": "season",
+                                        "type": "`$INTEGER`"
+                                    }
+                                ]
+                            },
+                            "kind": "http",
+                            "method": "GET",
+                            "orig": "/people/{playerId}",
+                            "rename": {
+                                "param": {
+                                    "playerId": "player_id"
+                                }
+                            },
+                            "segments": [
+                                {
+                                    "lit": "people"
+                                },
+                                {
+                                    "var": "player_id"
+                                }
+                            ],
+                            "select": {
+                                "exist": [
+                                    "hydrate",
+                                    "player_id",
+                                    "season"
+                                ]
+                            },
+                            "transform": {
+                                "req": "`reqdata`",
+                                "res": "`body`"
+                            },
+                            "parts": [
+                                "people",
+                                "{player_id}"
+                            ]
+                        }
+                    ]
+                }
+            },
+            "relations": {
+                "ancestors": [
+                    [
+                        "person"
+                    ]
+                ]
+            }
+        },
+        "schedule": {
+            "fields": [
+                {
+                    "format": "date",
+                    "name": "date",
+                    "type": "`$STRING`"
+                },
+                {
+                    "name": "games",
+                    "type": "`$ARRAY`"
+                }
+            ],
+            "name": "schedule",
+            "op": {
+                "list": {
+                    "input": "data",
+                    "name": "list",
+                    "points": [
+                        {
+                            "args": {
+                                "query": [
+                                    {
+                                        "example": "03/15/2024",
+                                        "kind": "query",
+                                        "name": "date",
+                                        "orig": "date",
+                                        "type": "`$STRING`"
+                                    },
+                                    {
+                                        "example": "R",
+                                        "kind": "query",
+                                        "name": "game_type",
+                                        "orig": "game_type",
+                                        "type": "`$STRING`"
+                                    },
+                                    {
+                                        "kind": "query",
+                                        "name": "hydrate",
+                                        "orig": "hydrate",
+                                        "type": "`$STRING`"
+                                    },
+                                    {
+                                        "example": 2024,
+                                        "kind": "query",
+                                        "name": "season",
+                                        "orig": "season",
+                                        "type": "`$INTEGER`"
+                                    },
+                                    {
+                                        "example": 1,
+                                        "kind": "query",
+                                        "name": "sport_id",
+                                        "orig": "sport_id",
+                                        "type": "`$INTEGER`"
+                                    }
+                                ]
+                            },
+                            "kind": "http",
+                            "method": "GET",
+                            "orig": "/schedule",
+                            "segments": [
+                                {
+                                    "lit": "schedule"
+                                }
+                            ],
+                            "select": {
+                                "exist": [
+                                    "date",
+                                    "game_type",
+                                    "hydrate",
+                                    "season",
+                                    "sport_id"
+                                ]
+                            },
+                            "transform": {
+                                "req": "`reqdata`",
+                                "res": "`body.dates`"
+                            },
+                            "parts": [
+                                "schedule"
+                            ]
+                        }
+                    ]
+                }
+            },
+            "relations": {
+                "ancestors": []
+            }
+        },
+        "team": {
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "`$STRING`"
+                },
+                {
+                    "name": "jerseyNumber",
+                    "type": "`$STRING`"
+                },
+                {
+                    "name": "person",
+                    "type": "`$OBJECT`"
+                },
+                {
+                    "name": "position",
+                    "type": "`$OBJECT`"
+                },
+                {
+                    "name": "status",
+                    "type": "`$OBJECT`"
+                },
+                {
+                    "name": "teams",
+                    "type": "`$ARRAY`"
+                }
+            ],
+            "id": {
+                "field": "id",
+                "name": "id"
+            },
+            "name": "team",
+            "op": {
+                "list": {
+                    "input": "data",
+                    "name": "list",
+                    "points": [
+                        {
+                            "args": {
+                                "params": [
+                                    {
+                                        "example": 119,
+                                        "kind": "param",
+                                        "name": "id",
+                                        "orig": "team_id",
+                                        "reqd": true,
+                                        "type": "`$INTEGER`"
+                                    }
+                                ],
+                                "query": [
+                                    {
+                                        "kind": "query",
+                                        "name": "hydrate",
+                                        "orig": "hydrate",
+                                        "type": "`$STRING`"
+                                    },
+                                    {
+                                        "example": 2024,
+                                        "kind": "query",
+                                        "name": "season",
+                                        "orig": "season",
+                                        "type": "`$INTEGER`"
+                                    }
+                                ]
+                            },
+                            "kind": "http",
+                            "method": "GET",
+                            "orig": "/teams/{teamId}/roster",
+                            "rename": {
+                                "param": {
+                                    "teamId": "id"
+                                }
+                            },
+                            "segments": [
+                                {
+                                    "lit": "teams"
+                                },
+                                {
+                                    "var": "id"
+                                },
+                                {
+                                    "lit": "roster"
+                                }
+                            ],
+                            "select": {
+                                "$action": "roster",
+                                "exist": [
+                                    "hydrate",
+                                    "id",
+                                    "season"
+                                ]
+                            },
+                            "transform": {
+                                "req": "`reqdata`",
+                                "res": "`body.roster`"
+                            },
+                            "parts": [
+                                "teams",
+                                "{id}",
+                                "roster"
+                            ]
+                        }
+                    ]
+                },
+                "load": {
+                    "input": "data",
+                    "name": "load",
+                    "points": [
+                        {
+                            "args": {
+                                "params": [
+                                    {
+                                        "example": 119,
+                                        "kind": "param",
+                                        "name": "id",
+                                        "orig": "team_id",
+                                        "reqd": true,
+                                        "type": "`$INTEGER`"
+                                    }
+                                ],
+                                "query": [
+                                    {
+                                        "kind": "query",
+                                        "name": "hydrate",
+                                        "orig": "hydrate",
+                                        "type": "`$STRING`"
+                                    },
+                                    {
+                                        "example": 2024,
+                                        "kind": "query",
+                                        "name": "season",
+                                        "orig": "season",
+                                        "type": "`$INTEGER`"
+                                    }
+                                ]
+                            },
+                            "kind": "http",
+                            "method": "GET",
+                            "orig": "/teams/{teamId}",
+                            "rename": {
+                                "param": {
+                                    "teamId": "id"
+                                }
+                            },
+                            "segments": [
+                                {
+                                    "lit": "teams"
+                                },
+                                {
+                                    "var": "id"
+                                }
+                            ],
+                            "select": {
+                                "exist": [
+                                    "hydrate",
+                                    "id",
+                                    "season"
+                                ]
+                            },
+                            "transform": {
+                                "req": "`reqdata`",
+                                "res": "`body`"
+                            },
+                            "parts": [
+                                "teams",
+                                "{id}"
+                            ]
+                        }
+                    ]
+                }
+            },
+            "relations": {
+                "ancestors": []
+            }
+        }
+    };
+}
+const config = new Config();
+exports.config = config;
+//# sourceMappingURL=Config.js.map

@@ -45,12 +45,22 @@ main: kit: entity: game_data: {
           }
           method: "GET"
           orig: "/game/{game_pk}/feed/live/timestamps"
-          parts: [
-            "game"
-            "{game_pk}"
-            "feed"
-            "live"
-            "timestamps"
+          segments: [
+            {
+              lit: "game"
+            }
+            {
+              var: "game_pk"
+            }
+            {
+              lit: "feed"
+            }
+            {
+              lit: "live"
+            }
+            {
+              lit: "timestamps"
+            }
           ]
           select: {
             exist: [
@@ -107,11 +117,19 @@ main: kit: entity: game_data: {
           }
           method: "GET"
           orig: "/game/{game_pk}/feed/live"
-          parts: [
-            "game"
-            "{game_pk}"
-            "feed"
-            "live"
+          segments: [
+            {
+              lit: "game"
+            }
+            {
+              var: "game_pk"
+            }
+            {
+              lit: "feed"
+            }
+            {
+              lit: "live"
+            }
           ]
           select: {
             exist: [

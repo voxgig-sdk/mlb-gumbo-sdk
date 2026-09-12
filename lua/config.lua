@@ -72,12 +72,22 @@ local function make_config()
                 ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/game/{game_pk}/feed/live/timestamps",
-                ["parts"] = {
-                  "game",
-                  "{game_pk}",
-                  "feed",
-                  "live",
-                  "timestamps",
+                ["segments"] = {
+                  {
+                    ["lit"] = "game",
+                  },
+                  {
+                    ["var"] = "game_pk",
+                  },
+                  {
+                    ["lit"] = "feed",
+                  },
+                  {
+                    ["lit"] = "live",
+                  },
+                  {
+                    ["lit"] = "timestamps",
+                  },
                 },
                 ["select"] = {
                   ["exist"] = {
@@ -87,6 +97,13 @@ local function make_config()
                 ["transform"] = {
                   ["req"] = "`reqdata`",
                   ["res"] = "`body.timestamps`",
+                },
+                ["parts"] = {
+                  "game",
+                  "{game_pk}",
+                  "feed",
+                  "live",
+                  "timestamps",
                 },
               },
             },
@@ -133,11 +150,19 @@ local function make_config()
                 ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/game/{game_pk}/feed/live",
-                ["parts"] = {
-                  "game",
-                  "{game_pk}",
-                  "feed",
-                  "live",
+                ["segments"] = {
+                  {
+                    ["lit"] = "game",
+                  },
+                  {
+                    ["var"] = "game_pk",
+                  },
+                  {
+                    ["lit"] = "feed",
+                  },
+                  {
+                    ["lit"] = "live",
+                  },
                 },
                 ["select"] = {
                   ["exist"] = {
@@ -150,6 +175,12 @@ local function make_config()
                 ["transform"] = {
                   ["req"] = "`reqdata`",
                   ["res"] = "`body`",
+                },
+                ["parts"] = {
+                  "game",
+                  "{game_pk}",
+                  "feed",
+                  "live",
                 },
               },
             },
@@ -208,13 +239,17 @@ local function make_config()
                 ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/people/{playerId}",
-                ["parts"] = {
-                  "people",
-                  "{player_id}",
-                },
                 ["rename"] = {
                   ["param"] = {
                     ["playerId"] = "player_id",
+                  },
+                },
+                ["segments"] = {
+                  {
+                    ["lit"] = "people",
+                  },
+                  {
+                    ["var"] = "player_id",
                   },
                 },
                 ["select"] = {
@@ -227,6 +262,10 @@ local function make_config()
                 ["transform"] = {
                   ["req"] = "`reqdata`",
                   ["res"] = "`body`",
+                },
+                ["parts"] = {
+                  "people",
+                  "{player_id}",
                 },
               },
             },
@@ -243,6 +282,7 @@ local function make_config()
       ["schedule"] = {
         ["fields"] = {
           {
+            ["format"] = "date",
             ["name"] = "date",
             ["type"] = "`$STRING`",
           },
@@ -299,8 +339,10 @@ local function make_config()
                 ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/schedule",
-                ["parts"] = {
-                  "schedule",
+                ["segments"] = {
+                  {
+                    ["lit"] = "schedule",
+                  },
                 },
                 ["select"] = {
                   ["exist"] = {
@@ -314,6 +356,9 @@ local function make_config()
                 ["transform"] = {
                   ["req"] = "`reqdata`",
                   ["res"] = "`body.dates`",
+                },
+                ["parts"] = {
+                  "schedule",
                 },
               },
             },
@@ -349,6 +394,10 @@ local function make_config()
             ["name"] = "teams",
             ["type"] = "`$ARRAY`",
           },
+        },
+        ["id"] = {
+          ["field"] = "id",
+          ["name"] = "id",
         },
         ["name"] = "team",
         ["op"] = {
@@ -387,14 +436,20 @@ local function make_config()
                 ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/teams/{teamId}/roster",
-                ["parts"] = {
-                  "teams",
-                  "{id}",
-                  "roster",
-                },
                 ["rename"] = {
                   ["param"] = {
                     ["teamId"] = "id",
+                  },
+                },
+                ["segments"] = {
+                  {
+                    ["lit"] = "teams",
+                  },
+                  {
+                    ["var"] = "id",
+                  },
+                  {
+                    ["lit"] = "roster",
                   },
                 },
                 ["select"] = {
@@ -408,6 +463,11 @@ local function make_config()
                 ["transform"] = {
                   ["req"] = "`reqdata`",
                   ["res"] = "`body.roster`",
+                },
+                ["parts"] = {
+                  "teams",
+                  "{id}",
+                  "roster",
                 },
               },
             },
@@ -447,13 +507,17 @@ local function make_config()
                 ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/teams/{teamId}",
-                ["parts"] = {
-                  "teams",
-                  "{id}",
-                },
                 ["rename"] = {
                   ["param"] = {
                     ["teamId"] = "id",
+                  },
+                },
+                ["segments"] = {
+                  {
+                    ["lit"] = "teams",
+                  },
+                  {
+                    ["var"] = "id",
                   },
                 },
                 ["select"] = {
@@ -466,6 +530,10 @@ local function make_config()
                 ["transform"] = {
                   ["req"] = "`reqdata`",
                   ["res"] = "`body`",
+                },
+                ["parts"] = {
+                  "teams",
+                  "{id}",
                 },
               },
             },

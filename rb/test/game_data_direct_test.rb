@@ -133,8 +133,10 @@ def game_data_direct_setup(mockres)
   live = env["MLB_GUMBO_TEST_LIVE"] == "TRUE"
 
   if live
-    merged_opts = {
-    }
+    # Merged so the generated fields win: sdk-test-control.json's
+    # test.client.options adds to the live client, it does not redirect it.
+    merged_opts = Runner.live_client_options.merge({
+    })
     client = MlbGumboSDK.new(merged_opts)
     return {
       client: client,

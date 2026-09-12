@@ -50,15 +50,19 @@ main: kit: entity: player: {
           }
           method: "GET"
           orig: "/people/{playerId}"
-          parts: [
-            "people"
-            "{player_id}"
-          ]
           rename: {
             param: {
               playerId: "player_id"
             }
           }
+          segments: [
+            {
+              lit: "people"
+            }
+            {
+              var: "player_id"
+            }
+          ]
           select: {
             exist: [
               "hydrate"

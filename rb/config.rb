@@ -84,12 +84,22 @@ module MlbGumboConfig
                   "kind" => "http",
                   "method" => "GET",
                   "orig" => "/game/{game_pk}/feed/live/timestamps",
-                  "parts" => [
-                    "game",
-                    "{game_pk}",
-                    "feed",
-                    "live",
-                    "timestamps",
+                  "segments" => [
+                    {
+                      "lit" => "game",
+                    },
+                    {
+                      "var" => "game_pk",
+                    },
+                    {
+                      "lit" => "feed",
+                    },
+                    {
+                      "lit" => "live",
+                    },
+                    {
+                      "lit" => "timestamps",
+                    },
                   ],
                   "select" => {
                     "exist" => [
@@ -100,6 +110,13 @@ module MlbGumboConfig
                     "req" => "`reqdata`",
                     "res" => "`body.timestamps`",
                   },
+                  "parts" => [
+                    "game",
+                    "{game_pk}",
+                    "feed",
+                    "live",
+                    "timestamps",
+                  ],
                 },
               ],
             },
@@ -145,11 +162,19 @@ module MlbGumboConfig
                   "kind" => "http",
                   "method" => "GET",
                   "orig" => "/game/{game_pk}/feed/live",
-                  "parts" => [
-                    "game",
-                    "{game_pk}",
-                    "feed",
-                    "live",
+                  "segments" => [
+                    {
+                      "lit" => "game",
+                    },
+                    {
+                      "var" => "game_pk",
+                    },
+                    {
+                      "lit" => "feed",
+                    },
+                    {
+                      "lit" => "live",
+                    },
                   ],
                   "select" => {
                     "exist" => [
@@ -163,6 +188,12 @@ module MlbGumboConfig
                     "req" => "`reqdata`",
                     "res" => "`body`",
                   },
+                  "parts" => [
+                    "game",
+                    "{game_pk}",
+                    "feed",
+                    "live",
+                  ],
                 },
               ],
             },
@@ -220,15 +251,19 @@ module MlbGumboConfig
                   "kind" => "http",
                   "method" => "GET",
                   "orig" => "/people/{playerId}",
-                  "parts" => [
-                    "people",
-                    "{player_id}",
-                  ],
                   "rename" => {
                     "param" => {
                       "playerId" => "player_id",
                     },
                   },
+                  "segments" => [
+                    {
+                      "lit" => "people",
+                    },
+                    {
+                      "var" => "player_id",
+                    },
+                  ],
                   "select" => {
                     "exist" => [
                       "hydrate",
@@ -240,6 +275,10 @@ module MlbGumboConfig
                     "req" => "`reqdata`",
                     "res" => "`body`",
                   },
+                  "parts" => [
+                    "people",
+                    "{player_id}",
+                  ],
                 },
               ],
             },
@@ -255,6 +294,7 @@ module MlbGumboConfig
         "schedule" => {
           "fields" => [
             {
+              "format" => "date",
               "name" => "date",
               "type" => "`$STRING`",
             },
@@ -311,8 +351,10 @@ module MlbGumboConfig
                   "kind" => "http",
                   "method" => "GET",
                   "orig" => "/schedule",
-                  "parts" => [
-                    "schedule",
+                  "segments" => [
+                    {
+                      "lit" => "schedule",
+                    },
                   ],
                   "select" => {
                     "exist" => [
@@ -327,6 +369,9 @@ module MlbGumboConfig
                     "req" => "`reqdata`",
                     "res" => "`body.dates`",
                   },
+                  "parts" => [
+                    "schedule",
+                  ],
                 },
               ],
             },
@@ -362,6 +407,10 @@ module MlbGumboConfig
               "type" => "`$ARRAY`",
             },
           ],
+          "id" => {
+            "field" => "id",
+            "name" => "id",
+          },
           "name" => "team",
           "op" => {
             "list" => {
@@ -399,16 +448,22 @@ module MlbGumboConfig
                   "kind" => "http",
                   "method" => "GET",
                   "orig" => "/teams/{teamId}/roster",
-                  "parts" => [
-                    "teams",
-                    "{id}",
-                    "roster",
-                  ],
                   "rename" => {
                     "param" => {
                       "teamId" => "id",
                     },
                   },
+                  "segments" => [
+                    {
+                      "lit" => "teams",
+                    },
+                    {
+                      "var" => "id",
+                    },
+                    {
+                      "lit" => "roster",
+                    },
+                  ],
                   "select" => {
                     "$action" => "roster",
                     "exist" => [
@@ -421,6 +476,11 @@ module MlbGumboConfig
                     "req" => "`reqdata`",
                     "res" => "`body.roster`",
                   },
+                  "parts" => [
+                    "teams",
+                    "{id}",
+                    "roster",
+                  ],
                 },
               ],
             },
@@ -459,15 +519,19 @@ module MlbGumboConfig
                   "kind" => "http",
                   "method" => "GET",
                   "orig" => "/teams/{teamId}",
-                  "parts" => [
-                    "teams",
-                    "{id}",
-                  ],
                   "rename" => {
                     "param" => {
                       "teamId" => "id",
                     },
                   },
+                  "segments" => [
+                    {
+                      "lit" => "teams",
+                    },
+                    {
+                      "var" => "id",
+                    },
+                  ],
                   "select" => {
                     "exist" => [
                       "hydrate",
@@ -479,6 +543,10 @@ module MlbGumboConfig
                     "req" => "`reqdata`",
                     "res" => "`body`",
                   },
+                  "parts" => [
+                    "teams",
+                    "{id}",
+                  ],
                 },
               ],
             },

@@ -79,16 +79,22 @@ main: kit: entity: team: {
           }
           method: "GET"
           orig: "/teams/{teamId}/roster"
-          parts: [
-            "teams"
-            "{id}"
-            "roster"
-          ]
           rename: {
             param: {
               teamId: "id"
             }
           }
+          segments: [
+            {
+              lit: "teams"
+            }
+            {
+              var: "id"
+            }
+            {
+              lit: "roster"
+            }
+          ]
           select: {
             "$action": "roster"
             exist: [
@@ -139,15 +145,19 @@ main: kit: entity: team: {
           }
           method: "GET"
           orig: "/teams/{teamId}"
-          parts: [
-            "teams"
-            "{id}"
-          ]
           rename: {
             param: {
               teamId: "id"
             }
           }
+          segments: [
+            {
+              lit: "teams"
+            }
+            {
+              var: "id"
+            }
+          ]
           select: {
             exist: [
               "hydrate"
