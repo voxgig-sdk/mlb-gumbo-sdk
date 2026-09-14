@@ -28,7 +28,7 @@ loading a specific record.
 ### 1. Create a client
 
 ```ts
-import { MlbGumboSDK } from '@voxgig-sdk/mlb-gumbo'
+import { MlbGumboSDK } from '@voxgig-sdk/mlb-gumbo-sdk'
 
 const client = new MlbGumboSDK()
 ```
@@ -553,7 +553,7 @@ mlb-gumbo/
 Import the SDK from the package root:
 
 ```ts
-import { MlbGumboSDK } from '@voxgig-sdk/mlb-gumbo'
+import { MlbGumboSDK } from '@voxgig-sdk/mlb-gumbo-sdk'
 ```
 
 ### Entity state

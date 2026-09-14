@@ -105,7 +105,7 @@ local results, err = client:Schedule():list()
 
 | Language | Package | Install |
 | --- | --- | --- |
-| TypeScript | `@voxgig-sdk/mlb-gumbo` | publish pending — [install from git tag](https://github.com/voxgig-sdk/mlb-gumbo-sdk/releases) |
+| TypeScript | `@voxgig-sdk/mlb-gumbo-sdk` | publish pending — [install from git tag](https://github.com/voxgig-sdk/mlb-gumbo-sdk/releases) |
 | Python | `voxgig-sdk-mlb-gumbo` | publish pending — [install from git tag](https://github.com/voxgig-sdk/mlb-gumbo-sdk/releases) |
 | PHP | `voxgig-sdk/mlb-gumbo` | publish pending — [install from git tag](https://github.com/voxgig-sdk/mlb-gumbo-sdk/releases) |
 | Golang | `github.com/voxgig-sdk/mlb-gumbo-sdk/go` | `go get github.com/voxgig-sdk/mlb-gumbo-sdk/go@latest` |
@@ -119,7 +119,7 @@ local results, err = client:Schedule():list()
 ### TypeScript
 
 ```ts
-import { MlbGumboSDK } from '@voxgig-sdk/mlb-gumbo'
+import { MlbGumboSDK } from '@voxgig-sdk/mlb-gumbo-sdk'
 
 const client = new MlbGumboSDK()
 
