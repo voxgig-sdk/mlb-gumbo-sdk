@@ -22,5 +22,117 @@
         "games": []
       }
     }
+  },
+  "requests": {
+    "GET /schedule": {
+      "provenance": "operation-contract",
+      "contract": {
+        "operationId": "getSchedule",
+        "parameters": [
+          {
+            "description": "Sport identifier (1 = Major League Baseball)",
+            "in": "query",
+            "name": "sportId",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "example": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The season year",
+            "in": "query",
+            "name": "season",
+            "required": false,
+            "schema": {
+              "example": 2024,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Type of games to include (R = Regular Season, P = Postseason, S = Spring Training)",
+            "in": "query",
+            "name": "gameType",
+            "required": false,
+            "schema": {
+              "enum": [
+                "R",
+                "P",
+                "S"
+              ],
+              "example": "R",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specific date for schedule (format: MM/DD/YYYY)",
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "schema": {
+              "example": "03/15/2024",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Add additional data to the response",
+            "in": "query",
+            "name": "hydrate",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "protocol": "http",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "dates": {
+                      "items": {
+                        "properties": {
+                          "date": {
+                            "format": "date",
+                            "type": "string"
+                          },
+                          "games": {
+                            "items": {
+                              "properties": {
+                                "gameDate": {
+                                  "format": "date-time",
+                                  "type": "string"
+                                },
+                                "gamePk": {
+                                  "description": "Unique game identifier",
+                                  "type": "integer"
+                                },
+                                "teams": {
+                                  "type": "object"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successfully retrieved schedule"
+          }
+        },
+        "securitySource": "unspecified"
+      }
+    }
   }
 }

@@ -5,6 +5,8 @@ import * as Fs from 'node:fs'
 
 import { test, describe, afterEach } from 'node:test'
 import assert from 'node:assert'
+import { createLiveTransport } from '../../live-runner'
+import { runLiveEntity } from '../../live-entity'
 
 
 import { MlbGumboSDK, BaseFeature, stdutil } from '../../..'
@@ -47,16 +49,13 @@ describe('GameDataEntity', async () => {
 
     const live = 'TRUE' === process.env.MLB_GUMBO_TEST_LIVE
     for (const op of ['list', 'load']) {
-      if (maybeSkipControl(t, 'entityOp', 'game_data.' + op, live)) return
+      if (!live && maybeSkipControl(t, 'entityOp', 'game_data.' + op, live)) return
     }
 
+    
     const setup = basicSetup()
-    // The basic flow consumes synthetic IDs and field values from the
-    // fixture (entity TestData.json). Those don't exist on the live API.
-    // Skip live runs unless the user provided a real ENTID env override.
-    if (setup.syntheticOnly) {
-      t.skip('live entity test uses synthetic IDs from fixture — set MLB_GUMBO_TEST_GAME_DATA_ENTID JSON to run live')
-      return
+    if (setup.live) {
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":[{"active":true,"name":"gameData","req":false,"short":"Metadata about the game including teams, venue, and game status","type":"`$OBJECT`","index$":0},{"active":true,"name":"liveData","req":false,"short":"Real-time game data including plays, boxscore, and current state","type":"`$OBJECT`","index$":1},{"active":true,"name":"timestamps","req":false,"short":"Array of timestamp strings in format yyyymmdd_######","type":"`$ARRAY`","index$":2}],"name":"game_data","op":{"list":{"input":"data","name":"list","points":[{"active":true,"args":{"params":[{"active":true,"example":"716463","kind":"param","name":"game_pk","orig":"game_pk","reqd":true,"type":"`$STRING`","index$":0}]},"contract":{"id":"GET /game/{game_pk}/feed/live/timestamps","json":"{\"operationId\":\"getGameTimestamps\",\"parameters\":[{\"description\":\"The unique identifier (primary key) for the specific game\",\"in\":\"path\",\"name\":\"game_pk\",\"required\":true,\"schema\":{\"example\":\"716463\",\"type\":\"string\"}}],\"protocol\":\"http\",\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"timestamps\":{\"description\":\"Array of timestamp strings in format yyyymmdd_######\",\"items\":{\"type\":\"string\"},\"type\":\"array\"}},\"type\":\"object\"}}},\"description\":\"Successfully retrieved list of timestamps\"},\"404\":{\"description\":\"Game not found\"}},\"securitySource\":\"unspecified\"}","source":"openapi3","version":1},"kind":"http","method":"GET","orig":"/game/{game_pk}/feed/live/timestamps","segments":[{"lit":"game"},{"var":"game_pk"},{"lit":"feed"},{"lit":"live"},{"lit":"timestamps"}],"select":{"exist":["game_pk"]},"transform":{"req":"`reqdata`","res":"`body.timestamps`"},"index$":0}],"key$":"list"},"load":{"input":"data","name":"load","points":[{"active":true,"args":{"params":[{"active":true,"example":"716463","kind":"param","name":"game_pk","orig":"game_pk","reqd":true,"type":"`$STRING`","index$":0}],"query":[{"active":true,"kind":"query","name":"field","orig":"field","reqd":false,"type":"`$STRING`","index$":0},{"active":true,"example":"stats,team","kind":"query","name":"hydrate","orig":"hydrate","reqd":false,"type":"`$STRING`","index$":1},{"active":true,"example":"20240315_123456","kind":"query","name":"timecode","orig":"timecode","reqd":false,"type":"`$STRING`","index$":2}]},"contract":{"id":"GET /game/{game_pk}/feed/live","json":"{\"operationId\":\"getLiveGameFeed\",\"parameters\":[{\"description\":\"The unique identifier (primary key) for the specific game\",\"in\":\"path\",\"name\":\"game_pk\",\"required\":true,\"schema\":{\"example\":\"716463\",\"type\":\"string\"}},{\"description\":\"Retrieve game state at a specific timestamp in format yyyymmdd_######\",\"in\":\"query\",\"name\":\"timecode\",\"required\":false,\"schema\":{\"example\":\"20240315_123456\",\"pattern\":\"^\\\\d{8}_\\\\d{6}$\",\"type\":\"string\"}},{\"description\":\"Add additional data to the response (e.g., stats, team)\",\"in\":\"query\",\"name\":\"hydrate\",\"required\":false,\"schema\":{\"example\":\"stats,team\",\"type\":\"string\"}},{\"description\":\"Limit the response to specific fields\",\"in\":\"query\",\"name\":\"fields\",\"required\":false,\"schema\":{\"type\":\"string\"}}],\"protocol\":\"http\",\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"gameData\":{\"description\":\"Metadata about the game including teams, venue, and game status\",\"type\":\"object\"},\"liveData\":{\"description\":\"Real-time game data including plays, boxscore, and current state\",\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"Successfully retrieved live game feed\"},\"404\":{\"description\":\"Game not found\"}},\"securitySource\":\"unspecified\"}","source":"openapi3","version":1},"kind":"http","method":"GET","orig":"/game/{game_pk}/feed/live","segments":[{"lit":"game"},{"var":"game_pk"},{"lit":"feed"},{"lit":"live"}],"select":{"exist":["field","game_pk","hydrate","timecode"]},"transform":{"req":"`reqdata`","res":"`body`"},"index$":0}],"key$":"load"}},"relations":{"ancestors":[["game"]]},"key$":"game_data","name__orig":"game_data","Name":"GameData","name_":"game_data","name-":"game-data","NAME":"GAME_DATA","index$":0}, {"active":true,"entity":"game_data","key$":"BasicGameDataFlow","kind":"basic","name":"BasicGameDataFlow","param":{},"step":[{"active":true,"data":{},"input":{},"match":{"game_pk":"game_pk01"},"op":"list","spec":[],"valid":[{"apply":"ItemExists","def":{"ref":"game_data_ref01"}}],"index$":0},{"active":true,"data":{},"input":{"ref":"game_data_ref01","srcdatavar":"game_data_ref01_data","suffix":"_dt0"},"match":{"id":"game_data01"},"op":"load","spec":[],"valid":[{"apply":"TextFieldMark","def":{"mark":"Mark01-game_data_ref01"}}],"index$":1}]}, 'GameData')
     }
     const client = setup.client
     const struct = setup.struct
@@ -111,13 +110,6 @@ function basicSetup(extra?: any) {
       }]
     })
 
-  // Detect whether the user provided a real ENTID JSON via env var. The
-  // basic flow consumes synthetic IDs from the fixture file; without an
-  // override those synthetic IDs reach the live API and 4xx. Surface this
-  // to the test so it can skip rather than fail.
-  const idmapEnvVal = process.env['MLB_GUMBO_TEST_GAME_DATA_ENTID']
-  const idmapOverridden = null != idmapEnvVal && idmapEnvVal.trim().startsWith('{')
-
   const env = envOverride({
     'MLB_GUMBO_TEST_GAME_DATA_ENTID': idmap,
     'MLB_GUMBO_TEST_LIVE': 'FALSE',
@@ -128,7 +120,13 @@ function basicSetup(extra?: any) {
 
   const live = 'TRUE' === env.MLB_GUMBO_TEST_LIVE
 
+  const transport = createLiveTransport()
   if (live) {
+    const rawIds = process.env['MLB_GUMBO_TEST_GAME_DATA_ENTID']
+    idmap = rawIds && rawIds.trim() ? JSON.parse(rawIds) : {}
+    if (!idmap || Array.isArray(idmap) || typeof idmap !== 'object') {
+      throw new Error('Live ENTID must be a JSON object')
+    }
     client = new MlbGumboSDK(merge([
       // FIRST, so the generated fields below win: sdk-test-control.json's
       // test.client.options adds to the live client, it does not redirect it.
@@ -140,7 +138,8 @@ function basicSetup(extra?: any) {
       // argument at all - so a bare 'extra' silently discarded the apikey
       // and server values above and handed the SDK undefined. Harmless
       // while there was nothing in that object; not harmless now.
-      extra || {}
+      extra || {},
+      { system: { fetch: transport.fetch } }
     ]))
   }
 
@@ -153,7 +152,7 @@ function basicSetup(extra?: any) {
     data: entityData,
     explain: 'TRUE' === env.MLB_GUMBO_TEST_EXPLAIN,
     live,
-    syntheticOnly: live && !idmapOverridden,
+    transport,
     now: Date.now(),
   }
 

@@ -4,7 +4,10 @@ declare(strict_types=1);
 // MlbGumbo SDK feature factory
 
 require_once __DIR__ . '/feature/BaseFeature.php';
+require_once __DIR__ . '/feature/RatelimitFeature.php';
+require_once __DIR__ . '/feature/RetryFeature.php';
 require_once __DIR__ . '/feature/TestFeature.php';
+require_once __DIR__ . '/feature/TimeoutFeature.php';
 
 
 class MlbGumboFeatures
@@ -14,8 +17,14 @@ class MlbGumboFeatures
         switch ($name) {
             case "base":
                 return new MlbGumboBaseFeature();
+            case "ratelimit":
+                return new MlbGumboRatelimitFeature();
+            case "retry":
+                return new MlbGumboRetryFeature();
             case "test":
                 return new MlbGumboTestFeature();
+            case "timeout":
+                return new MlbGumboTimeoutFeature();
             default:
                 return new MlbGumboBaseFeature();
         }
@@ -31,7 +40,10 @@ class MlbGumboFeatures
     {
         switch ($name) {
             case "base":
+            case "ratelimit":
+            case "retry":
             case "test":
+            case "timeout":
                 return true;
             default:
                 return false;

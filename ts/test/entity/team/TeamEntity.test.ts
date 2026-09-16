@@ -5,6 +5,8 @@ import * as Fs from 'node:fs'
 
 import { test, describe, afterEach } from 'node:test'
 import assert from 'node:assert'
+import { createLiveTransport } from '../../live-runner'
+import { runLiveEntity } from '../../live-entity'
 
 
 import { MlbGumboSDK, BaseFeature, stdutil } from '../../..'
@@ -47,16 +49,13 @@ describe('TeamEntity', async () => {
 
     const live = 'TRUE' === process.env.MLB_GUMBO_TEST_LIVE
     for (const op of ['list', 'load']) {
-      if (maybeSkipControl(t, 'entityOp', 'team.' + op, live)) return
+      if (!live && maybeSkipControl(t, 'entityOp', 'team.' + op, live)) return
     }
 
+    
     const setup = basicSetup()
-    // The basic flow consumes synthetic IDs and field values from the
-    // fixture (entity TestData.json). Those don't exist on the live API.
-    // Skip live runs unless the user provided a real ENTID env override.
-    if (setup.syntheticOnly) {
-      t.skip('live entity test uses synthetic IDs from fixture — set MLB_GUMBO_TEST_TEAM_ENTID JSON to run live')
-      return
+    if (setup.live) {
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":[{"active":true,"name":"id","req":false,"type":"`$STRING`","index$":0},{"active":true,"name":"jerseyNumber","req":false,"type":"`$STRING`","index$":1},{"active":true,"name":"person","req":false,"type":"`$OBJECT`","index$":2},{"active":true,"name":"position","req":false,"type":"`$OBJECT`","index$":3},{"active":true,"name":"status","req":false,"type":"`$OBJECT`","index$":4},{"active":true,"name":"teams","req":false,"type":"`$ARRAY`","index$":5}],"id":{"field":"id","name":"id"},"name":"team","op":{"list":{"input":"data","name":"list","points":[{"active":true,"args":{"params":[{"active":true,"example":119,"kind":"param","name":"id","orig":"team_id","reqd":true,"type":"`$INTEGER`","index$":0}],"query":[{"active":true,"kind":"query","name":"hydrate","orig":"hydrate","reqd":false,"type":"`$STRING`","index$":0},{"active":true,"example":2024,"kind":"query","name":"season","orig":"season","reqd":false,"type":"`$INTEGER`","index$":1}]},"contract":{"id":"GET /teams/{teamId}/roster","json":"{\"operationId\":\"getTeamRoster\",\"parameters\":[{\"description\":\"The unique identifier for the team (e.g., 119 for LA Dodgers)\",\"in\":\"path\",\"name\":\"teamId\",\"required\":true,\"schema\":{\"example\":119,\"type\":\"integer\"}},{\"description\":\"The season year for the roster\",\"in\":\"query\",\"name\":\"season\",\"required\":false,\"schema\":{\"example\":2024,\"type\":\"integer\"}},{\"description\":\"Add additional data to the response\",\"in\":\"query\",\"name\":\"hydrate\",\"required\":false,\"schema\":{\"type\":\"string\"}}],\"protocol\":\"http\",\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"roster\":{\"items\":{\"properties\":{\"jerseyNumber\":{\"type\":\"string\"},\"person\":{\"properties\":{\"fullName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"}},\"type\":\"object\"},\"position\":{\"properties\":{\"code\":{\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\"},\"status\":{\"type\":\"object\"}},\"type\":\"object\"},\"type\":\"array\"}},\"type\":\"object\"}}},\"description\":\"Successfully retrieved team roster\"},\"404\":{\"description\":\"Team not found\"}},\"securitySource\":\"unspecified\"}","source":"openapi3","version":1},"kind":"http","method":"GET","orig":"/teams/{teamId}/roster","rename":{"param":{"teamId":"id"}},"segments":[{"lit":"teams"},{"var":"id"},{"lit":"roster"}],"select":{"$action":"roster","exist":["hydrate","id","season"]},"transform":{"req":"`reqdata`","res":"`body.roster`"},"index$":0}],"key$":"list"},"load":{"input":"data","name":"load","points":[{"active":true,"args":{"params":[{"active":true,"example":119,"kind":"param","name":"id","orig":"team_id","reqd":true,"type":"`$INTEGER`","index$":0}],"query":[{"active":true,"kind":"query","name":"hydrate","orig":"hydrate","reqd":false,"type":"`$STRING`","index$":0},{"active":true,"example":2024,"kind":"query","name":"season","orig":"season","reqd":false,"type":"`$INTEGER`","index$":1}]},"contract":{"id":"GET /teams/{teamId}","json":"{\"operationId\":\"getTeam\",\"parameters\":[{\"description\":\"The unique identifier for the team (e.g., 119 for LA Dodgers)\",\"in\":\"path\",\"name\":\"teamId\",\"required\":true,\"schema\":{\"example\":119,\"type\":\"integer\"}},{\"description\":\"Specify a season year for team information\",\"in\":\"query\",\"name\":\"season\",\"required\":false,\"schema\":{\"example\":2024,\"type\":\"integer\"}},{\"description\":\"Add additional data to the response\",\"in\":\"query\",\"name\":\"hydrate\",\"required\":false,\"schema\":{\"type\":\"string\"}}],\"protocol\":\"http\",\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"teams\":{\"items\":{\"properties\":{\"abbreviation\":{\"type\":\"string\"},\"division\":{\"type\":\"object\"},\"id\":{\"type\":\"integer\"},\"league\":{\"type\":\"object\"},\"locationName\":{\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"teamName\":{\"type\":\"string\"}},\"type\":\"object\"},\"type\":\"array\"}},\"type\":\"object\"}}},\"description\":\"Successfully retrieved team information\"},\"404\":{\"description\":\"Team not found\"}},\"securitySource\":\"unspecified\"}","source":"openapi3","version":1},"kind":"http","method":"GET","orig":"/teams/{teamId}","rename":{"param":{"teamId":"id"}},"segments":[{"lit":"teams"},{"var":"id"}],"select":{"exist":["hydrate","id","season"]},"transform":{"req":"`reqdata`","res":"`body`"},"index$":0}],"key$":"load"}},"relations":{"ancestors":[]},"key$":"team","name__orig":"team","Name":"Team","name_":"team","name-":"team","NAME":"TEAM","index$":3}, {"active":true,"entity":"team","key$":"BasicTeamFlow","kind":"basic","name":"BasicTeamFlow","param":{},"step":[{"active":true,"data":{},"input":{},"match":{"team_id":"team01"},"op":"list","spec":[],"valid":[{"apply":"ItemExists","def":{"ref":"team_ref01"}}],"index$":0},{"active":true,"data":{},"input":{"ref":"team_ref01","srcdatavar":"team_ref01_data","suffix":"_dt0"},"match":{"id":"team01"},"op":"load","spec":[],"valid":[{"apply":"TextFieldMark","def":{"mark":"Mark01-team_ref01"}}],"index$":1}]}, 'Team')
     }
     const client = setup.client
     const struct = setup.struct
@@ -117,13 +116,6 @@ function basicSetup(extra?: any) {
       }]
     })
 
-  // Detect whether the user provided a real ENTID JSON via env var. The
-  // basic flow consumes synthetic IDs from the fixture file; without an
-  // override those synthetic IDs reach the live API and 4xx. Surface this
-  // to the test so it can skip rather than fail.
-  const idmapEnvVal = process.env['MLB_GUMBO_TEST_TEAM_ENTID']
-  const idmapOverridden = null != idmapEnvVal && idmapEnvVal.trim().startsWith('{')
-
   const env = envOverride({
     'MLB_GUMBO_TEST_TEAM_ENTID': idmap,
     'MLB_GUMBO_TEST_LIVE': 'FALSE',
@@ -134,7 +126,13 @@ function basicSetup(extra?: any) {
 
   const live = 'TRUE' === env.MLB_GUMBO_TEST_LIVE
 
+  const transport = createLiveTransport()
   if (live) {
+    const rawIds = process.env['MLB_GUMBO_TEST_TEAM_ENTID']
+    idmap = rawIds && rawIds.trim() ? JSON.parse(rawIds) : {}
+    if (!idmap || Array.isArray(idmap) || typeof idmap !== 'object') {
+      throw new Error('Live ENTID must be a JSON object')
+    }
     client = new MlbGumboSDK(merge([
       // FIRST, so the generated fields below win: sdk-test-control.json's
       // test.client.options adds to the live client, it does not redirect it.
@@ -146,7 +144,8 @@ function basicSetup(extra?: any) {
       // argument at all - so a bare 'extra' silently discarded the apikey
       // and server values above and handed the SDK undefined. Harmless
       // while there was nothing in that object; not harmless now.
-      extra || {}
+      extra || {},
+      { system: { fetch: transport.fetch } }
     ]))
   }
 
@@ -159,7 +158,7 @@ function basicSetup(extra?: any) {
     data: entityData,
     explain: 'TRUE' === env.MLB_GUMBO_TEST_EXPLAIN,
     live,
-    syntheticOnly: live && !idmapOverridden,
+    transport,
     now: Date.now(),
   }
 

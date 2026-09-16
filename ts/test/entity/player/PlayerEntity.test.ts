@@ -5,6 +5,8 @@ import * as Fs from 'node:fs'
 
 import { test, describe, afterEach } from 'node:test'
 import assert from 'node:assert'
+import { createLiveTransport } from '../../live-runner'
+import { runLiveEntity } from '../../live-entity'
 
 
 import { MlbGumboSDK, BaseFeature, stdutil } from '../../..'
@@ -47,16 +49,13 @@ describe('PlayerEntity', async () => {
 
     const live = 'TRUE' === process.env.MLB_GUMBO_TEST_LIVE
     for (const op of ['load']) {
-      if (maybeSkipControl(t, 'entityOp', 'player.' + op, live)) return
+      if (!live && maybeSkipControl(t, 'entityOp', 'player.' + op, live)) return
     }
 
+    
     const setup = basicSetup()
-    // The basic flow consumes synthetic IDs and field values from the
-    // fixture (entity TestData.json). Those don't exist on the live API.
-    // Skip live runs unless the user provided a real ENTID env override.
-    if (setup.syntheticOnly) {
-      t.skip('live entity test uses synthetic IDs from fixture — set MLB_GUMBO_TEST_PLAYER_ENTID JSON to run live')
-      return
+    if (setup.live) {
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":[{"active":true,"name":"people","req":false,"type":"`$ARRAY`","index$":0}],"name":"player","op":{"load":{"input":"data","name":"load","points":[{"active":true,"args":{"params":[{"active":true,"example":660271,"kind":"param","name":"player_id","orig":"player_id","reqd":true,"type":"`$INTEGER`","index$":0}],"query":[{"active":true,"example":"stats,currentTeam","kind":"query","name":"hydrate","orig":"hydrate","reqd":false,"type":"`$STRING`","index$":0},{"active":true,"example":2024,"kind":"query","name":"season","orig":"season","reqd":false,"type":"`$INTEGER`","index$":1}]},"contract":{"id":"GET /people/{playerId}","json":"{\"operationId\":\"getPlayer\",\"parameters\":[{\"description\":\"The unique identifier for the player (e.g., 660271 for Shohei Ohtani)\",\"in\":\"path\",\"name\":\"playerId\",\"required\":true,\"schema\":{\"example\":660271,\"type\":\"integer\"}},{\"description\":\"Specify a season year for player information\",\"in\":\"query\",\"name\":\"season\",\"required\":false,\"schema\":{\"example\":2024,\"type\":\"integer\"}},{\"description\":\"Add additional data to the response (e.g., stats, currentTeam)\",\"in\":\"query\",\"name\":\"hydrate\",\"required\":false,\"schema\":{\"example\":\"stats,currentTeam\",\"type\":\"string\"}}],\"protocol\":\"http\",\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"people\":{\"items\":{\"properties\":{\"batSide\":{\"type\":\"object\"},\"birthDate\":{\"format\":\"date\",\"type\":\"string\"},\"currentAge\":{\"type\":\"integer\"},\"firstName\":{\"type\":\"string\"},\"fullName\":{\"type\":\"string\"},\"height\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"pitchHand\":{\"type\":\"object\"},\"primaryNumber\":{\"type\":\"string\"},\"primaryPosition\":{\"properties\":{\"code\":{\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\"},\"weight\":{\"type\":\"integer\"}},\"type\":\"object\"},\"type\":\"array\"}},\"type\":\"object\"}}},\"description\":\"Successfully retrieved player information\"},\"404\":{\"description\":\"Player not found\"}},\"securitySource\":\"unspecified\"}","source":"openapi3","version":1},"kind":"http","method":"GET","orig":"/people/{playerId}","rename":{"param":{"playerId":"player_id"}},"segments":[{"lit":"people"},{"var":"player_id"}],"select":{"exist":["hydrate","player_id","season"]},"transform":{"req":"`reqdata`","res":"`body`"},"index$":0}],"key$":"load"}},"relations":{"ancestors":[["person"]]},"key$":"player","name__orig":"player","Name":"Player","name_":"player","name-":"player","NAME":"PLAYER","index$":1}, {"active":true,"entity":"player","key$":"BasicPlayerFlow","kind":"basic","name":"BasicPlayerFlow","param":{},"step":[{"active":true,"data":{},"input":{"ref":"player_ref01","srcdatavar":"player_ref01_data","suffix":"_dt0"},"match":{"id":"player01"},"op":"load","spec":[],"valid":[{"apply":"TextFieldMark","def":{"mark":"Mark01-player_ref01"}}],"index$":0}]}, 'Player')
     }
     const client = setup.client
     const struct = setup.struct
@@ -107,13 +106,6 @@ function basicSetup(extra?: any) {
       }]
     })
 
-  // Detect whether the user provided a real ENTID JSON via env var. The
-  // basic flow consumes synthetic IDs from the fixture file; without an
-  // override those synthetic IDs reach the live API and 4xx. Surface this
-  // to the test so it can skip rather than fail.
-  const idmapEnvVal = process.env['MLB_GUMBO_TEST_PLAYER_ENTID']
-  const idmapOverridden = null != idmapEnvVal && idmapEnvVal.trim().startsWith('{')
-
   const env = envOverride({
     'MLB_GUMBO_TEST_PLAYER_ENTID': idmap,
     'MLB_GUMBO_TEST_LIVE': 'FALSE',
@@ -124,7 +116,13 @@ function basicSetup(extra?: any) {
 
   const live = 'TRUE' === env.MLB_GUMBO_TEST_LIVE
 
+  const transport = createLiveTransport()
   if (live) {
+    const rawIds = process.env['MLB_GUMBO_TEST_PLAYER_ENTID']
+    idmap = rawIds && rawIds.trim() ? JSON.parse(rawIds) : {}
+    if (!idmap || Array.isArray(idmap) || typeof idmap !== 'object') {
+      throw new Error('Live ENTID must be a JSON object')
+    }
     client = new MlbGumboSDK(merge([
       // FIRST, so the generated fields below win: sdk-test-control.json's
       // test.client.options adds to the live client, it does not redirect it.
@@ -136,7 +134,8 @@ function basicSetup(extra?: any) {
       // argument at all - so a bare 'extra' silently discarded the apikey
       // and server values above and handed the SDK undefined. Harmless
       // while there was nothing in that object; not harmless now.
-      extra || {}
+      extra || {},
+      { system: { fetch: transport.fetch } }
     ]))
   }
 
@@ -149,7 +148,7 @@ function basicSetup(extra?: any) {
     data: entityData,
     explain: 'TRUE' === env.MLB_GUMBO_TEST_EXPLAIN,
     live,
-    syntheticOnly: live && !idmapOverridden,
+    transport,
     now: Date.now(),
   }
 

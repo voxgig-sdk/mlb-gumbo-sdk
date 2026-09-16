@@ -55,14 +55,14 @@ func TestTeamDirect(t *testing.T) {
 			// against an arbitrary public API, so the default SKIPS here.
 			// A project that owns its test server sets strict and FAILS.
 			if err != nil {
-				t.Skipf("list call failed (likely synthetic IDs against live API): %v", err)
+				t.Fatalf("list call failed (likely synthetic IDs against live API): %v", err)
 			}
 			if result["ok"] != true {
-				t.Skipf("list call not ok (likely synthetic IDs against live API): %v", result)
+				t.Fatalf("list call not ok (likely synthetic IDs against live API): %v", result)
 			}
 			status := core.ToInt(result["status"])
 			if status < 200 || status >= 300 {
-				t.Skipf("expected 2xx status, got %v", result["status"])
+				t.Fatalf("expected 2xx status, got %v", result["status"])
 			}
 		} else {
 			if err != nil {
@@ -137,14 +137,14 @@ func TestTeamDirect(t *testing.T) {
 			// the IDs we can construct from setup.idmap — unless the model
 			// sets main.kit.test.live.strict.
 			if err != nil {
-				t.Skipf("load call failed (likely synthetic IDs against live API): %v", err)
+				t.Fatalf("load call failed (likely synthetic IDs against live API): %v", err)
 			}
 			if result["ok"] != true {
-				t.Skipf("load call not ok (likely synthetic IDs against live API): %v", result)
+				t.Fatalf("load call not ok (likely synthetic IDs against live API): %v", result)
 			}
 			status := core.ToInt(result["status"])
 			if status < 200 || status >= 300 {
-				t.Skipf("expected 2xx status, got %v", result["status"])
+				t.Fatalf("expected 2xx status, got %v", result["status"])
 			}
 		} else {
 			if err != nil {

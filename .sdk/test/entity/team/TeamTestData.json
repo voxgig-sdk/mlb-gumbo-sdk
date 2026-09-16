@@ -37,5 +37,187 @@
         "teams": []
       }
     }
+  },
+  "requests": {
+    "GET /teams/{teamId}/roster": {
+      "provenance": "operation-contract",
+      "contract": {
+        "operationId": "getTeamRoster",
+        "parameters": [
+          {
+            "description": "The unique identifier for the team (e.g., 119 for LA Dodgers)",
+            "in": "path",
+            "name": "teamId",
+            "required": true,
+            "schema": {
+              "example": 119,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The season year for the roster",
+            "in": "query",
+            "name": "season",
+            "required": false,
+            "schema": {
+              "example": 2024,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Add additional data to the response",
+            "in": "query",
+            "name": "hydrate",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "protocol": "http",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "roster": {
+                      "items": {
+                        "properties": {
+                          "jerseyNumber": {
+                            "type": "string"
+                          },
+                          "person": {
+                            "properties": {
+                              "fullName": {
+                                "type": "string"
+                              },
+                              "id": {
+                                "type": "integer"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "position": {
+                            "properties": {
+                              "code": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "status": {
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successfully retrieved team roster"
+          },
+          "404": {
+            "description": "Team not found"
+          }
+        },
+        "securitySource": "unspecified"
+      }
+    },
+    "GET /teams/{teamId}": {
+      "provenance": "operation-contract",
+      "contract": {
+        "operationId": "getTeam",
+        "parameters": [
+          {
+            "description": "The unique identifier for the team (e.g., 119 for LA Dodgers)",
+            "in": "path",
+            "name": "teamId",
+            "required": true,
+            "schema": {
+              "example": 119,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Specify a season year for team information",
+            "in": "query",
+            "name": "season",
+            "required": false,
+            "schema": {
+              "example": 2024,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Add additional data to the response",
+            "in": "query",
+            "name": "hydrate",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "protocol": "http",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "teams": {
+                      "items": {
+                        "properties": {
+                          "abbreviation": {
+                            "type": "string"
+                          },
+                          "division": {
+                            "type": "object"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "league": {
+                            "type": "object"
+                          },
+                          "locationName": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "teamName": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successfully retrieved team information"
+          },
+          "404": {
+            "description": "Team not found"
+          }
+        },
+        "securitySource": "unspecified"
+      }
+    }
   }
 }

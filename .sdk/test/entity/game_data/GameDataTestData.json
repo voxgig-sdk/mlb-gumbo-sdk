@@ -32,5 +32,126 @@
         "timestamps": []
       }
     }
+  },
+  "requests": {
+    "GET /game/{game_pk}/feed/live/timestamps": {
+      "provenance": "operation-contract",
+      "contract": {
+        "operationId": "getGameTimestamps",
+        "parameters": [
+          {
+            "description": "The unique identifier (primary key) for the specific game",
+            "in": "path",
+            "name": "game_pk",
+            "required": true,
+            "schema": {
+              "example": "716463",
+              "type": "string"
+            }
+          }
+        ],
+        "protocol": "http",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "timestamps": {
+                      "description": "Array of timestamp strings in format yyyymmdd_######",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successfully retrieved list of timestamps"
+          },
+          "404": {
+            "description": "Game not found"
+          }
+        },
+        "securitySource": "unspecified"
+      }
+    },
+    "GET /game/{game_pk}/feed/live": {
+      "provenance": "operation-contract",
+      "contract": {
+        "operationId": "getLiveGameFeed",
+        "parameters": [
+          {
+            "description": "The unique identifier (primary key) for the specific game",
+            "in": "path",
+            "name": "game_pk",
+            "required": true,
+            "schema": {
+              "example": "716463",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Retrieve game state at a specific timestamp in format yyyymmdd_######",
+            "in": "query",
+            "name": "timecode",
+            "required": false,
+            "schema": {
+              "example": "20240315_123456",
+              "pattern": "^\\d{8}_\\d{6}$",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Add additional data to the response (e.g., stats, team)",
+            "in": "query",
+            "name": "hydrate",
+            "required": false,
+            "schema": {
+              "example": "stats,team",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Limit the response to specific fields",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "protocol": "http",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "gameData": {
+                      "description": "Metadata about the game including teams, venue, and game status",
+                      "type": "object"
+                    },
+                    "liveData": {
+                      "description": "Real-time game data including plays, boxscore, and current state",
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successfully retrieved live game feed"
+          },
+          "404": {
+            "description": "Game not found"
+          }
+        },
+        "securitySource": "unspecified"
+      }
+    }
   }
 }

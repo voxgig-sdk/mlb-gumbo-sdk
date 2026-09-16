@@ -1,12 +1,18 @@
 # MlbGumbo SDK feature factory
 
 from mlbgumbo_sdk.feature.base_feature import MlbGumboBaseFeature
+from mlbgumbo_sdk.feature.ratelimit_feature import MlbGumboRatelimitFeature
+from mlbgumbo_sdk.feature.retry_feature import MlbGumboRetryFeature
 from mlbgumbo_sdk.feature.test_feature import MlbGumboTestFeature
+from mlbgumbo_sdk.feature.timeout_feature import MlbGumboTimeoutFeature
 
 
 _FEATURES = {
     "base": lambda: MlbGumboBaseFeature(),
+    "ratelimit": lambda: MlbGumboRatelimitFeature(),
+    "retry": lambda: MlbGumboRetryFeature(),
     "test": lambda: MlbGumboTestFeature(),
+    "timeout": lambda: MlbGumboTimeoutFeature(),
 }
 
 

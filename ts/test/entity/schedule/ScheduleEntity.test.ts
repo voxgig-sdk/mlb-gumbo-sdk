@@ -5,6 +5,8 @@ import * as Fs from 'node:fs'
 
 import { test, describe, afterEach } from 'node:test'
 import assert from 'node:assert'
+import { createLiveTransport } from '../../live-runner'
+import { runLiveEntity } from '../../live-entity'
 
 
 import { MlbGumboSDK, BaseFeature, stdutil } from '../../..'
@@ -47,16 +49,13 @@ describe('ScheduleEntity', async () => {
 
     const live = 'TRUE' === process.env.MLB_GUMBO_TEST_LIVE
     for (const op of ['list']) {
-      if (maybeSkipControl(t, 'entityOp', 'schedule.' + op, live)) return
+      if (!live && maybeSkipControl(t, 'entityOp', 'schedule.' + op, live)) return
     }
 
+    
     const setup = basicSetup()
-    // The basic flow consumes synthetic IDs and field values from the
-    // fixture (entity TestData.json). Those don't exist on the live API.
-    // Skip live runs unless the user provided a real ENTID env override.
-    if (setup.syntheticOnly) {
-      t.skip('live entity test uses synthetic IDs from fixture — set MLB_GUMBO_TEST_SCHEDULE_ENTID JSON to run live')
-      return
+    if (setup.live) {
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":[{"active":true,"format":"date","name":"date","req":false,"type":"`$STRING`","index$":0},{"active":true,"name":"games","req":false,"type":"`$ARRAY`","index$":1}],"name":"schedule","op":{"list":{"input":"data","name":"list","points":[{"active":true,"args":{"query":[{"active":true,"example":"03/15/2024","kind":"query","name":"date","orig":"date","reqd":false,"type":"`$STRING`","index$":0},{"active":true,"example":"R","kind":"query","name":"game_type","orig":"game_type","reqd":false,"type":"`$STRING`","index$":1},{"active":true,"kind":"query","name":"hydrate","orig":"hydrate","reqd":false,"type":"`$STRING`","index$":2},{"active":true,"example":2024,"kind":"query","name":"season","orig":"season","reqd":false,"type":"`$INTEGER`","index$":3},{"active":true,"example":1,"kind":"query","name":"sport_id","orig":"sport_id","reqd":false,"type":"`$INTEGER`","index$":4}]},"contract":{"id":"GET /schedule","json":"{\"operationId\":\"getSchedule\",\"parameters\":[{\"description\":\"Sport identifier (1 = Major League Baseball)\",\"in\":\"query\",\"name\":\"sportId\",\"required\":false,\"schema\":{\"default\":1,\"example\":1,\"type\":\"integer\"}},{\"description\":\"The season year\",\"in\":\"query\",\"name\":\"season\",\"required\":false,\"schema\":{\"example\":2024,\"type\":\"integer\"}},{\"description\":\"Type of games to include (R = Regular Season, P = Postseason, S = Spring Training)\",\"in\":\"query\",\"name\":\"gameType\",\"required\":false,\"schema\":{\"enum\":[\"R\",\"P\",\"S\"],\"example\":\"R\",\"type\":\"string\"}},{\"description\":\"Specific date for schedule (format: MM/DD/YYYY)\",\"in\":\"query\",\"name\":\"date\",\"required\":false,\"schema\":{\"example\":\"03/15/2024\",\"type\":\"string\"}},{\"description\":\"Add additional data to the response\",\"in\":\"query\",\"name\":\"hydrate\",\"required\":false,\"schema\":{\"type\":\"string\"}}],\"protocol\":\"http\",\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"dates\":{\"items\":{\"properties\":{\"date\":{\"format\":\"date\",\"type\":\"string\"},\"games\":{\"items\":{\"properties\":{\"gameDate\":{\"format\":\"date-time\",\"type\":\"string\"},\"gamePk\":{\"description\":\"Unique game identifier\",\"type\":\"integer\"},\"teams\":{\"type\":\"object\"}},\"type\":\"object\"},\"type\":\"array\"}},\"type\":\"object\"},\"type\":\"array\"}},\"type\":\"object\"}}},\"description\":\"Successfully retrieved schedule\"}},\"securitySource\":\"unspecified\"}","source":"openapi3","version":1},"kind":"http","method":"GET","orig":"/schedule","segments":[{"lit":"schedule"}],"select":{"exist":["date","game_type","hydrate","season","sport_id"]},"transform":{"req":"`reqdata`","res":"`body.dates`"},"index$":0}],"key$":"list"}},"relations":{"ancestors":[]},"key$":"schedule","name__orig":"schedule","Name":"Schedule","name_":"schedule","name-":"schedule","NAME":"SCHEDULE","index$":2}, {"active":true,"entity":"schedule","key$":"BasicScheduleFlow","kind":"basic","name":"BasicScheduleFlow","param":{},"step":[{"active":true,"data":{},"input":{},"match":{},"op":"list","spec":[],"valid":[{"apply":"ItemExists","def":{"ref":"schedule_ref01"}}],"index$":0}]}, 'Schedule')
     }
     const client = setup.client
     const struct = setup.struct
@@ -109,13 +108,6 @@ function basicSetup(extra?: any) {
       }]
     })
 
-  // Detect whether the user provided a real ENTID JSON via env var. The
-  // basic flow consumes synthetic IDs from the fixture file; without an
-  // override those synthetic IDs reach the live API and 4xx. Surface this
-  // to the test so it can skip rather than fail.
-  const idmapEnvVal = process.env['MLB_GUMBO_TEST_SCHEDULE_ENTID']
-  const idmapOverridden = null != idmapEnvVal && idmapEnvVal.trim().startsWith('{')
-
   const env = envOverride({
     'MLB_GUMBO_TEST_SCHEDULE_ENTID': idmap,
     'MLB_GUMBO_TEST_LIVE': 'FALSE',
@@ -126,7 +118,13 @@ function basicSetup(extra?: any) {
 
   const live = 'TRUE' === env.MLB_GUMBO_TEST_LIVE
 
+  const transport = createLiveTransport()
   if (live) {
+    const rawIds = process.env['MLB_GUMBO_TEST_SCHEDULE_ENTID']
+    idmap = rawIds && rawIds.trim() ? JSON.parse(rawIds) : {}
+    if (!idmap || Array.isArray(idmap) || typeof idmap !== 'object') {
+      throw new Error('Live ENTID must be a JSON object')
+    }
     client = new MlbGumboSDK(merge([
       // FIRST, so the generated fields below win: sdk-test-control.json's
       // test.client.options adds to the live client, it does not redirect it.
@@ -138,7 +136,8 @@ function basicSetup(extra?: any) {
       // argument at all - so a bare 'extra' silently discarded the apikey
       // and server values above and handed the SDK undefined. Harmless
       // while there was nothing in that object; not harmless now.
-      extra || {}
+      extra || {},
+      { system: { fetch: transport.fetch } }
     ]))
   }
 
@@ -151,7 +150,7 @@ function basicSetup(extra?: any) {
     data: entityData,
     explain: 'TRUE' === env.MLB_GUMBO_TEST_EXPLAIN,
     live,
-    syntheticOnly: live && !idmapOverridden,
+    transport,
     now: Date.now(),
   }
 
