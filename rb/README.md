@@ -289,10 +289,6 @@ API path: `/schedule`
 | Field | Description |
 | --- | --- |
 | `id` |  |
-| `jerseyNumber` |  |
-| `person` |  |
-| `position` |  |
-| `status` |  |
 | `teams` |  |
 
 Operations: List, Load.
@@ -403,10 +399,6 @@ Create an instance: `team = client.Team`
 | Field | Type | Description |
 | --- | --- | --- |
 | `id` | `String` |  |
-| `jerseyNumber` | `String` |  |
-| `person` | `Hash` |  |
-| `position` | `Hash` |  |
-| `status` | `Hash` |  |
 | `teams` | `Array` |  |
 
 #### Example: Load
@@ -566,6 +558,7 @@ Use `Helpers.to_map()` to safely validate that a value is a hash.
 rb/
 ├── MlbGumbo_sdk.rb       -- Main SDK module
 ├── config.rb                  -- Configuration
+├── schema.rb                  -- Generated option + entity specs
 ├── features.rb                -- Feature factory
 ├── core/                      -- Core types and context
 ├── entity/                    -- Entity implementations

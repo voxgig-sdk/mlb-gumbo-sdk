@@ -433,22 +433,6 @@ func MakeConfig() map[string]any {
 						"type": "`$STRING`",
 					},
 					map[string]any{
-						"name": "jerseyNumber",
-						"type": "`$STRING`",
-					},
-					map[string]any{
-						"name": "person",
-						"type": "`$OBJECT`",
-					},
-					map[string]any{
-						"name": "position",
-						"type": "`$OBJECT`",
-					},
-					map[string]any{
-						"name": "status",
-						"type": "`$OBJECT`",
-					},
-					map[string]any{
 						"name": "teams",
 						"type": "`$ARRAY`",
 					},

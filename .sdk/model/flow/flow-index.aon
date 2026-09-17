@@ -1,6 +1,6 @@
 # Flows
 
-@"BasicGameDataFlow.aon"
-@"BasicPlayerFlow.aon"
-@"BasicScheduleFlow.aon"
-@"BasicTeamFlow.aon"
+@"./BasicGameDataFlow.aon"
+@"./BasicPlayerFlow.aon"
+@"./BasicScheduleFlow.aon"
+@"./BasicTeamFlow.aon"

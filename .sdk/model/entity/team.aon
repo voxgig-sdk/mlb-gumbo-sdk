@@ -11,26 +11,6 @@ main: kit: entity: team: {
       type: "`$STRING`"
     }
     {
-      name: "jerseyNumber"
-      req: false
-      type: "`$STRING`"
-    }
-    {
-      name: "person"
-      req: false
-      type: "`$OBJECT`"
-    }
-    {
-      name: "position"
-      req: false
-      type: "`$OBJECT`"
-    }
-    {
-      name: "status"
-      req: false
-      type: "`$OBJECT`"
-    }
-    {
       name: "teams"
       req: false
       type: "`$ARRAY`"

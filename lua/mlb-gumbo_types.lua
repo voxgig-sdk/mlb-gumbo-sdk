@@ -41,10 +41,6 @@
 
 ---@class Team
 ---@field id? string
----@field jerseyNumber? string
----@field person? table
----@field position? table
----@field status? table
 ---@field teams? table
 
 ---@class TeamLoadMatch

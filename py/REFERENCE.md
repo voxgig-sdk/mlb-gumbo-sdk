@@ -268,10 +268,6 @@ team = client.Team()
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `id` | `str` | No |  |
-| `jerseyNumber` | `str` | No |  |
-| `person` | `dict` | No |  |
-| `position` | `dict` | No |  |
-| `status` | `dict` | No |  |
 | `teams` | `list` | No |  |
 
 ### Operations

@@ -127,18 +127,18 @@ class Config {
 
     entity: {
       
-      game_data: {
-      },
-
-      player: {
-      },
-
-      schedule: {
-      },
-
-      team: {
-      },
-
+        game_data: {
+        },
+  
+        player: {
+        },
+  
+        schedule: {
+        },
+  
+        team: {
+        },
+  
     }
   }
 
@@ -485,22 +485,6 @@ class Config {
         {
           "name": "id",
           "type": "`$STRING`"
-        },
-        {
-          "name": "jerseyNumber",
-          "type": "`$STRING`"
-        },
-        {
-          "name": "person",
-          "type": "`$OBJECT`"
-        },
-        {
-          "name": "position",
-          "type": "`$OBJECT`"
-        },
-        {
-          "name": "status",
-          "type": "`$OBJECT`"
         },
         {
           "name": "teams",

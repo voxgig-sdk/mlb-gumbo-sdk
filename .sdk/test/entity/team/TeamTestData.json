@@ -3,26 +3,14 @@
     "team": {
       "TEAM00": {
         "id": "TEAM00",
-        "jerseyNumber": "s3d",
-        "person": {},
-        "position": {},
-        "status": {},
         "teams": []
       },
       "TEAM01": {
         "id": "TEAM01",
-        "jerseyNumber": "s79",
-        "person": {},
-        "position": {},
-        "status": {},
         "teams": []
       },
       "TEAM02": {
         "id": "TEAM02",
-        "jerseyNumber": "sb5",
-        "person": {},
-        "position": {},
-        "status": {},
         "teams": []
       }
     }
@@ -30,10 +18,6 @@
   "new": {
     "team": {
       "team_ref01": {
-        "jerseyNumber": "sf1",
-        "person": {},
-        "position": {},
-        "status": {},
         "teams": []
       }
     }

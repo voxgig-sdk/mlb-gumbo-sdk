@@ -347,10 +347,6 @@ API path: `/schedule`
 | Field | Description |
 | --- | --- |
 | `id` |  |
-| `jerseyNumber` |  |
-| `person` |  |
-| `position` |  |
-| `status` |  |
 | `teams` |  |
 
 Operations: list, load.
@@ -457,10 +453,6 @@ Create an instance: `const team = client.Team()`
 | Field | Type | Description |
 | --- | --- | --- |
 | `id` | `string` |  |
-| `jerseyNumber` | `string` |  |
-| `person` | `Record<string, any>` |  |
-| `position` | `Record<string, any>` |  |
-| `status` | `Record<string, any>` |  |
 | `teams` | `any[]` |  |
 
 #### Example: Load

@@ -1,6 +1,6 @@
 # Entity Models
 
-@"game_data.aon"
-@"player.aon"
-@"schedule.aon"
-@"team.aon"
+@"./game_data.aon"
+@"./player.aon"
+@"./schedule.aon"
+@"./team.aon"

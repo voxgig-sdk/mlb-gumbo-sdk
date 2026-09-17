@@ -455,22 +455,6 @@ class MlbGumboConfig
               'type' => '`$STRING`',
             ],
             [
-              'name' => 'jerseyNumber',
-              'type' => '`$STRING`',
-            ],
-            [
-              'name' => 'person',
-              'type' => '`$OBJECT`',
-            ],
-            [
-              'name' => 'position',
-              'type' => '`$OBJECT`',
-            ],
-            [
-              'name' => 'status',
-              'type' => '`$OBJECT`',
-            ],
-            [
               'name' => 'teams',
               'type' => '`$ARRAY`',
             ],

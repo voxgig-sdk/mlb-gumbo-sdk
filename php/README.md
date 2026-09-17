@@ -303,10 +303,6 @@ API path: `/schedule`
 | Field | Description |
 | --- | --- |
 | `id` |  |
-| `jerseyNumber` |  |
-| `person` |  |
-| `position` |  |
-| `status` |  |
 | `teams` |  |
 
 Operations: List, Load.
@@ -417,10 +413,6 @@ Create an instance: `$team = $client->Team();`
 | Field | Type | Description |
 | --- | --- | --- |
 | `id` | `string` |  |
-| `jerseyNumber` | `string` |  |
-| `person` | `array` |  |
-| `position` | `array` |  |
-| `status` | `array` |  |
 | `teams` | `array` |  |
 
 #### Example: Load
@@ -580,6 +572,7 @@ Use `Helpers::to_map()` to safely validate that a value is an array.
 php/
 ├── mlbgumbo_sdk.php          -- Main SDK class
 ├── config.php                     -- Configuration
+├── schema.php                     -- Generated option + entity specs
 ├── features.php                   -- Feature factory
 ├── core/                          -- Core types and context
 ├── entity/                        -- Entity implementations

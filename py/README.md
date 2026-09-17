@@ -294,10 +294,6 @@ API path: `/schedule`
 | Field | Description |
 | --- | --- |
 | `id` |  |
-| `jerseyNumber` |  |
-| `person` |  |
-| `position` |  |
-| `status` |  |
 | `teams` |  |
 
 Operations: List, Load.
@@ -404,10 +400,6 @@ Create an instance: `team = client.Team()`
 | Field | Type | Description |
 | --- | --- | --- |
 | `id` | `str` |  |
-| `jerseyNumber` | `str` |  |
-| `person` | `dict` |  |
-| `position` | `dict` |  |
-| `status` | `dict` |  |
 | `teams` | `list` |  |
 
 #### Example: Load
@@ -565,6 +557,7 @@ Use `helpers.to_map()` to safely validate that a value is a dict.
 py/
 ├── mlbgumbo_sdk.py         -- Main SDK module
 ├── config.py                    -- Configuration
+├── schema.py                    -- Generated option + entity specs
 ├── features.py                  -- Feature factory
 ├── core/                        -- Core types and context
 ├── entity/                      -- Entity implementations

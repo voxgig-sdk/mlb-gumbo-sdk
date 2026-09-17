@@ -70,10 +70,6 @@ class ScheduleListMatch
 class Team
 {
     public ?string $id = null;
-    public ?string $jerseyNumber = null;
-    public ?array $person = null;
-    public ?array $position = null;
-    public ?array $status = null;
     public ?array $teams = null;
 }
 

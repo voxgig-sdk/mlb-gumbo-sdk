@@ -280,10 +280,6 @@ API path: `/schedule`
 | Field | Description |
 | --- | --- |
 | `id` |  |
-| `jerseyNumber` |  |
-| `person` |  |
-| `position` |  |
-| `status` |  |
 | `teams` |  |
 
 Operations: List, Load.
@@ -390,10 +386,6 @@ Create an instance: `local team = client:Team(nil)`
 | Field | Type | Description |
 | --- | --- | --- |
 | `id` | `string` |  |
-| `jerseyNumber` | `string` |  |
-| `person` | `table` |  |
-| `position` | `table` |  |
-| `status` | `table` |  |
 | `teams` | `table` |  |
 
 #### Example: Load
@@ -551,6 +543,7 @@ Use `helpers.to_map()` to safely validate that a value is a table.
 lua/
 ├── mlb-gumbo_sdk.lua    -- Main SDK module
 ├── config.lua               -- Configuration
+├── schema.lua               -- Generated option + entity specs
 ├── features.lua             -- Feature factory
 ├── core/                    -- Core types and context
 ├── entity/                  -- Entity implementations

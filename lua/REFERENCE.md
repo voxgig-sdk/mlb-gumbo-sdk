@@ -270,10 +270,6 @@ local team = client:Team(nil)
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `id` | `string` | No |  |
-| `jerseyNumber` | `string` | No |  |
-| `person` | `table` | No |  |
-| `position` | `table` | No |  |
-| `status` | `table` | No |  |
 | `teams` | `table` | No |  |
 
 ### Operations

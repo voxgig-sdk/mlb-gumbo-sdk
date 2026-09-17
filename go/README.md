@@ -306,10 +306,6 @@ API path: `/schedule`
 | Field | Description |
 | --- | --- |
 | `"id"` |  |
-| `"jerseyNumber"` |  |
-| `"person"` |  |
-| `"position"` |  |
-| `"status"` |  |
 | `"teams"` |  |
 
 Operations: List, Load.
@@ -432,10 +428,6 @@ Create an instance: `team := client.Team(nil)`
 | Field | Type | Description |
 | --- | --- | --- |
 | `id` | `string` |  |
-| `jerseyNumber` | `string` |  |
-| `person` | `map[string]any` |  |
-| `position` | `map[string]any` |  |
-| `status` | `map[string]any` |  |
 | `teams` | `[]any` |  |
 
 #### Example: Load

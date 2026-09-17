@@ -124,26 +124,10 @@ ScheduleListMatch = Struct.new(
 # @!attribute [rw] id
 #   @return [String, nil]
 #
-# @!attribute [rw] jerseyNumber
-#   @return [String, nil]
-#
-# @!attribute [rw] person
-#   @return [Hash, nil]
-#
-# @!attribute [rw] position
-#   @return [Hash, nil]
-#
-# @!attribute [rw] status
-#   @return [Hash, nil]
-#
 # @!attribute [rw] teams
 #   @return [Array, nil]
 Team = Struct.new(
   :id,
-  :jerseyNumber,
-  :person,
-  :position,
-  :status,
   :teams,
   keyword_init: true
 )
