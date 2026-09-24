@@ -72,7 +72,7 @@ function player_basic_setup(extra)
 
   -- Generate idmap via transform.
   local idmap = vs.transform(
-    { "player01", "player02", "player03", "person01", "person02", "person03" },
+    { "player01", "player02", "player03" },
     {
       ["`$PACK`"] = { "", {
         ["`$KEY`"] = "`$COPY`",

@@ -119,18 +119,21 @@ def make_config():
         "fields": [
           {
             "name": "gameData",
-            "short": "Metadata about the game including teams, venue, and game status",
+            "title": "Game Data",
             "type": "`$OBJECT`",
+            "short": "Metadata about the game including teams, venue, and game status",
           },
           {
             "name": "liveData",
-            "short": "Real-time game data including plays, boxscore, and current state",
+            "title": "Live Data",
             "type": "`$OBJECT`",
+            "short": "Real-time game data including plays, boxscore, and current state",
           },
           {
             "name": "timestamps",
-            "short": "Array of timestamp strings in format yyyymmdd_######",
+            "title": "Timestamps",
             "type": "`$ARRAY`",
+            "short": "Array of timestamp strings in format yyyymmdd_######",
           },
         ],
         "name": "game_data",
@@ -140,18 +143,6 @@ def make_config():
             "name": "list",
             "points": [
               {
-                "args": {
-                  "params": [
-                    {
-                      "example": "716463",
-                      "kind": "param",
-                      "name": "game_pk",
-                      "orig": "game_pk",
-                      "reqd": True,
-                      "type": "`$STRING`",
-                    },
-                  ],
-                },
                 "kind": "http",
                 "method": "GET",
                 "orig": "/game/{game_pk}/feed/live/timestamps",
@@ -172,15 +163,6 @@ def make_config():
                     "lit": "timestamps",
                   },
                 ],
-                "select": {
-                  "exist": [
-                    "game_pk",
-                  ],
-                },
-                "transform": {
-                  "req": "`reqdata`",
-                  "res": "`body.timestamps`",
-                },
                 "parts": [
                   "game",
                   "{game_pk}",
@@ -188,6 +170,28 @@ def make_config():
                   "live",
                   "timestamps",
                 ],
+                "rename": {},
+                "transform": {
+                  "req": "`reqdata`",
+                  "res": "`body.timestamps`",
+                },
+                "args": {
+                  "params": [
+                    {
+                      "name": "game_pk",
+                      "orig": "game_pk",
+                      "type": "`$STRING`",
+                      "kind": "param",
+                      "reqd": True,
+                      "example": "716463",
+                    },
+                  ],
+                },
+                "select": {
+                  "exist": [
+                    "game_pk",
+                  ],
+                },
               },
             ],
           },
@@ -196,40 +200,6 @@ def make_config():
             "name": "load",
             "points": [
               {
-                "args": {
-                  "params": [
-                    {
-                      "example": "716463",
-                      "kind": "param",
-                      "name": "game_pk",
-                      "orig": "game_pk",
-                      "reqd": True,
-                      "type": "`$STRING`",
-                    },
-                  ],
-                  "query": [
-                    {
-                      "kind": "query",
-                      "name": "field",
-                      "orig": "field",
-                      "type": "`$STRING`",
-                    },
-                    {
-                      "example": "stats,team",
-                      "kind": "query",
-                      "name": "hydrate",
-                      "orig": "hydrate",
-                      "type": "`$STRING`",
-                    },
-                    {
-                      "example": "20240315_123456",
-                      "kind": "query",
-                      "name": "timecode",
-                      "orig": "timecode",
-                      "type": "`$STRING`",
-                    },
-                  ],
-                },
                 "kind": "http",
                 "method": "GET",
                 "orig": "/game/{game_pk}/feed/live",
@@ -247,6 +217,51 @@ def make_config():
                     "lit": "live",
                   },
                 ],
+                "parts": [
+                  "game",
+                  "{game_pk}",
+                  "feed",
+                  "live",
+                ],
+                "rename": {},
+                "transform": {
+                  "req": "`reqdata`",
+                  "res": "`body`",
+                },
+                "args": {
+                  "params": [
+                    {
+                      "name": "game_pk",
+                      "orig": "game_pk",
+                      "type": "`$STRING`",
+                      "kind": "param",
+                      "reqd": True,
+                      "example": "716463",
+                    },
+                  ],
+                  "query": [
+                    {
+                      "name": "field",
+                      "orig": "field",
+                      "type": "`$STRING`",
+                      "kind": "query",
+                    },
+                    {
+                      "name": "hydrate",
+                      "orig": "hydrate",
+                      "type": "`$STRING`",
+                      "kind": "query",
+                      "example": "stats,team",
+                    },
+                    {
+                      "name": "timecode",
+                      "orig": "timecode",
+                      "type": "`$STRING`",
+                      "kind": "query",
+                      "example": "20240315_123456",
+                    },
+                  ],
+                },
                 "select": {
                   "exist": [
                     "field",
@@ -255,32 +270,19 @@ def make_config():
                     "timecode",
                   ],
                 },
-                "transform": {
-                  "req": "`reqdata`",
-                  "res": "`body`",
-                },
-                "parts": [
-                  "game",
-                  "{game_pk}",
-                  "feed",
-                  "live",
-                ],
               },
             ],
           },
         },
         "relations": {
-          "ancestors": [
-            [
-              "game",
-            ],
-          ],
+          "ancestors": [],
         },
       },
       "player": {
         "fields": [
           {
             "name": "people",
+            "title": "People",
             "type": "`$ARRAY`",
           },
         ],
@@ -291,42 +293,9 @@ def make_config():
             "name": "load",
             "points": [
               {
-                "args": {
-                  "params": [
-                    {
-                      "example": 660271,
-                      "kind": "param",
-                      "name": "player_id",
-                      "orig": "player_id",
-                      "reqd": True,
-                      "type": "`$INTEGER`",
-                    },
-                  ],
-                  "query": [
-                    {
-                      "example": "stats,currentTeam",
-                      "kind": "query",
-                      "name": "hydrate",
-                      "orig": "hydrate",
-                      "type": "`$STRING`",
-                    },
-                    {
-                      "example": 2024,
-                      "kind": "query",
-                      "name": "season",
-                      "orig": "season",
-                      "type": "`$INTEGER`",
-                    },
-                  ],
-                },
                 "kind": "http",
                 "method": "GET",
                 "orig": "/people/{playerId}",
-                "rename": {
-                  "param": {
-                    "playerId": "player_id",
-                  },
-                },
                 "segments": [
                   {
                     "lit": "people",
@@ -335,6 +304,47 @@ def make_config():
                     "var": "player_id",
                   },
                 ],
+                "parts": [
+                  "people",
+                  "{player_id}",
+                ],
+                "rename": {
+                  "param": {
+                    "playerId": "player_id",
+                  },
+                },
+                "transform": {
+                  "req": "`reqdata`",
+                  "res": "`body`",
+                },
+                "args": {
+                  "params": [
+                    {
+                      "name": "player_id",
+                      "orig": "player_id",
+                      "type": "`$INTEGER`",
+                      "kind": "param",
+                      "reqd": True,
+                      "example": 660271,
+                    },
+                  ],
+                  "query": [
+                    {
+                      "name": "hydrate",
+                      "orig": "hydrate",
+                      "type": "`$STRING`",
+                      "kind": "query",
+                      "example": "stats,currentTeam",
+                    },
+                    {
+                      "name": "season",
+                      "orig": "season",
+                      "type": "`$INTEGER`",
+                      "kind": "query",
+                      "example": 2024,
+                    },
+                  ],
+                },
                 "select": {
                   "exist": [
                     "hydrate",
@@ -342,35 +352,25 @@ def make_config():
                     "season",
                   ],
                 },
-                "transform": {
-                  "req": "`reqdata`",
-                  "res": "`body`",
-                },
-                "parts": [
-                  "people",
-                  "{player_id}",
-                ],
               },
             ],
           },
         },
         "relations": {
-          "ancestors": [
-            [
-              "person",
-            ],
-          ],
+          "ancestors": [],
         },
       },
       "schedule": {
         "fields": [
           {
-            "format": "date",
             "name": "date",
+            "title": "Date",
             "type": "`$STRING`",
+            "format": "date",
           },
           {
             "name": "games",
+            "title": "Games",
             "type": "`$ARRAY`",
           },
         ],
@@ -381,44 +381,6 @@ def make_config():
             "name": "list",
             "points": [
               {
-                "args": {
-                  "query": [
-                    {
-                      "example": "03/15/2024",
-                      "kind": "query",
-                      "name": "date",
-                      "orig": "date",
-                      "type": "`$STRING`",
-                    },
-                    {
-                      "example": "R",
-                      "kind": "query",
-                      "name": "game_type",
-                      "orig": "game_type",
-                      "type": "`$STRING`",
-                    },
-                    {
-                      "kind": "query",
-                      "name": "hydrate",
-                      "orig": "hydrate",
-                      "type": "`$STRING`",
-                    },
-                    {
-                      "example": 2024,
-                      "kind": "query",
-                      "name": "season",
-                      "orig": "season",
-                      "type": "`$INTEGER`",
-                    },
-                    {
-                      "example": 1,
-                      "kind": "query",
-                      "name": "sport_id",
-                      "orig": "sport_id",
-                      "type": "`$INTEGER`",
-                    },
-                  ],
-                },
                 "kind": "http",
                 "method": "GET",
                 "orig": "/schedule",
@@ -427,6 +389,52 @@ def make_config():
                     "lit": "schedule",
                   },
                 ],
+                "parts": [
+                  "schedule",
+                ],
+                "rename": {},
+                "transform": {
+                  "req": "`reqdata`",
+                  "res": "`body.dates`",
+                },
+                "args": {
+                  "query": [
+                    {
+                      "name": "date",
+                      "orig": "date",
+                      "type": "`$STRING`",
+                      "kind": "query",
+                      "example": "03/15/2024",
+                    },
+                    {
+                      "name": "game_type",
+                      "orig": "game_type",
+                      "type": "`$STRING`",
+                      "kind": "query",
+                      "example": "R",
+                    },
+                    {
+                      "name": "hydrate",
+                      "orig": "hydrate",
+                      "type": "`$STRING`",
+                      "kind": "query",
+                    },
+                    {
+                      "name": "season",
+                      "orig": "season",
+                      "type": "`$INTEGER`",
+                      "kind": "query",
+                      "example": 2024,
+                    },
+                    {
+                      "name": "sport_id",
+                      "orig": "sport_id",
+                      "type": "`$INTEGER`",
+                      "kind": "query",
+                      "example": 1,
+                    },
+                  ],
+                },
                 "select": {
                   "exist": [
                     "date",
@@ -436,13 +444,6 @@ def make_config():
                     "sport_id",
                   ],
                 },
-                "transform": {
-                  "req": "`reqdata`",
-                  "res": "`body.dates`",
-                },
-                "parts": [
-                  "schedule",
-                ],
               },
             ],
           },
@@ -455,10 +456,12 @@ def make_config():
         "fields": [
           {
             "name": "id",
+            "title": "Id",
             "type": "`$STRING`",
           },
           {
             "name": "teams",
+            "title": "Teams",
             "type": "`$ARRAY`",
           },
         ],
@@ -473,41 +476,9 @@ def make_config():
             "name": "list",
             "points": [
               {
-                "args": {
-                  "params": [
-                    {
-                      "example": 119,
-                      "kind": "param",
-                      "name": "id",
-                      "orig": "team_id",
-                      "reqd": True,
-                      "type": "`$INTEGER`",
-                    },
-                  ],
-                  "query": [
-                    {
-                      "kind": "query",
-                      "name": "hydrate",
-                      "orig": "hydrate",
-                      "type": "`$STRING`",
-                    },
-                    {
-                      "example": 2024,
-                      "kind": "query",
-                      "name": "season",
-                      "orig": "season",
-                      "type": "`$INTEGER`",
-                    },
-                  ],
-                },
                 "kind": "http",
                 "method": "GET",
                 "orig": "/teams/{teamId}/roster",
-                "rename": {
-                  "param": {
-                    "teamId": "id",
-                  },
-                },
                 "segments": [
                   {
                     "lit": "teams",
@@ -519,6 +490,47 @@ def make_config():
                     "lit": "roster",
                   },
                 ],
+                "parts": [
+                  "teams",
+                  "{id}",
+                  "roster",
+                ],
+                "rename": {
+                  "param": {
+                    "teamId": "id",
+                  },
+                },
+                "transform": {
+                  "req": "`reqdata`",
+                  "res": "`body.roster`",
+                },
+                "args": {
+                  "params": [
+                    {
+                      "name": "id",
+                      "orig": "team_id",
+                      "type": "`$INTEGER`",
+                      "kind": "param",
+                      "reqd": True,
+                      "example": 119,
+                    },
+                  ],
+                  "query": [
+                    {
+                      "name": "hydrate",
+                      "orig": "hydrate",
+                      "type": "`$STRING`",
+                      "kind": "query",
+                    },
+                    {
+                      "name": "season",
+                      "orig": "season",
+                      "type": "`$INTEGER`",
+                      "kind": "query",
+                      "example": 2024,
+                    },
+                  ],
+                },
                 "select": {
                   "$action": "roster",
                   "exist": [
@@ -527,15 +539,6 @@ def make_config():
                     "season",
                   ],
                 },
-                "transform": {
-                  "req": "`reqdata`",
-                  "res": "`body.roster`",
-                },
-                "parts": [
-                  "teams",
-                  "{id}",
-                  "roster",
-                ],
               },
             ],
           },
@@ -544,41 +547,9 @@ def make_config():
             "name": "load",
             "points": [
               {
-                "args": {
-                  "params": [
-                    {
-                      "example": 119,
-                      "kind": "param",
-                      "name": "id",
-                      "orig": "team_id",
-                      "reqd": True,
-                      "type": "`$INTEGER`",
-                    },
-                  ],
-                  "query": [
-                    {
-                      "kind": "query",
-                      "name": "hydrate",
-                      "orig": "hydrate",
-                      "type": "`$STRING`",
-                    },
-                    {
-                      "example": 2024,
-                      "kind": "query",
-                      "name": "season",
-                      "orig": "season",
-                      "type": "`$INTEGER`",
-                    },
-                  ],
-                },
                 "kind": "http",
                 "method": "GET",
                 "orig": "/teams/{teamId}",
-                "rename": {
-                  "param": {
-                    "teamId": "id",
-                  },
-                },
                 "segments": [
                   {
                     "lit": "teams",
@@ -587,6 +558,46 @@ def make_config():
                     "var": "id",
                   },
                 ],
+                "parts": [
+                  "teams",
+                  "{id}",
+                ],
+                "rename": {
+                  "param": {
+                    "teamId": "id",
+                  },
+                },
+                "transform": {
+                  "req": "`reqdata`",
+                  "res": "`body`",
+                },
+                "args": {
+                  "params": [
+                    {
+                      "name": "id",
+                      "orig": "team_id",
+                      "type": "`$INTEGER`",
+                      "kind": "param",
+                      "reqd": True,
+                      "example": 119,
+                    },
+                  ],
+                  "query": [
+                    {
+                      "name": "hydrate",
+                      "orig": "hydrate",
+                      "type": "`$STRING`",
+                      "kind": "query",
+                    },
+                    {
+                      "name": "season",
+                      "orig": "season",
+                      "type": "`$INTEGER`",
+                      "kind": "query",
+                      "example": 2024,
+                    },
+                  ],
+                },
                 "select": {
                   "exist": [
                     "hydrate",
@@ -594,14 +605,6 @@ def make_config():
                     "season",
                   ],
                 },
-                "transform": {
-                  "req": "`reqdata`",
-                  "res": "`body`",
-                },
-                "parts": [
-                  "teams",
-                  "{id}",
-                ],
               },
             ],
           },

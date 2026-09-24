@@ -62,7 +62,7 @@ def player_basic_setup(extra)
 
   # Generate idmap via transform.
   idmap = Vs.transform(
-    ["player01", "player02", "player03", "person01", "person02", "person03"],
+    ["player01", "player02", "player03"],
     {
       "`$PACK`" => ["", {
         "`$KEY`" => "`$COPY`",

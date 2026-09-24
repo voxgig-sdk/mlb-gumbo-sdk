@@ -1,0 +1,90 @@
+# Entity: player
+
+main: kit: entity: player: {
+
+  alias: field: {}
+
+  fields: {
+    people: {
+      h: "People"
+      n: "people"
+      r: false
+      t: "`$ARRAY`"
+    }
+  }
+
+  name: "player"
+  op: {
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "GET /people/{playerId}"
+            source: "openapi3"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                ex: 660271
+                k: "param"
+                n: "player_id"
+                or: "player_id"
+                r: true
+                t: "`$INTEGER`"
+              }
+            ]
+            query: [
+              {
+                ex: "stats,currentTeam"
+                k: "query"
+                n: "hydrate"
+                or: "hydrate"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                ex: 2024
+                k: "query"
+                n: "season"
+                or: "season"
+                r: false
+                t: "`$INTEGER`"
+              }
+            ]
+          }
+          m: "GET"
+          o: "/people/{playerId}"
+          q: {
+            exist: [
+              "hydrate"
+              "player_id"
+              "season"
+            ]
+          }
+          r: {
+            param: {
+              playerId: "player_id"
+            }
+          }
+          s: [
+            {
+              lit: "people"
+            }
+            {
+              var: "player_id"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

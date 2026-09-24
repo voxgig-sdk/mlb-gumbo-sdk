@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScheduleEntity = void 0;
 const MlbGumboEntityBase_1 = require("../MlbGumboEntityBase");
-// TODO: needs Entity superclass
 class ScheduleEntity extends MlbGumboEntityBase_1.MlbGumboEntityBase {
     constructor(client, entopts) {
         super(client, entopts);

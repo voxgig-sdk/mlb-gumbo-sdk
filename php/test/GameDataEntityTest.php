@@ -117,7 +117,7 @@ function game_data_basic_setup($extra)
 
     // Generate idmap.
     $idmap = [];
-    foreach (["game_data01", "game_data02", "game_data03", "game01", "game02", "game03", "game_pk01"] as $k) {
+    foreach (["game_data01", "game_data02", "game_data03", "game_pk01"] as $k) {
         $idmap[$k] = strtoupper($k);
     }
 

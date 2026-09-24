@@ -49,14 +49,11 @@ for (const gamedata of gamedatas) {
 
 ### 3. Load a gamedata
 
-GameData is nested under game_pk, so provide the `game_pk`.
 `load()` returns the entity directly and throws on failure:
 
 ```ts
 try {
-  const gamedata = await client.GameData().load({
-    game_pk: 'example_game_pk',
-  })
+  const gamedata = await client.GameData().load({ game_pk: 'example_game_pk' })
   console.log(gamedata)
 } catch (err) {
   console.error('load failed:', err)

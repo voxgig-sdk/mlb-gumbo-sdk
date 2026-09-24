@@ -46,8 +46,6 @@ end
 
 ### 3. Load a gamedata
 
-GameData is nested under game_pk, so provide the `game_pk`.
-
 ```ruby
 begin
   # load returns the ENTITY — call data_get for the GameData record (raises on error).

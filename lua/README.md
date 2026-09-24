@@ -43,13 +43,11 @@ local gamedatas, err = client:GameData():list()
 if err then error(err) end
 
 for _, item in ipairs(gamedatas) do
-  print(item["gameData"])
+  print(item)
 end
 ```
 
 ### 3. Load a gamedata
-
-GameData is nested under game_pk, so provide the `game_pk`.
 
 ```lua
 local gamedata, err = client:GameData():load({ game_pk = "example_game_pk" })

@@ -112,7 +112,7 @@ def _game_data_basic_setup(extra):
 
     # Generate idmap via transform.
     idmap = vs.transform(
-        ["game_data01", "game_data02", "game_data03", "game01", "game02", "game03", "game_pk01"],
+        ["game_data01", "game_data02", "game_data03", "game_pk01"],
         {
             "`$PACK`": ["", {
                 "`$KEY`": "`$COPY`",

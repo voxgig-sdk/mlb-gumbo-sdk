@@ -1,0 +1,48 @@
+# BasicTeamFlow
+
+main: kit: flow: BasicTeamFlow:
+{
+  entity: "team",
+  kind: "basic",
+  name: "BasicTeamFlow",
+  step: [
+    {
+      m: {
+        team_id: "team01"
+      }
+
+      o: "list",
+      v: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "team_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
+        ref: "team_ref01",
+        srcdatavar: "team_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        id: "team01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-team_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicTeamFlow"
+}

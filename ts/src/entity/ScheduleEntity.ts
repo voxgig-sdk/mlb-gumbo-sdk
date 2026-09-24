@@ -19,7 +19,6 @@ import type {
   ScheduleListMatch,
 } from '../MlbGumboTypes'
 
-// TODO: needs Entity superclass
 class ScheduleEntity extends MlbGumboEntityBase<Schedule> {
 
   constructor(client: MlbGumboSDK, entopts: any) {

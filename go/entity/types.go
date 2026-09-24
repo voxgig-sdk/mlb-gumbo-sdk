@@ -1,7 +1,7 @@
 // Typed models for the MlbGumbo SDK.
 //
-// GENERATED from the API model: main.kit.entity.<e>.fields[] and per-op
-// params (op.<name>.points[].args.params[]). Field/param types come from the
+// GENERATED from the API model: main.kit.entity.<e>.fields{} and per-op
+// params (op.<name>.points[].g.params[]). Field/param types come from the
 // canonical type sentinels via @voxgig/sdkgen canonToType (source of truth:
 // @voxgig/apidef VALID_CANON). Do not edit by hand.
 package entity
@@ -14,9 +14,6 @@ import (
 
 // GameData is the typed data model for the game_data entity.
 type GameData struct {
-	GameData *map[string]any `json:"gameData,omitempty"`
-	LiveData *map[string]any `json:"liveData,omitempty"`
-	Timestamps *[]any `json:"timestamps,omitempty"`
 }
 
 // GameDataLoadMatch is the typed request payload for GameData.LoadTyped.
@@ -34,7 +31,6 @@ type GameDataListMatch struct {
 
 // Player is the typed data model for the player entity.
 type Player struct {
-	People *[]any `json:"people,omitempty"`
 }
 
 // PlayerLoadMatch is the typed request payload for Player.LoadTyped.
@@ -46,8 +42,6 @@ type PlayerLoadMatch struct {
 
 // Schedule is the typed data model for the schedule entity.
 type Schedule struct {
-	Date *string `json:"date,omitempty"`
-	Games *[]any `json:"games,omitempty"`
 }
 
 // ScheduleListMatch is the typed request payload for Schedule.ListTyped.
@@ -61,8 +55,6 @@ type ScheduleListMatch struct {
 
 // Team is the typed data model for the team entity.
 type Team struct {
-	Id *string `json:"id,omitempty"`
-	Teams *[]any `json:"teams,omitempty"`
 }
 
 // TeamLoadMatch is the typed request payload for Team.LoadTyped.

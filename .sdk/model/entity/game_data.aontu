@@ -1,0 +1,166 @@
+# Entity: game_data
+
+main: kit: entity: game_data: {
+
+  alias: field: {}
+
+  fields: {
+    gameData: {
+      h: "Game Data"
+      n: "gameData"
+      r: false
+      sh: "Metadata about the game including teams, venue, and game status"
+      t: "`$OBJECT`"
+    }
+    liveData: {
+      h: "Live Data"
+      n: "liveData"
+      r: false
+      sh: "Real-time game data including plays, boxscore, and current state"
+      t: "`$OBJECT`"
+    }
+    timestamps: {
+      h: "Timestamps"
+      n: "timestamps"
+      r: false
+      sh: "Array of timestamp strings in format yyyymmdd_######"
+      t: "`$ARRAY`"
+    }
+  }
+
+  name: "game_data"
+  op: {
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "GET /game/{game_pk}/feed/live/timestamps"
+            source: "openapi3"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                ex: "716463"
+                k: "param"
+                n: "game_pk"
+                or: "game_pk"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          m: "GET"
+          o: "/game/{game_pk}/feed/live/timestamps"
+          q: {
+            exist: [
+              "game_pk"
+            ]
+          }
+          s: [
+            {
+              lit: "game"
+            }
+            {
+              var: "game_pk"
+            }
+            {
+              lit: "feed"
+            }
+            {
+              lit: "live"
+            }
+            {
+              lit: "timestamps"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body.timestamps`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "GET /game/{game_pk}/feed/live"
+            source: "openapi3"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                ex: "716463"
+                k: "param"
+                n: "game_pk"
+                or: "game_pk"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+            query: [
+              {
+                k: "query"
+                n: "field"
+                or: "field"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                ex: "stats,team"
+                k: "query"
+                n: "hydrate"
+                or: "hydrate"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                ex: "20240315_123456"
+                k: "query"
+                n: "timecode"
+                or: "timecode"
+                r: false
+                t: "`$STRING`"
+              }
+            ]
+          }
+          m: "GET"
+          o: "/game/{game_pk}/feed/live"
+          q: {
+            exist: [
+              "field"
+              "game_pk"
+              "hydrate"
+              "timecode"
+            ]
+          }
+          s: [
+            {
+              lit: "game"
+            }
+            {
+              var: "game_pk"
+            }
+            {
+              lit: "feed"
+            }
+            {
+              lit: "live"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

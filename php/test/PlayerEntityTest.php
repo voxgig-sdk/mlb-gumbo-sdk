@@ -70,7 +70,7 @@ function player_basic_setup($extra)
 
     // Generate idmap.
     $idmap = [];
-    foreach (["player01", "player02", "player03", "person01", "person02", "person03"] as $k) {
+    foreach (["player01", "player02", "player03"] as $k) {
         $idmap[$k] = strtoupper($k);
     }
 

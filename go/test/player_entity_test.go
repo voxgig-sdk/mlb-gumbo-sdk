@@ -98,7 +98,7 @@ func playerBasicSetup(extra map[string]any) *entityTestSetup {
 
 	// Generate idmap via transform, matching TS pattern.
 	idmap, _ := vs.Transform(
-		[]any{"player01", "player02", "player03", "person01", "person02", "person03"},
+		[]any{"player01", "player02", "player03"},
 		map[string]any{
 			"`$PACK`": []any{"", map[string]any{
 				"`$KEY`": "`$COPY`",

@@ -14,7 +14,7 @@ Metadata kindly supplied by [www.freepublicapis.com](https://www.freepublicapis.
 
 > TypeScript, Python, PHP, Golang, Ruby, Lua SDKs, a CLI with an interactive REPL, and an MCP server for AI agents — all generated from one OpenAPI spec by [@voxgig/sdkgen](https://github.com/voxgig/sdkgen).
 
-> **Features:** `ratelimit`, `retry`, `test`, `timeout` — opt-in,
+> **Features:** `undefined`, `undefined`, `undefined`, `undefined` — opt-in,
 > inactive until switched on, and configured per client. See the Features
 > section of any SDK README below for what each one does.
 
@@ -128,12 +128,6 @@ const gamedatas = await client.GameData().list({ game_pk: "example" })
 for (const gamedata of gamedatas) {
   console.log(gamedata)
 }
-
-// Load a specific gamedata (returns a GameData)
-const gamedata = await client.GameData().load({
-  game_pk: 'example_game_pk',
-})
-console.log(gamedata)
 ```
 
 See the [TypeScript README](ts/README.md) for the full guide.
@@ -231,15 +225,6 @@ if err != nil {
     panic(err)
 }
 fmt.Println(gameDatas)
-
-// Load a specific gamedata
-gameData, err := client.GameData(nil).Load(
-    map[string]any{"game_pk": "example_game_pk"}, nil,
-)
-if err != nil {
-    panic(err)
-}
-fmt.Println(gameData)
 ```
 
 ### Ruby

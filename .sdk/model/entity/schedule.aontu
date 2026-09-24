@@ -1,0 +1,104 @@
+# Entity: schedule
+
+main: kit: entity: schedule: {
+
+  alias: field: {}
+
+  fields: {
+    date: {
+      fo: "date"
+      h: "Date"
+      n: "date"
+      r: false
+      t: "`$STRING`"
+    }
+    games: {
+      h: "Games"
+      n: "games"
+      r: false
+      t: "`$ARRAY`"
+    }
+  }
+
+  name: "schedule"
+  op: {
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "GET /schedule"
+            source: "openapi3"
+            version: 2
+          }
+          g: {
+            query: [
+              {
+                ex: "03/15/2024"
+                k: "query"
+                n: "date"
+                or: "date"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                ex: "R"
+                k: "query"
+                n: "game_type"
+                or: "game_type"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "query"
+                n: "hydrate"
+                or: "hydrate"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                ex: 2024
+                k: "query"
+                n: "season"
+                or: "season"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                ex: 1
+                k: "query"
+                n: "sport_id"
+                or: "sport_id"
+                r: false
+                t: "`$INTEGER`"
+              }
+            ]
+          }
+          m: "GET"
+          o: "/schedule"
+          q: {
+            exist: [
+              "date"
+              "game_type"
+              "hydrate"
+              "season"
+              "sport_id"
+            ]
+          }
+          s: [
+            {
+              lit: "schedule"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body.dates`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

@@ -1,0 +1,171 @@
+# Entity: team
+
+main: kit: entity: team: {
+
+  alias: field: {}
+
+  fields: {
+    id: {
+      h: "Id"
+      n: "id"
+      r: false
+      t: "`$STRING`"
+    }
+    teams: {
+      h: "Teams"
+      n: "teams"
+      r: false
+      t: "`$ARRAY`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "team"
+  op: {
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "GET /teams/{teamId}/roster"
+            source: "openapi3"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                ex: 119
+                k: "param"
+                n: "id"
+                or: "team_id"
+                r: true
+                t: "`$INTEGER`"
+              }
+            ]
+            query: [
+              {
+                k: "query"
+                n: "hydrate"
+                or: "hydrate"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                ex: 2024
+                k: "query"
+                n: "season"
+                or: "season"
+                r: false
+                t: "`$INTEGER`"
+              }
+            ]
+          }
+          m: "GET"
+          o: "/teams/{teamId}/roster"
+          q: {
+            "$action": "roster"
+            exist: [
+              "hydrate"
+              "id"
+              "season"
+            ]
+          }
+          r: {
+            param: {
+              teamId: "id"
+            }
+          }
+          s: [
+            {
+              lit: "teams"
+            }
+            {
+              var: "id"
+            }
+            {
+              lit: "roster"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body.roster`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "GET /teams/{teamId}"
+            source: "openapi3"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                ex: 119
+                k: "param"
+                n: "id"
+                or: "team_id"
+                r: true
+                t: "`$INTEGER`"
+              }
+            ]
+            query: [
+              {
+                k: "query"
+                n: "hydrate"
+                or: "hydrate"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                ex: 2024
+                k: "query"
+                n: "season"
+                or: "season"
+                r: false
+                t: "`$INTEGER`"
+              }
+            ]
+          }
+          m: "GET"
+          o: "/teams/{teamId}"
+          q: {
+            exist: [
+              "hydrate"
+              "id"
+              "season"
+            ]
+          }
+          r: {
+            param: {
+              teamId: "id"
+            }
+          }
+          s: [
+            {
+              lit: "teams"
+            }
+            {
+              var: "id"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

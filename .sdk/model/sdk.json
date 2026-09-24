@@ -24,35 +24,104 @@
         "repr": "auto"
       },
       "contributor": {},
+      "doc": {
+        "active": true,
+        "assets": {
+          "path": ".sdk/doc/assets"
+        },
+        "brand": {
+          "label": "",
+          "notice": "",
+          "shortNotice": "",
+          "url": ""
+        },
+        "ci": {
+          "active": true,
+          "branch": "main"
+        },
+        "content": {
+          "path": ".sdk/doc/content"
+        },
+        "edition": {
+          "summary": {
+            "active": true,
+            "base": "node_modules/@voxgig/docgen/project/.sdk",
+            "brand": {},
+            "filter": {
+              "entities": [],
+              "features": [],
+              "targets": []
+            },
+            "kind": "summary",
+            "name": "summary",
+            "origname": "",
+            "output": {
+              "path": "SUMMARY.md"
+            },
+            "package": "@voxgig/docgen",
+            "published": false,
+            "site": {
+              "active": true
+            },
+            "style": {},
+            "title": ""
+          }
+        },
+        "qa": {
+          "vocabulary": []
+        },
+        "style": {
+          "color": {
+            "accent": "#00c6d8",
+            "background": "#f5f5f9",
+            "darkBackground": "#0f1117",
+            "darkText": "#e6edf3",
+            "primary": "#e70042",
+            "text": "#0a0a0a"
+          },
+          "font": "Nunito, system-ui, sans-serif",
+          "fontFile": "",
+          "headingFont": "Nunito, system-ui, sans-serif",
+          "headingFontFile": "",
+          "logo": "",
+          "mode": "light",
+          "mono": "ui-monospace, monospace",
+          "monoFile": ""
+        },
+        "target": {}
+      },
       "entity": {
         "game_data": {
           "active": true,
           "alias": {
             "field": {}
           },
-          "fields": [
-            {
-              "active": true,
-              "name": "gameData",
-              "req": false,
-              "short": "Metadata about the game including teams, venue, and game status",
-              "type": "`$OBJECT`"
+          "fields": {
+            "gameData": {
+              "a": true,
+              "h": "Game Data",
+              "n": "gameData",
+              "r": false,
+              "sh": "Metadata about the game including teams, venue, and game status",
+              "t": "`$OBJECT`"
             },
-            {
-              "active": true,
-              "name": "liveData",
-              "req": false,
-              "short": "Real-time game data including plays, boxscore, and current state",
-              "type": "`$OBJECT`"
+            "liveData": {
+              "a": true,
+              "h": "Live Data",
+              "n": "liveData",
+              "r": false,
+              "sh": "Real-time game data including plays, boxscore, and current state",
+              "t": "`$OBJECT`"
             },
-            {
-              "active": true,
-              "name": "timestamps",
-              "req": false,
-              "short": "Array of timestamp strings in format yyyymmdd_######",
-              "type": "`$ARRAY`"
+            "timestamps": {
+              "a": true,
+              "h": "Timestamps",
+              "n": "timestamps",
+              "r": false,
+              "sh": "Array of timestamp strings in format yyyymmdd_######",
+              "t": "`$ARRAY`"
             }
-          ],
+          },
           "name": "game_data",
           "op": {
             "list": {
@@ -60,30 +129,35 @@
               "name": "list",
               "points": [
                 {
-                  "active": true,
-                  "args": {
+                  "a": true,
+                  "co": {
+                    "id": "GET /game/{game_pk}/feed/live/timestamps",
+                    "source": "openapi3",
+                    "version": 2
+                  },
+                  "g": {
                     "params": [
                       {
-                        "active": true,
-                        "example": "716463",
-                        "kind": "param",
-                        "name": "game_pk",
-                        "orig": "game_pk",
-                        "reqd": true,
-                        "type": "`$STRING`"
+                        "a": true,
+                        "ex": "716463",
+                        "k": "param",
+                        "n": "game_pk",
+                        "or": "game_pk",
+                        "r": true,
+                        "t": "`$STRING`"
                       }
                     ]
                   },
-                  "contract": {
-                    "id": "GET /game/{game_pk}/feed/live/timestamps",
-                    "json": "{\"operationId\":\"getGameTimestamps\",\"parameters\":[{\"description\":\"The unique identifier (primary key) for the specific game\",\"in\":\"path\",\"name\":\"game_pk\",\"required\":true,\"schema\":{\"example\":\"716463\",\"type\":\"string\"}}],\"protocol\":\"http\",\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"timestamps\":{\"description\":\"Array of timestamp strings in format yyyymmdd_######\",\"items\":{\"type\":\"string\"},\"type\":\"array\"}},\"type\":\"object\"}}},\"description\":\"Successfully retrieved list of timestamps\"},\"404\":{\"description\":\"Game not found\"}},\"securitySource\":\"unspecified\"}",
-                    "source": "openapi3",
-                    "version": 1
+                  "k": "http",
+                  "m": "GET",
+                  "o": "/game/{game_pk}/feed/live/timestamps",
+                  "q": {
+                    "exist": [
+                      "game_pk"
+                    ]
                   },
-                  "kind": "http",
-                  "method": "GET",
-                  "orig": "/game/{game_pk}/feed/live/timestamps",
-                  "segments": [
+                  "r": {},
+                  "s": [
                     {
                       "lit": "game"
                     },
@@ -100,12 +174,7 @@
                       "lit": "timestamps"
                     }
                   ],
-                  "select": {
-                    "exist": [
-                      "game_pk"
-                    ]
-                  },
-                  "transform": {
+                  "t": {
                     "req": "`reqdata`",
                     "res": "`body.timestamps`"
                   }
@@ -117,58 +186,66 @@
               "name": "load",
               "points": [
                 {
-                  "active": true,
-                  "args": {
+                  "a": true,
+                  "co": {
+                    "id": "GET /game/{game_pk}/feed/live",
+                    "source": "openapi3",
+                    "version": 2
+                  },
+                  "g": {
                     "params": [
                       {
-                        "active": true,
-                        "example": "716463",
-                        "kind": "param",
-                        "name": "game_pk",
-                        "orig": "game_pk",
-                        "reqd": true,
-                        "type": "`$STRING`"
+                        "a": true,
+                        "ex": "716463",
+                        "k": "param",
+                        "n": "game_pk",
+                        "or": "game_pk",
+                        "r": true,
+                        "t": "`$STRING`"
                       }
                     ],
                     "query": [
                       {
-                        "active": true,
-                        "kind": "query",
-                        "name": "field",
-                        "orig": "field",
-                        "reqd": false,
-                        "type": "`$STRING`"
+                        "a": true,
+                        "k": "query",
+                        "n": "field",
+                        "or": "field",
+                        "r": false,
+                        "t": "`$STRING`"
                       },
                       {
-                        "active": true,
-                        "example": "stats,team",
-                        "kind": "query",
-                        "name": "hydrate",
-                        "orig": "hydrate",
-                        "reqd": false,
-                        "type": "`$STRING`"
+                        "a": true,
+                        "ex": "stats,team",
+                        "k": "query",
+                        "n": "hydrate",
+                        "or": "hydrate",
+                        "r": false,
+                        "t": "`$STRING`"
                       },
                       {
-                        "active": true,
-                        "example": "20240315_123456",
-                        "kind": "query",
-                        "name": "timecode",
-                        "orig": "timecode",
-                        "reqd": false,
-                        "type": "`$STRING`"
+                        "a": true,
+                        "ex": "20240315_123456",
+                        "k": "query",
+                        "n": "timecode",
+                        "or": "timecode",
+                        "r": false,
+                        "t": "`$STRING`"
                       }
                     ]
                   },
-                  "contract": {
-                    "id": "GET /game/{game_pk}/feed/live",
-                    "json": "{\"operationId\":\"getLiveGameFeed\",\"parameters\":[{\"description\":\"The unique identifier (primary key) for the specific game\",\"in\":\"path\",\"name\":\"game_pk\",\"required\":true,\"schema\":{\"example\":\"716463\",\"type\":\"string\"}},{\"description\":\"Retrieve game state at a specific timestamp in format yyyymmdd_######\",\"in\":\"query\",\"name\":\"timecode\",\"required\":false,\"schema\":{\"example\":\"20240315_123456\",\"pattern\":\"^\\\\d{8}_\\\\d{6}$\",\"type\":\"string\"}},{\"description\":\"Add additional data to the response (e.g., stats, team)\",\"in\":\"query\",\"name\":\"hydrate\",\"required\":false,\"schema\":{\"example\":\"stats,team\",\"type\":\"string\"}},{\"description\":\"Limit the response to specific fields\",\"in\":\"query\",\"name\":\"fields\",\"required\":false,\"schema\":{\"type\":\"string\"}}],\"protocol\":\"http\",\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"gameData\":{\"description\":\"Metadata about the game including teams, venue, and game status\",\"type\":\"object\"},\"liveData\":{\"description\":\"Real-time game data including plays, boxscore, and current state\",\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"Successfully retrieved live game feed\"},\"404\":{\"description\":\"Game not found\"}},\"securitySource\":\"unspecified\"}",
-                    "source": "openapi3",
-                    "version": 1
+                  "k": "http",
+                  "m": "GET",
+                  "o": "/game/{game_pk}/feed/live",
+                  "q": {
+                    "exist": [
+                      "field",
+                      "game_pk",
+                      "hydrate",
+                      "timecode"
+                    ]
                   },
-                  "kind": "http",
-                  "method": "GET",
-                  "orig": "/game/{game_pk}/feed/live",
-                  "segments": [
+                  "r": {},
+                  "s": [
                     {
                       "lit": "game"
                     },
@@ -182,15 +259,7 @@
                       "lit": "live"
                     }
                   ],
-                  "select": {
-                    "exist": [
-                      "field",
-                      "game_pk",
-                      "hydrate",
-                      "timecode"
-                    ]
-                  },
-                  "transform": {
+                  "t": {
                     "req": "`reqdata`",
                     "res": "`body`"
                   }
@@ -199,11 +268,7 @@
             }
           },
           "relations": {
-            "ancestors": [
-              [
-                "game"
-              ]
-            ]
+            "ancestors": []
           }
         },
         "player": {
@@ -211,14 +276,15 @@
           "alias": {
             "field": {}
           },
-          "fields": [
-            {
-              "active": true,
-              "name": "people",
-              "req": false,
-              "type": "`$ARRAY`"
+          "fields": {
+            "people": {
+              "a": true,
+              "h": "People",
+              "n": "people",
+              "r": false,
+              "t": "`$ARRAY`"
             }
-          ],
+          },
           "name": "player",
           "op": {
             "load": {
@@ -226,55 +292,61 @@
               "name": "load",
               "points": [
                 {
-                  "active": true,
-                  "args": {
+                  "a": true,
+                  "co": {
+                    "id": "GET /people/{playerId}",
+                    "source": "openapi3",
+                    "version": 2
+                  },
+                  "g": {
                     "params": [
                       {
-                        "active": true,
-                        "example": 660271,
-                        "kind": "param",
-                        "name": "player_id",
-                        "orig": "player_id",
-                        "reqd": true,
-                        "type": "`$INTEGER`"
+                        "a": true,
+                        "ex": 660271,
+                        "k": "param",
+                        "n": "player_id",
+                        "or": "player_id",
+                        "r": true,
+                        "t": "`$INTEGER`"
                       }
                     ],
                     "query": [
                       {
-                        "active": true,
-                        "example": "stats,currentTeam",
-                        "kind": "query",
-                        "name": "hydrate",
-                        "orig": "hydrate",
-                        "reqd": false,
-                        "type": "`$STRING`"
+                        "a": true,
+                        "ex": "stats,currentTeam",
+                        "k": "query",
+                        "n": "hydrate",
+                        "or": "hydrate",
+                        "r": false,
+                        "t": "`$STRING`"
                       },
                       {
-                        "active": true,
-                        "example": 2024,
-                        "kind": "query",
-                        "name": "season",
-                        "orig": "season",
-                        "reqd": false,
-                        "type": "`$INTEGER`"
+                        "a": true,
+                        "ex": 2024,
+                        "k": "query",
+                        "n": "season",
+                        "or": "season",
+                        "r": false,
+                        "t": "`$INTEGER`"
                       }
                     ]
                   },
-                  "contract": {
-                    "id": "GET /people/{playerId}",
-                    "json": "{\"operationId\":\"getPlayer\",\"parameters\":[{\"description\":\"The unique identifier for the player (e.g., 660271 for Shohei Ohtani)\",\"in\":\"path\",\"name\":\"playerId\",\"required\":true,\"schema\":{\"example\":660271,\"type\":\"integer\"}},{\"description\":\"Specify a season year for player information\",\"in\":\"query\",\"name\":\"season\",\"required\":false,\"schema\":{\"example\":2024,\"type\":\"integer\"}},{\"description\":\"Add additional data to the response (e.g., stats, currentTeam)\",\"in\":\"query\",\"name\":\"hydrate\",\"required\":false,\"schema\":{\"example\":\"stats,currentTeam\",\"type\":\"string\"}}],\"protocol\":\"http\",\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"people\":{\"items\":{\"properties\":{\"batSide\":{\"type\":\"object\"},\"birthDate\":{\"format\":\"date\",\"type\":\"string\"},\"currentAge\":{\"type\":\"integer\"},\"firstName\":{\"type\":\"string\"},\"fullName\":{\"type\":\"string\"},\"height\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"pitchHand\":{\"type\":\"object\"},\"primaryNumber\":{\"type\":\"string\"},\"primaryPosition\":{\"properties\":{\"code\":{\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\"},\"weight\":{\"type\":\"integer\"}},\"type\":\"object\"},\"type\":\"array\"}},\"type\":\"object\"}}},\"description\":\"Successfully retrieved player information\"},\"404\":{\"description\":\"Player not found\"}},\"securitySource\":\"unspecified\"}",
-                    "source": "openapi3",
-                    "version": 1
+                  "k": "http",
+                  "m": "GET",
+                  "o": "/people/{playerId}",
+                  "q": {
+                    "exist": [
+                      "hydrate",
+                      "player_id",
+                      "season"
+                    ]
                   },
-                  "kind": "http",
-                  "method": "GET",
-                  "orig": "/people/{playerId}",
-                  "rename": {
+                  "r": {
                     "param": {
                       "playerId": "player_id"
                     }
                   },
-                  "segments": [
+                  "s": [
                     {
                       "lit": "people"
                     },
@@ -282,14 +354,7 @@
                       "var": "player_id"
                     }
                   ],
-                  "select": {
-                    "exist": [
-                      "hydrate",
-                      "player_id",
-                      "season"
-                    ]
-                  },
-                  "transform": {
+                  "t": {
                     "req": "`reqdata`",
                     "res": "`body`"
                   }
@@ -298,11 +363,7 @@
             }
           },
           "relations": {
-            "ancestors": [
-              [
-                "person"
-              ]
-            ]
+            "ancestors": []
           }
         },
         "schedule": {
@@ -310,21 +371,23 @@
           "alias": {
             "field": {}
           },
-          "fields": [
-            {
-              "active": true,
-              "format": "date",
-              "name": "date",
-              "req": false,
-              "type": "`$STRING`"
+          "fields": {
+            "date": {
+              "a": true,
+              "fo": "date",
+              "h": "Date",
+              "n": "date",
+              "r": false,
+              "t": "`$STRING`"
             },
-            {
-              "active": true,
-              "name": "games",
-              "req": false,
-              "type": "`$ARRAY`"
+            "games": {
+              "a": true,
+              "h": "Games",
+              "n": "games",
+              "r": false,
+              "t": "`$ARRAY`"
             }
-          ],
+          },
           "name": "schedule",
           "op": {
             "list": {
@@ -332,70 +395,64 @@
               "name": "list",
               "points": [
                 {
-                  "active": true,
-                  "args": {
+                  "a": true,
+                  "co": {
+                    "id": "GET /schedule",
+                    "source": "openapi3",
+                    "version": 2
+                  },
+                  "g": {
                     "query": [
                       {
-                        "active": true,
-                        "example": "03/15/2024",
-                        "kind": "query",
-                        "name": "date",
-                        "orig": "date",
-                        "reqd": false,
-                        "type": "`$STRING`"
+                        "a": true,
+                        "ex": "03/15/2024",
+                        "k": "query",
+                        "n": "date",
+                        "or": "date",
+                        "r": false,
+                        "t": "`$STRING`"
                       },
                       {
-                        "active": true,
-                        "example": "R",
-                        "kind": "query",
-                        "name": "game_type",
-                        "orig": "game_type",
-                        "reqd": false,
-                        "type": "`$STRING`"
+                        "a": true,
+                        "ex": "R",
+                        "k": "query",
+                        "n": "game_type",
+                        "or": "game_type",
+                        "r": false,
+                        "t": "`$STRING`"
                       },
                       {
-                        "active": true,
-                        "kind": "query",
-                        "name": "hydrate",
-                        "orig": "hydrate",
-                        "reqd": false,
-                        "type": "`$STRING`"
+                        "a": true,
+                        "k": "query",
+                        "n": "hydrate",
+                        "or": "hydrate",
+                        "r": false,
+                        "t": "`$STRING`"
                       },
                       {
-                        "active": true,
-                        "example": 2024,
-                        "kind": "query",
-                        "name": "season",
-                        "orig": "season",
-                        "reqd": false,
-                        "type": "`$INTEGER`"
+                        "a": true,
+                        "ex": 2024,
+                        "k": "query",
+                        "n": "season",
+                        "or": "season",
+                        "r": false,
+                        "t": "`$INTEGER`"
                       },
                       {
-                        "active": true,
-                        "example": 1,
-                        "kind": "query",
-                        "name": "sport_id",
-                        "orig": "sport_id",
-                        "reqd": false,
-                        "type": "`$INTEGER`"
+                        "a": true,
+                        "ex": 1,
+                        "k": "query",
+                        "n": "sport_id",
+                        "or": "sport_id",
+                        "r": false,
+                        "t": "`$INTEGER`"
                       }
                     ]
                   },
-                  "contract": {
-                    "id": "GET /schedule",
-                    "json": "{\"operationId\":\"getSchedule\",\"parameters\":[{\"description\":\"Sport identifier (1 = Major League Baseball)\",\"in\":\"query\",\"name\":\"sportId\",\"required\":false,\"schema\":{\"default\":1,\"example\":1,\"type\":\"integer\"}},{\"description\":\"The season year\",\"in\":\"query\",\"name\":\"season\",\"required\":false,\"schema\":{\"example\":2024,\"type\":\"integer\"}},{\"description\":\"Type of games to include (R = Regular Season, P = Postseason, S = Spring Training)\",\"in\":\"query\",\"name\":\"gameType\",\"required\":false,\"schema\":{\"enum\":[\"R\",\"P\",\"S\"],\"example\":\"R\",\"type\":\"string\"}},{\"description\":\"Specific date for schedule (format: MM/DD/YYYY)\",\"in\":\"query\",\"name\":\"date\",\"required\":false,\"schema\":{\"example\":\"03/15/2024\",\"type\":\"string\"}},{\"description\":\"Add additional data to the response\",\"in\":\"query\",\"name\":\"hydrate\",\"required\":false,\"schema\":{\"type\":\"string\"}}],\"protocol\":\"http\",\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"dates\":{\"items\":{\"properties\":{\"date\":{\"format\":\"date\",\"type\":\"string\"},\"games\":{\"items\":{\"properties\":{\"gameDate\":{\"format\":\"date-time\",\"type\":\"string\"},\"gamePk\":{\"description\":\"Unique game identifier\",\"type\":\"integer\"},\"teams\":{\"type\":\"object\"}},\"type\":\"object\"},\"type\":\"array\"}},\"type\":\"object\"},\"type\":\"array\"}},\"type\":\"object\"}}},\"description\":\"Successfully retrieved schedule\"}},\"securitySource\":\"unspecified\"}",
-                    "source": "openapi3",
-                    "version": 1
-                  },
-                  "kind": "http",
-                  "method": "GET",
-                  "orig": "/schedule",
-                  "segments": [
-                    {
-                      "lit": "schedule"
-                    }
-                  ],
-                  "select": {
+                  "k": "http",
+                  "m": "GET",
+                  "o": "/schedule",
+                  "q": {
                     "exist": [
                       "date",
                       "game_type",
@@ -404,7 +461,13 @@
                       "sport_id"
                     ]
                   },
-                  "transform": {
+                  "r": {},
+                  "s": [
+                    {
+                      "lit": "schedule"
+                    }
+                  ],
+                  "t": {
                     "req": "`reqdata`",
                     "res": "`body.dates`"
                   }
@@ -421,20 +484,22 @@
           "alias": {
             "field": {}
           },
-          "fields": [
-            {
-              "active": true,
-              "name": "id",
-              "req": false,
-              "type": "`$STRING`"
+          "fields": {
+            "id": {
+              "a": true,
+              "h": "Id",
+              "n": "id",
+              "r": false,
+              "t": "`$STRING`"
             },
-            {
-              "active": true,
-              "name": "teams",
-              "req": false,
-              "type": "`$ARRAY`"
+            "teams": {
+              "a": true,
+              "h": "Teams",
+              "n": "teams",
+              "r": false,
+              "t": "`$ARRAY`"
             }
-          ],
+          },
           "id": {
             "field": "id",
             "name": "id"
@@ -446,54 +511,61 @@
               "name": "list",
               "points": [
                 {
-                  "active": true,
-                  "args": {
+                  "a": true,
+                  "co": {
+                    "id": "GET /teams/{teamId}/roster",
+                    "source": "openapi3",
+                    "version": 2
+                  },
+                  "g": {
                     "params": [
                       {
-                        "active": true,
-                        "example": 119,
-                        "kind": "param",
-                        "name": "id",
-                        "orig": "team_id",
-                        "reqd": true,
-                        "type": "`$INTEGER`"
+                        "a": true,
+                        "ex": 119,
+                        "k": "param",
+                        "n": "id",
+                        "or": "team_id",
+                        "r": true,
+                        "t": "`$INTEGER`"
                       }
                     ],
                     "query": [
                       {
-                        "active": true,
-                        "kind": "query",
-                        "name": "hydrate",
-                        "orig": "hydrate",
-                        "reqd": false,
-                        "type": "`$STRING`"
+                        "a": true,
+                        "k": "query",
+                        "n": "hydrate",
+                        "or": "hydrate",
+                        "r": false,
+                        "t": "`$STRING`"
                       },
                       {
-                        "active": true,
-                        "example": 2024,
-                        "kind": "query",
-                        "name": "season",
-                        "orig": "season",
-                        "reqd": false,
-                        "type": "`$INTEGER`"
+                        "a": true,
+                        "ex": 2024,
+                        "k": "query",
+                        "n": "season",
+                        "or": "season",
+                        "r": false,
+                        "t": "`$INTEGER`"
                       }
                     ]
                   },
-                  "contract": {
-                    "id": "GET /teams/{teamId}/roster",
-                    "json": "{\"operationId\":\"getTeamRoster\",\"parameters\":[{\"description\":\"The unique identifier for the team (e.g., 119 for LA Dodgers)\",\"in\":\"path\",\"name\":\"teamId\",\"required\":true,\"schema\":{\"example\":119,\"type\":\"integer\"}},{\"description\":\"The season year for the roster\",\"in\":\"query\",\"name\":\"season\",\"required\":false,\"schema\":{\"example\":2024,\"type\":\"integer\"}},{\"description\":\"Add additional data to the response\",\"in\":\"query\",\"name\":\"hydrate\",\"required\":false,\"schema\":{\"type\":\"string\"}}],\"protocol\":\"http\",\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"roster\":{\"items\":{\"properties\":{\"jerseyNumber\":{\"type\":\"string\"},\"person\":{\"properties\":{\"fullName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"}},\"type\":\"object\"},\"position\":{\"properties\":{\"code\":{\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\"},\"status\":{\"type\":\"object\"}},\"type\":\"object\"},\"type\":\"array\"}},\"type\":\"object\"}}},\"description\":\"Successfully retrieved team roster\"},\"404\":{\"description\":\"Team not found\"}},\"securitySource\":\"unspecified\"}",
-                    "source": "openapi3",
-                    "version": 1
+                  "k": "http",
+                  "m": "GET",
+                  "o": "/teams/{teamId}/roster",
+                  "q": {
+                    "$action": "roster",
+                    "exist": [
+                      "hydrate",
+                      "id",
+                      "season"
+                    ]
                   },
-                  "kind": "http",
-                  "method": "GET",
-                  "orig": "/teams/{teamId}/roster",
-                  "rename": {
+                  "r": {
                     "param": {
                       "teamId": "id"
                     }
                   },
-                  "segments": [
+                  "s": [
                     {
                       "lit": "teams"
                     },
@@ -504,15 +576,7 @@
                       "lit": "roster"
                     }
                   ],
-                  "select": {
-                    "$action": "roster",
-                    "exist": [
-                      "hydrate",
-                      "id",
-                      "season"
-                    ]
-                  },
-                  "transform": {
+                  "t": {
                     "req": "`reqdata`",
                     "res": "`body.roster`"
                   }
@@ -524,54 +588,60 @@
               "name": "load",
               "points": [
                 {
-                  "active": true,
-                  "args": {
+                  "a": true,
+                  "co": {
+                    "id": "GET /teams/{teamId}",
+                    "source": "openapi3",
+                    "version": 2
+                  },
+                  "g": {
                     "params": [
                       {
-                        "active": true,
-                        "example": 119,
-                        "kind": "param",
-                        "name": "id",
-                        "orig": "team_id",
-                        "reqd": true,
-                        "type": "`$INTEGER`"
+                        "a": true,
+                        "ex": 119,
+                        "k": "param",
+                        "n": "id",
+                        "or": "team_id",
+                        "r": true,
+                        "t": "`$INTEGER`"
                       }
                     ],
                     "query": [
                       {
-                        "active": true,
-                        "kind": "query",
-                        "name": "hydrate",
-                        "orig": "hydrate",
-                        "reqd": false,
-                        "type": "`$STRING`"
+                        "a": true,
+                        "k": "query",
+                        "n": "hydrate",
+                        "or": "hydrate",
+                        "r": false,
+                        "t": "`$STRING`"
                       },
                       {
-                        "active": true,
-                        "example": 2024,
-                        "kind": "query",
-                        "name": "season",
-                        "orig": "season",
-                        "reqd": false,
-                        "type": "`$INTEGER`"
+                        "a": true,
+                        "ex": 2024,
+                        "k": "query",
+                        "n": "season",
+                        "or": "season",
+                        "r": false,
+                        "t": "`$INTEGER`"
                       }
                     ]
                   },
-                  "contract": {
-                    "id": "GET /teams/{teamId}",
-                    "json": "{\"operationId\":\"getTeam\",\"parameters\":[{\"description\":\"The unique identifier for the team (e.g., 119 for LA Dodgers)\",\"in\":\"path\",\"name\":\"teamId\",\"required\":true,\"schema\":{\"example\":119,\"type\":\"integer\"}},{\"description\":\"Specify a season year for team information\",\"in\":\"query\",\"name\":\"season\",\"required\":false,\"schema\":{\"example\":2024,\"type\":\"integer\"}},{\"description\":\"Add additional data to the response\",\"in\":\"query\",\"name\":\"hydrate\",\"required\":false,\"schema\":{\"type\":\"string\"}}],\"protocol\":\"http\",\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"teams\":{\"items\":{\"properties\":{\"abbreviation\":{\"type\":\"string\"},\"division\":{\"type\":\"object\"},\"id\":{\"type\":\"integer\"},\"league\":{\"type\":\"object\"},\"locationName\":{\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"teamName\":{\"type\":\"string\"}},\"type\":\"object\"},\"type\":\"array\"}},\"type\":\"object\"}}},\"description\":\"Successfully retrieved team information\"},\"404\":{\"description\":\"Team not found\"}},\"securitySource\":\"unspecified\"}",
-                    "source": "openapi3",
-                    "version": 1
+                  "k": "http",
+                  "m": "GET",
+                  "o": "/teams/{teamId}",
+                  "q": {
+                    "exist": [
+                      "hydrate",
+                      "id",
+                      "season"
+                    ]
                   },
-                  "kind": "http",
-                  "method": "GET",
-                  "orig": "/teams/{teamId}",
-                  "rename": {
+                  "r": {
                     "param": {
                       "teamId": "id"
                     }
                   },
-                  "segments": [
+                  "s": [
                     {
                       "lit": "teams"
                     },
@@ -579,14 +649,7 @@
                       "var": "id"
                     }
                   ],
-                  "select": {
-                    "exist": [
-                      "hydrate",
-                      "id",
-                      "season"
-                    ]
-                  },
-                  "transform": {
+                  "t": {
                     "req": "`reqdata`",
                     "res": "`body`"
                   }
@@ -1015,15 +1078,15 @@
           "param": {},
           "step": [
             {
-              "active": true,
-              "data": {},
-              "input": {},
-              "match": {
+              "a": true,
+              "d": {},
+              "i": {},
+              "m": {
                 "game_pk": "game_pk01"
               },
-              "op": "list",
-              "spec": [],
-              "valid": [
+              "o": "list",
+              "s": [],
+              "v": [
                 {
                   "apply": "ItemExists",
                   "def": {
@@ -1033,19 +1096,19 @@
               ]
             },
             {
-              "active": true,
-              "data": {},
-              "input": {
+              "a": true,
+              "d": {},
+              "i": {
                 "ref": "game_data_ref01",
                 "srcdatavar": "game_data_ref01_data",
                 "suffix": "_dt0"
               },
-              "match": {
+              "m": {
                 "id": "game_data01"
               },
-              "op": "load",
-              "spec": [],
-              "valid": [
+              "o": "load",
+              "s": [],
+              "v": [
                 {
                   "apply": "TextFieldMark",
                   "def": {
@@ -1065,19 +1128,19 @@
           "param": {},
           "step": [
             {
-              "active": true,
-              "data": {},
-              "input": {
+              "a": true,
+              "d": {},
+              "i": {
                 "ref": "player_ref01",
                 "srcdatavar": "player_ref01_data",
                 "suffix": "_dt0"
               },
-              "match": {
+              "m": {
                 "id": "player01"
               },
-              "op": "load",
-              "spec": [],
-              "valid": [
+              "o": "load",
+              "s": [],
+              "v": [
                 {
                   "apply": "TextFieldMark",
                   "def": {
@@ -1097,13 +1160,13 @@
           "param": {},
           "step": [
             {
-              "active": true,
-              "data": {},
-              "input": {},
-              "match": {},
-              "op": "list",
-              "spec": [],
-              "valid": [
+              "a": true,
+              "d": {},
+              "i": {},
+              "m": {},
+              "o": "list",
+              "s": [],
+              "v": [
                 {
                   "apply": "ItemExists",
                   "def": {
@@ -1123,15 +1186,15 @@
           "param": {},
           "step": [
             {
-              "active": true,
-              "data": {},
-              "input": {},
-              "match": {
+              "a": true,
+              "d": {},
+              "i": {},
+              "m": {
                 "team_id": "team01"
               },
-              "op": "list",
-              "spec": [],
-              "valid": [
+              "o": "list",
+              "s": [],
+              "v": [
                 {
                   "apply": "ItemExists",
                   "def": {
@@ -1141,19 +1204,19 @@
               ]
             },
             {
-              "active": true,
-              "data": {},
-              "input": {
+              "a": true,
+              "d": {},
+              "i": {
                 "ref": "team_ref01",
                 "srcdatavar": "team_ref01_data",
                 "suffix": "_dt0"
               },
-              "match": {
+              "m": {
                 "id": "team01"
               },
-              "op": "load",
-              "spec": [],
-              "valid": [
+              "o": "load",
+              "s": [],
+              "v": [
                 {
                   "apply": "TextFieldMark",
                   "def": {
