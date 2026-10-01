@@ -37,6 +37,8 @@ require_once __DIR__ . '/TransformResponse.php';
 
 MlbGumboUtility::setRegistrar(function (MlbGumboUtility $u): void {
     $u->clean = [MlbGumboClean::class, 'call'];
+    $u->clean_add = [MlbGumboClean::class, 'add'];
+    $u->clean_explain = [MlbGumboDone::class, 'clean_explain'];
     $u->done = [MlbGumboDone::class, 'call'];
     $u->make_error = [MlbGumboMakeError::class, 'call'];
     $u->feature_add = [MlbGumboFeatureAdd::class, 'call'];

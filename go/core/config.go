@@ -217,7 +217,7 @@ func MakeConfig() map[string]any {
 									"query": []any{
 										map[string]any{
 											"name": "field",
-											"orig": "field",
+											"orig": "fields",
 											"type": "`$STRING`",
 											"kind": "query",
 										},
@@ -296,7 +296,7 @@ func MakeConfig() map[string]any {
 									"params": []any{
 										map[string]any{
 											"name": "player_id",
-											"orig": "player_id",
+											"orig": "playerId",
 											"type": "`$INTEGER`",
 											"kind": "param",
 											"reqd": true,
@@ -383,7 +383,7 @@ func MakeConfig() map[string]any {
 										},
 										map[string]any{
 											"name": "game_type",
-											"orig": "game_type",
+											"orig": "gameType",
 											"type": "`$STRING`",
 											"kind": "query",
 											"example": "R",
@@ -403,7 +403,7 @@ func MakeConfig() map[string]any {
 										},
 										map[string]any{
 											"name": "sport_id",
-											"orig": "sport_id",
+											"orig": "sportId",
 											"type": "`$INTEGER`",
 											"kind": "query",
 											"example": 1,
@@ -483,7 +483,7 @@ func MakeConfig() map[string]any {
 									"params": []any{
 										map[string]any{
 											"name": "id",
-											"orig": "team_id",
+											"orig": "teamId",
 											"type": "`$INTEGER`",
 											"kind": "param",
 											"reqd": true,
@@ -550,7 +550,7 @@ func MakeConfig() map[string]any {
 									"params": []any{
 										map[string]any{
 											"name": "id",
-											"orig": "team_id",
+											"orig": "teamId",
 											"type": "`$INTEGER`",
 											"kind": "param",
 											"reqd": true,

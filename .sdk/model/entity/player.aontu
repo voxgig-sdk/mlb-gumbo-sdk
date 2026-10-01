@@ -30,7 +30,7 @@ main: kit: entity: player: {
                 ex: 660271
                 k: "param"
                 n: "player_id"
-                or: "player_id"
+                or: "playerId"
                 r: true
                 t: "`$INTEGER`"
               }

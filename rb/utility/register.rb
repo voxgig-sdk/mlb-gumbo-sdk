@@ -33,6 +33,8 @@ require_relative 'transform_response'
 
 MlbGumboUtility.registrar = ->(u) {
   u.clean = MlbGumboUtilities::Clean
+  u.clean_add = MlbGumboUtilities::CleanAdd
+  u.clean_explain = MlbGumboUtilities::CleanExplain
   u.done = MlbGumboUtilities::Done
   u.make_error = MlbGumboUtilities::MakeError
   u.feature_add = MlbGumboUtilities::FeatureAdd

@@ -45,7 +45,7 @@ main: kit: entity: schedule: {
                 ex: "R"
                 k: "query"
                 n: "game_type"
-                or: "game_type"
+                or: "gameType"
                 r: false
                 t: "`$STRING`"
               }
@@ -68,7 +68,7 @@ main: kit: entity: schedule: {
                 ex: 1
                 k: "query"
                 n: "sport_id"
-                or: "sport_id"
+                or: "sportId"
                 r: false
                 t: "`$INTEGER`"
               }

@@ -41,7 +41,7 @@ main: kit: entity: team: {
                 ex: 119
                 k: "param"
                 n: "id"
-                or: "team_id"
+                or: "teamId"
                 r: true
                 t: "`$INTEGER`"
               }
@@ -112,7 +112,7 @@ main: kit: entity: team: {
                 ex: 119
                 k: "param"
                 n: "id"
-                or: "team_id"
+                or: "teamId"
                 r: true
                 t: "`$INTEGER`"
               }

@@ -213,7 +213,7 @@ local function make_config()
                   ["query"] = {
                     {
                       ["name"] = "field",
-                      ["orig"] = "field",
+                      ["orig"] = "fields",
                       ["type"] = "`$STRING`",
                       ["kind"] = "query",
                     },
@@ -292,7 +292,7 @@ local function make_config()
                   ["params"] = {
                     {
                       ["name"] = "player_id",
-                      ["orig"] = "player_id",
+                      ["orig"] = "playerId",
                       ["type"] = "`$INTEGER`",
                       ["kind"] = "param",
                       ["reqd"] = true,
@@ -379,7 +379,7 @@ local function make_config()
                     },
                     {
                       ["name"] = "game_type",
-                      ["orig"] = "game_type",
+                      ["orig"] = "gameType",
                       ["type"] = "`$STRING`",
                       ["kind"] = "query",
                       ["example"] = "R",
@@ -399,7 +399,7 @@ local function make_config()
                     },
                     {
                       ["name"] = "sport_id",
-                      ["orig"] = "sport_id",
+                      ["orig"] = "sportId",
                       ["type"] = "`$INTEGER`",
                       ["kind"] = "query",
                       ["example"] = 1,
@@ -479,7 +479,7 @@ local function make_config()
                   ["params"] = {
                     {
                       ["name"] = "id",
-                      ["orig"] = "team_id",
+                      ["orig"] = "teamId",
                       ["type"] = "`$INTEGER`",
                       ["kind"] = "param",
                       ["reqd"] = true,
@@ -546,7 +546,7 @@ local function make_config()
                   ["params"] = {
                     {
                       ["name"] = "id",
-                      ["orig"] = "team_id",
+                      ["orig"] = "teamId",
                       ["type"] = "`$INTEGER`",
                       ["kind"] = "param",
                       ["reqd"] = true,
