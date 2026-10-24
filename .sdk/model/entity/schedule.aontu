@@ -76,14 +76,9 @@ main: kit: entity: schedule: {
           }
           m: "GET"
           o: "/schedule"
-          q: {
-            exist: [
-              "date"
-              "game_type"
-              "hydrate"
-              "season"
-              "sport_id"
-            ]
+          rs: {
+            kind: "json"
+            media: "application/json"
           }
           s: [
             {

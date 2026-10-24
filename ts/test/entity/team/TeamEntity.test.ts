@@ -9,7 +9,7 @@ import { createLiveTransport } from '../../live-runner'
 import { runLiveEntity } from '../../live-entity'
 
 
-import { MlbGumboSDK, BaseFeature, stdutil } from '../../..'
+import { MlbGumboSDK, BaseFeature, config, stdutil } from '../../..'
 
 import {
   envOverride,
@@ -41,17 +41,29 @@ describe('TeamEntity', async () => {
   })
 
 
+  test('validate', async (t) => {
+    if (null == (config as any).feature?.validate) {
+      t.skip('feature not present in this SDK: validate')
+      return
+    }
+    const client = MlbGumboSDK.test(undefined, { feature: { validate: { active: true } } })
+    await assert.rejects(client.Team().list({"id":"x"} as any),
+      (err: any) => 'validate_failed' === err.code)
+  })
+
+
+
   test('basic', async (t) => {
 
     const live = 'TRUE' === process.env.MLB_GUMBO_TEST_LIVE
-    for (const op of ['list', 'load']) {
+    for (const op of ['load']) {
       if (!live && maybeSkipControl(t, 'entityOp', 'team.' + op, live)) return
     }
 
     
     const setup = basicSetup()
     if (setup.live) {
-      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"id":{"a":true,"h":"Id","n":"id","r":false,"t":"`$STRING`","key$":"id","index$":0},"teams":{"a":true,"h":"Teams","n":"teams","r":false,"t":"`$ARRAY`","key$":"teams","index$":1}},"id":{"field":"id","name":"id"},"name":"team","op":{"list":{"input":"data","name":"list","points":[{"a":true,"co":{"id":"GET /teams/{teamId}/roster","source":"openapi3","version":2},"g":{"params":[{"a":true,"ex":119,"k":"param","n":"id","or":"teamId","r":true,"t":"`$INTEGER`","index$":0}],"query":[{"a":true,"k":"query","n":"hydrate","or":"hydrate","r":false,"t":"`$STRING`","index$":0},{"a":true,"ex":2024,"k":"query","n":"season","or":"season","r":false,"t":"`$INTEGER`","index$":1}]},"k":"http","m":"GET","o":"/teams/{teamId}/roster","q":{"$action":"roster","exist":["hydrate","id","season"]},"r":{"param":{"teamId":"id"}},"s":[{"lit":"teams"},{"var":"id"},{"lit":"roster"}],"t":{"req":"`reqdata`","res":"`body.roster`"},"index$":0}],"key$":"list"},"load":{"input":"data","name":"load","points":[{"a":true,"co":{"id":"GET /teams/{teamId}","source":"openapi3","version":2},"g":{"params":[{"a":true,"ex":119,"k":"param","n":"id","or":"teamId","r":true,"t":"`$INTEGER`","index$":0}],"query":[{"a":true,"k":"query","n":"hydrate","or":"hydrate","r":false,"t":"`$STRING`","index$":0},{"a":true,"ex":2024,"k":"query","n":"season","or":"season","r":false,"t":"`$INTEGER`","index$":1}]},"k":"http","m":"GET","o":"/teams/{teamId}","q":{"exist":["hydrate","id","season"]},"r":{"param":{"teamId":"id"}},"s":[{"lit":"teams"},{"var":"id"}],"t":{"req":"`reqdata`","res":"`body`"},"index$":0}],"key$":"load"}},"relations":{"ancestors":[]},"key$":"team","name__orig":"team","Name":"Team","name_":"team","name-":"team","NAME":"TEAM","index$":3}, {"active":true,"entity":"team","key$":"BasicTeamFlow","kind":"basic","name":"BasicTeamFlow","param":{},"step":[{"a":true,"d":{},"i":{},"m":{"team_id":"team01"},"o":"list","s":[],"v":[{"apply":"ItemExists","def":{"ref":"team_ref01"}}],"index$":0},{"a":true,"d":{},"i":{"ref":"team_ref01","srcdatavar":"team_ref01_data","suffix":"_dt0"},"m":{"id":"team01"},"o":"load","s":[],"v":[{"apply":"TextFieldMark","def":{"mark":"Mark01-team_ref01"}}],"index$":1}]}, 'Team', {"GET /teams/{teamId}/roster":{"protocol":"http","parameters":[{"name":"teamId","in":"path","description":"The unique identifier for the team (e.g., 119 for LA Dodgers)","required":true,"schema":{"type":"integer","example":119},"index$":0},{"name":"season","in":"query","description":"The season year for the roster","required":false,"schema":{"type":"integer","example":2024},"index$":1},{"name":"hydrate","in":"query","description":"Add additional data to the response","required":false,"schema":{"type":"string"},"index$":2}]},"GET /teams/{teamId}":{"protocol":"http","parameters":[{"name":"teamId","in":"path","description":"The unique identifier for the team (e.g., 119 for LA Dodgers)","required":true,"schema":{"type":"integer","example":119},"index$":0},{"name":"season","in":"query","description":"Specify a season year for team information","required":false,"schema":{"type":"integer","example":2024},"index$":1},{"name":"hydrate","in":"query","description":"Add additional data to the response","required":false,"schema":{"type":"string"},"index$":2}]}})
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"id":{"a":true,"h":"Id","n":"id","r":false,"t":"`$STRING`","key$":"id","index$":0},"teams":{"a":true,"h":"Teams","n":"teams","r":false,"t":"`$ARRAY`","key$":"teams","index$":1}},"id":{"field":"id","name":"id"},"name":"team","op":{"list":{"input":"data","name":"list","points":[{"a":true,"co":{"id":"GET /teams/{teamId}/roster","source":"openapi3","version":2},"g":{"params":[{"a":true,"ex":119,"k":"param","n":"id","or":"teamId","r":true,"t":"`$INTEGER`","index$":0}],"query":[{"a":true,"k":"query","n":"hydrate","or":"hydrate","r":false,"t":"`$STRING`","index$":0},{"a":true,"ex":2024,"k":"query","n":"season","or":"season","r":false,"t":"`$INTEGER`","index$":1}]},"k":"http","m":"GET","o":"/teams/{teamId}/roster","q":{"$action":"roster","exist":["id"]},"r":{"param":{"teamId":"id"}},"rs":{"kind":"json","media":"application/json"},"s":[{"lit":"teams"},{"var":"id"},{"lit":"roster"}],"t":{"req":"`reqdata`","res":"`body.roster`"},"index$":0}],"key$":"list"},"load":{"input":"data","name":"load","points":[{"a":true,"co":{"id":"GET /teams/{teamId}","source":"openapi3","version":2},"g":{"params":[{"a":true,"ex":119,"k":"param","n":"id","or":"teamId","r":true,"t":"`$INTEGER`","index$":0}],"query":[{"a":true,"k":"query","n":"hydrate","or":"hydrate","r":false,"t":"`$STRING`","index$":0},{"a":true,"ex":2024,"k":"query","n":"season","or":"season","r":false,"t":"`$INTEGER`","index$":1}]},"k":"http","m":"GET","o":"/teams/{teamId}","q":{"exist":["id"]},"r":{"param":{"teamId":"id"}},"rs":{"kind":"json","media":"application/json"},"s":[{"lit":"teams"},{"var":"id"}],"t":{"req":"`reqdata`","res":"`body`"},"index$":0}],"key$":"load"}},"relations":{"ancestors":[]},"key$":"team","name__orig":"team","Name":"Team","name_":"team","name-":"team","NAME":"TEAM","index$":3}, {"active":true,"entity":"team","key$":"BasicTeamFlow","kind":"basic","name":"BasicTeamFlow","param":{},"step":[{"a":false,"d":{},"i":{},"m":{"team_id":"team01"},"o":"list","s":[],"v":[{"apply":"ItemExists","def":{"ref":"team_ref01"}}],"unreachable":true},{"a":true,"d":{},"i":{"ref":"team_ref01","srcdatavar":"team_ref01_data","suffix":"_dt0"},"m":{"id":"team01"},"o":"load","s":[],"v":[{"apply":"TextFieldMark","def":{"mark":"Mark01-team_ref01"}}],"index$":0}]}, 'Team', {"GET /teams/{teamId}/roster":{"protocol":"http","parameters":[{"name":"teamId","in":"path","description":"The unique identifier for the team (e.g., 119 for LA Dodgers)","required":true,"schema":{"type":"integer","example":119},"index$":0},{"name":"season","in":"query","description":"The season year for the roster","required":false,"schema":{"type":"integer","example":2024},"index$":1},{"name":"hydrate","in":"query","description":"Add additional data to the response","required":false,"schema":{"type":"string"},"index$":2}]},"GET /teams/{teamId}":{"protocol":"http","parameters":[{"name":"teamId","in":"path","description":"The unique identifier for the team (e.g., 119 for LA Dodgers)","required":true,"schema":{"type":"integer","example":119},"index$":0},{"name":"season","in":"query","description":"Specify a season year for team information","required":false,"schema":{"type":"integer","example":2024},"index$":1},{"name":"hydrate","in":"query","description":"Add additional data to the response","required":false,"schema":{"type":"string"},"index$":2}]}}, { strict: LIVE_STRICT, t })
     }
     const client = setup.client
     const struct = setup.struct
@@ -61,15 +73,8 @@ describe('TeamEntity', async () => {
 
     let team_ref01_data = Object.values(setup.data.existing.team)[0] as any
 
-    // LIST
-    const team_ref01_ent = client.Team()
-    const team_ref01_match: any = {}
-    team_ref01_match['team_id'] = setup.idmap['team01']
-
-    const team_ref01_list = (await team_ref01_ent.list(team_ref01_match)).map((e: any) => e.data())
-
-
     // LOAD
+    const team_ref01_ent = client.Team()
     const team_ref01_match_dt0: any = {}
     team_ref01_match_dt0.id = team_ref01_data.id
     const team_ref01_data_dt0 = (await team_ref01_ent.load(team_ref01_match_dt0)).data()
@@ -80,6 +85,12 @@ describe('TeamEntity', async () => {
 })
 
 
+
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true
 
 function basicSetup(extra?: any) {
   // TODO: fix test def options

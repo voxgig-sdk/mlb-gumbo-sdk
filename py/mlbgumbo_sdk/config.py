@@ -96,6 +96,7 @@ def make_config():
         },
         "optspec": {
           "clearTimer": "`$FUNCTION`",
+          "now": "`$FUNCTION`",
           "setTimer": "`$FUNCTION`",
         },
         "strict": False,
@@ -192,6 +193,10 @@ def make_config():
                     "game_pk",
                   ],
                 },
+                "response": {
+                  "kind": "json",
+                  "media": "application/json",
+                },
               },
             ],
           },
@@ -264,11 +269,12 @@ def make_config():
                 },
                 "select": {
                   "exist": [
-                    "field",
                     "game_pk",
-                    "hydrate",
-                    "timecode",
                   ],
+                },
+                "response": {
+                  "kind": "json",
+                  "media": "application/json",
                 },
               },
             ],
@@ -347,10 +353,12 @@ def make_config():
                 },
                 "select": {
                   "exist": [
-                    "hydrate",
                     "player_id",
-                    "season",
                   ],
+                },
+                "response": {
+                  "kind": "json",
+                  "media": "application/json",
                 },
               },
             ],
@@ -405,6 +413,7 @@ def make_config():
                       "type": "`$STRING`",
                       "kind": "query",
                       "example": "03/15/2024",
+                      "field": True,
                     },
                     {
                       "name": "game_type",
@@ -435,14 +444,10 @@ def make_config():
                     },
                   ],
                 },
-                "select": {
-                  "exist": [
-                    "date",
-                    "game_type",
-                    "hydrate",
-                    "season",
-                    "sport_id",
-                  ],
+                "select": {},
+                "response": {
+                  "kind": "json",
+                  "media": "application/json",
                 },
               },
             ],
@@ -534,10 +539,12 @@ def make_config():
                 "select": {
                   "$action": "roster",
                   "exist": [
-                    "hydrate",
                     "id",
-                    "season",
                   ],
+                },
+                "response": {
+                  "kind": "json",
+                  "media": "application/json",
                 },
               },
             ],
@@ -600,10 +607,12 @@ def make_config():
                 },
                 "select": {
                   "exist": [
-                    "hydrate",
                     "id",
-                    "season",
                   ],
+                },
+                "response": {
+                  "kind": "json",
+                  "media": "application/json",
                 },
               },
             ],

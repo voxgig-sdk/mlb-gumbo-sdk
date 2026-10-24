@@ -54,26 +54,36 @@ const utility_1 = require("../../utility");
         const ent = testsdk.Player();
         (0, node_assert_1.default)(null != ent);
     });
+    (0, node_test_1.test)('validate', async (t) => {
+        if (null == __1.config.feature?.validate) {
+            t.skip('feature not present in this SDK: validate');
+            return;
+        }
+        const client = __1.MlbGumboSDK.test(undefined, { feature: { validate: { active: true } } });
+        await node_assert_1.default.rejects(client.Player().load({ "player_id": "x" }), (err) => 'validate_failed' === err.code);
+    });
     (0, node_test_1.test)('basic', async (t) => {
         const live = 'TRUE' === process.env.MLB_GUMBO_TEST_LIVE;
-        for (const op of ['load']) {
+        for (const op of []) {
             if (!live && (0, utility_1.maybeSkipControl)(t, 'entityOp', 'player.' + op, live))
                 return;
         }
         const setup = basicSetup();
         if (setup.live) {
-            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "people": { "a": true, "h": "People", "n": "people", "r": false, "t": "`$ARRAY`", "key$": "people", "index$": 0 } }, "name": "player", "op": { "load": { "input": "data", "name": "load", "points": [{ "a": true, "co": { "id": "GET /people/{playerId}", "source": "openapi3", "version": 2 }, "g": { "params": [{ "a": true, "ex": 660271, "k": "param", "n": "player_id", "or": "playerId", "r": true, "t": "`$INTEGER`", "index$": 0 }], "query": [{ "a": true, "ex": "stats,currentTeam", "k": "query", "n": "hydrate", "or": "hydrate", "r": false, "t": "`$STRING`", "index$": 0 }, { "a": true, "ex": 2024, "k": "query", "n": "season", "or": "season", "r": false, "t": "`$INTEGER`", "index$": 1 }] }, "k": "http", "m": "GET", "o": "/people/{playerId}", "q": { "exist": ["hydrate", "player_id", "season"] }, "r": { "param": { "playerId": "player_id" } }, "s": [{ "lit": "people" }, { "var": "player_id" }], "t": { "req": "`reqdata`", "res": "`body`" }, "index$": 0 }], "key$": "load" } }, "relations": { "ancestors": [] }, "key$": "player", "name__orig": "player", "Name": "Player", "name_": "player", "name-": "player", "NAME": "PLAYER", "index$": 1 }, { "active": true, "entity": "player", "key$": "BasicPlayerFlow", "kind": "basic", "name": "BasicPlayerFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": { "ref": "player_ref01", "srcdatavar": "player_ref01_data", "suffix": "_dt0" }, "m": { "id": "player01" }, "o": "load", "s": [], "v": [{ "apply": "TextFieldMark", "def": { "mark": "Mark01-player_ref01" } }], "index$": 0 }] }, 'Player', { "GET /people/{playerId}": { "protocol": "http", "parameters": [{ "name": "playerId", "in": "path", "description": "The unique identifier for the player (e.g., 660271 for Shohei Ohtani)", "required": true, "schema": { "type": "integer", "example": 660271 }, "index$": 0 }, { "name": "season", "in": "query", "description": "Specify a season year for player information", "required": false, "schema": { "type": "integer", "example": 2024 }, "index$": 1 }, { "name": "hydrate", "in": "query", "description": "Add additional data to the response (e.g., stats, currentTeam)", "required": false, "schema": { "type": "string", "example": "stats,currentTeam" }, "index$": 2 }] } });
+            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "people": { "a": true, "h": "People", "n": "people", "r": false, "t": "`$ARRAY`", "key$": "people", "index$": 0 } }, "name": "player", "op": { "load": { "input": "data", "name": "load", "points": [{ "a": true, "co": { "id": "GET /people/{playerId}", "source": "openapi3", "version": 2 }, "g": { "params": [{ "a": true, "ex": 660271, "k": "param", "n": "player_id", "or": "playerId", "r": true, "t": "`$INTEGER`", "index$": 0 }], "query": [{ "a": true, "ex": "stats,currentTeam", "k": "query", "n": "hydrate", "or": "hydrate", "r": false, "t": "`$STRING`", "index$": 0 }, { "a": true, "ex": 2024, "k": "query", "n": "season", "or": "season", "r": false, "t": "`$INTEGER`", "index$": 1 }] }, "k": "http", "m": "GET", "o": "/people/{playerId}", "q": { "exist": ["player_id"] }, "r": { "param": { "playerId": "player_id" } }, "rs": { "kind": "json", "media": "application/json" }, "s": [{ "lit": "people" }, { "var": "player_id" }], "t": { "req": "`reqdata`", "res": "`body`" }, "index$": 0 }], "key$": "load" } }, "relations": { "ancestors": [] }, "key$": "player", "name__orig": "player", "Name": "Player", "name_": "player", "name-": "player", "NAME": "PLAYER", "index$": 1 }, { "active": true, "entity": "player", "key$": "BasicPlayerFlow", "kind": "basic", "name": "BasicPlayerFlow", "param": {}, "step": [{ "a": false, "d": {}, "i": { "ref": "player_ref01", "srcdatavar": "player_ref01_data", "suffix": "_dt0" }, "m": { "id": "player01" }, "o": "load", "s": [], "v": [{ "apply": "TextFieldMark", "def": { "mark": "Mark01-player_ref01" } }], "unreachable": true }] }, 'Player', { "GET /people/{playerId}": { "protocol": "http", "parameters": [{ "name": "playerId", "in": "path", "description": "The unique identifier for the player (e.g., 660271 for Shohei Ohtani)", "required": true, "schema": { "type": "integer", "example": 660271 }, "index$": 0 }, { "name": "season", "in": "query", "description": "Specify a season year for player information", "required": false, "schema": { "type": "integer", "example": 2024 }, "index$": 1 }, { "name": "hydrate", "in": "query", "description": "Add additional data to the response (e.g., stats, currentTeam)", "required": false, "schema": { "type": "string", "example": "stats,currentTeam" }, "index$": 2 }] } }, { strict: LIVE_STRICT, t });
         }
         const client = setup.client;
         const struct = setup.struct;
         const isempty = struct.isempty;
         const select = struct.select;
         let player_ref01_data = Object.values(setup.data.existing.player)[0];
-        // LOAD: skipped — no entity id field and load requires path params.
-        // Entity-var is declared here so later flow steps still compile.
-        const player_ref01_ent = client.Player();
     });
 });
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true;
 function basicSetup(extra) {
     // TODO: fix test def options
     const options = {}; // null

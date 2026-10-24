@@ -22,7 +22,7 @@ export MLB_GUMBO_APIKEY=sk_live_xxx
 ./mlb-gumbo-cli list game_data
 ./mlb-gumbo-cli load 1 game_data            # {id:1} shorthand
 ./mlb-gumbo-cli load '{id:1}' game_data       # explicit match map
-./mlb-gumbo-cli list player
+./mlb-gumbo-cli list schedule
 
 # 5. Override the API base URL for a single call
 MLB_GUMBO_BASE=https://api.example.com ./mlb-gumbo-cli list game_data

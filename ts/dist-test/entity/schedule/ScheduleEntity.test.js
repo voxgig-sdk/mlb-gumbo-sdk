@@ -54,6 +54,53 @@ const utility_1 = require("../../utility");
         const ent = testsdk.Schedule();
         (0, node_assert_1.default)(null != ent);
     });
+    class FailHook extends __1.BaseFeature {
+        name = 'failhook';
+        version = '0.0.1';
+        active = true;
+        unexpected = 0;
+        init() { }
+        PreSpec() { throw new Error('schedule hook failed'); }
+        PreUnexpected() { this.unexpected++; }
+    }
+    (0, node_test_1.test)('stream-error', async () => {
+        const offline = { net: { offline: true } };
+        await node_assert_1.default.rejects(async () => {
+            for await (const _item of __1.MlbGumboSDK.test(offline).Schedule().stream('list')) { }
+        }, /offline/);
+        for await (const _item of __1.MlbGumboSDK.test(offline).Schedule()
+            .stream('list', undefined, { ctrl: { throw: false } })) { }
+        if (null != __1.config.feature?.rbac) {
+            const denied = __1.MlbGumboSDK.test(undefined, { feature: { rbac: { active: true, deny: true } } });
+            await node_assert_1.default.rejects(async () => {
+                for await (const _item of denied.Schedule().stream('list')) { }
+            }, (err) => 'rbac_denied' === err.code);
+        }
+    });
+    (0, node_test_1.test)('stream-ctrl', async () => {
+        const explain = {};
+        const ctrl = { explain };
+        for await (const _item of __1.MlbGumboSDK.test().Schedule().stream('list', undefined, { ctrl })) { }
+        node_assert_1.default.deepStrictEqual(Object.keys(ctrl), ['explain']);
+        (0, node_assert_1.default)(explain === ctrl.explain && 0 < Object.keys(explain).length);
+    });
+    (0, node_test_1.test)('unexpected', async () => {
+        const hook = new FailHook();
+        const client = new __1.MlbGumboSDK({ feature: { test: { active: true } }, extend: [hook] });
+        await node_assert_1.default.rejects(client.Schedule().list(), /hook failed/);
+        (0, node_assert_1.default)(0 < hook.unexpected);
+        const fired = hook.unexpected;
+        node_assert_1.default.strictEqual(await client.Schedule().list(undefined, { throw: false }), undefined);
+        (0, node_assert_1.default)(fired < hook.unexpected);
+    });
+    (0, node_test_1.test)('validate', async (t) => {
+        if (null == __1.config.feature?.validate) {
+            t.skip('feature not present in this SDK: validate');
+            return;
+        }
+        const client = __1.MlbGumboSDK.test(undefined, { feature: { validate: { active: true } } });
+        await node_assert_1.default.rejects(client.Schedule().list({ "date": 1 }), (err) => 'validate_failed' === err.code);
+    });
     (0, node_test_1.test)('basic', async (t) => {
         const live = 'TRUE' === process.env.MLB_GUMBO_TEST_LIVE;
         for (const op of ['list']) {
@@ -62,7 +109,7 @@ const utility_1 = require("../../utility");
         }
         const setup = basicSetup();
         if (setup.live) {
-            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "date": { "a": true, "fo": "date", "h": "Date", "n": "date", "r": false, "t": "`$STRING`", "key$": "date", "index$": 0 }, "games": { "a": true, "h": "Games", "n": "games", "r": false, "t": "`$ARRAY`", "key$": "games", "index$": 1 } }, "name": "schedule", "op": { "list": { "input": "data", "name": "list", "points": [{ "a": true, "co": { "id": "GET /schedule", "source": "openapi3", "version": 2 }, "g": { "query": [{ "a": true, "ex": "03/15/2024", "k": "query", "n": "date", "or": "date", "r": false, "t": "`$STRING`", "index$": 0 }, { "a": true, "ex": "R", "k": "query", "n": "game_type", "or": "gameType", "r": false, "t": "`$STRING`", "index$": 1 }, { "a": true, "k": "query", "n": "hydrate", "or": "hydrate", "r": false, "t": "`$STRING`", "index$": 2 }, { "a": true, "ex": 2024, "k": "query", "n": "season", "or": "season", "r": false, "t": "`$INTEGER`", "index$": 3 }, { "a": true, "ex": 1, "k": "query", "n": "sport_id", "or": "sportId", "r": false, "t": "`$INTEGER`", "index$": 4 }] }, "k": "http", "m": "GET", "o": "/schedule", "q": { "exist": ["date", "game_type", "hydrate", "season", "sport_id"] }, "r": {}, "s": [{ "lit": "schedule" }], "t": { "req": "`reqdata`", "res": "`body.dates`" }, "index$": 0 }], "key$": "list" } }, "relations": { "ancestors": [] }, "key$": "schedule", "name__orig": "schedule", "Name": "Schedule", "name_": "schedule", "name-": "schedule", "NAME": "SCHEDULE", "index$": 2 }, { "active": true, "entity": "schedule", "key$": "BasicScheduleFlow", "kind": "basic", "name": "BasicScheduleFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": {}, "m": {}, "o": "list", "s": [], "v": [{ "apply": "ItemExists", "def": { "ref": "schedule_ref01" } }], "index$": 0 }] }, 'Schedule', { "GET /schedule": { "protocol": "http", "parameters": [{ "name": "sportId", "in": "query", "description": "Sport identifier (1 = Major League Baseball)", "required": false, "schema": { "type": "integer", "example": 1, "default": 1 }, "index$": 0 }, { "name": "season", "in": "query", "description": "The season year", "required": false, "schema": { "type": "integer", "example": 2024 }, "index$": 1 }, { "name": "gameType", "in": "query", "description": "Type of games to include (R = Regular Season, P = Postseason, S = Spring Training)", "required": false, "schema": { "type": "string", "enum": ["R", "P", "S"], "example": "R" }, "index$": 2 }, { "name": "date", "in": "query", "description": "Specific date for schedule (format: MM/DD/YYYY)", "required": false, "schema": { "type": "string", "example": "03/15/2024" }, "index$": 3 }, { "name": "hydrate", "in": "query", "description": "Add additional data to the response", "required": false, "schema": { "type": "string" }, "index$": 4 }] } });
+            return (0, live_entity_1.runLiveEntity)(setup, { "active": true, "alias": { "field": {} }, "fields": { "date": { "a": true, "fo": "date", "h": "Date", "n": "date", "r": false, "t": "`$STRING`", "key$": "date", "index$": 0 }, "games": { "a": true, "h": "Games", "n": "games", "r": false, "t": "`$ARRAY`", "key$": "games", "index$": 1 } }, "name": "schedule", "op": { "list": { "input": "data", "name": "list", "points": [{ "a": true, "co": { "id": "GET /schedule", "source": "openapi3", "version": 2 }, "g": { "query": [{ "a": true, "ex": "03/15/2024", "k": "query", "n": "date", "or": "date", "r": false, "t": "`$STRING`", "index$": 0 }, { "a": true, "ex": "R", "k": "query", "n": "game_type", "or": "gameType", "r": false, "t": "`$STRING`", "index$": 1 }, { "a": true, "k": "query", "n": "hydrate", "or": "hydrate", "r": false, "t": "`$STRING`", "index$": 2 }, { "a": true, "ex": 2024, "k": "query", "n": "season", "or": "season", "r": false, "t": "`$INTEGER`", "index$": 3 }, { "a": true, "ex": 1, "k": "query", "n": "sport_id", "or": "sportId", "r": false, "t": "`$INTEGER`", "index$": 4 }] }, "k": "http", "m": "GET", "o": "/schedule", "q": {}, "r": {}, "rs": { "kind": "json", "media": "application/json" }, "s": [{ "lit": "schedule" }], "t": { "req": "`reqdata`", "res": "`body.dates`" }, "index$": 0 }], "key$": "list" } }, "relations": { "ancestors": [] }, "key$": "schedule", "name__orig": "schedule", "Name": "Schedule", "name_": "schedule", "name-": "schedule", "NAME": "SCHEDULE", "index$": 2 }, { "active": true, "entity": "schedule", "key$": "BasicScheduleFlow", "kind": "basic", "name": "BasicScheduleFlow", "param": {}, "step": [{ "a": true, "d": {}, "i": {}, "m": {}, "o": "list", "s": [], "v": [{ "apply": "ItemExists", "def": { "ref": "schedule_ref01" } }], "index$": 0 }] }, 'Schedule', { "GET /schedule": { "protocol": "http", "parameters": [{ "name": "sportId", "in": "query", "description": "Sport identifier (1 = Major League Baseball)", "required": false, "schema": { "type": "integer", "example": 1, "default": 1 }, "index$": 0 }, { "name": "season", "in": "query", "description": "The season year", "required": false, "schema": { "type": "integer", "example": 2024 }, "index$": 1 }, { "name": "gameType", "in": "query", "description": "Type of games to include (R = Regular Season, P = Postseason, S = Spring Training)", "required": false, "schema": { "type": "string", "enum": ["R", "P", "S"], "example": "R" }, "index$": 2 }, { "name": "date", "in": "query", "description": "Specific date for schedule (format: MM/DD/YYYY)", "required": false, "schema": { "type": "string", "example": "03/15/2024" }, "index$": 3 }, { "name": "hydrate", "in": "query", "description": "Add additional data to the response", "required": false, "schema": { "type": "string" }, "index$": 4 }] } }, { strict: LIVE_STRICT, t });
         }
         const client = setup.client;
         const struct = setup.struct;
@@ -75,6 +122,11 @@ const utility_1 = require("../../utility");
         const schedule_ref01_list = (await schedule_ref01_ent.list(schedule_ref01_match)).map((e) => e.data());
     });
 });
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true;
 function basicSetup(extra) {
     // TODO: fix test def options
     const options = {}; // null

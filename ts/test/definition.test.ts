@@ -23,7 +23,12 @@ const PLAN: any[] = [
     ],
     "select": {},
     "headers": [],
+    "cookies": [],
+    "responseMedia": [
+      "application/json"
+    ],
     "query": [],
+    "queryArgs": [],
     "auth": null,
     "status": 200,
     "sample": {
@@ -52,10 +57,28 @@ const PLAN: any[] = [
       "timecode": "20240315_123456"
     },
     "headers": [],
+    "cookies": [],
+    "responseMedia": [
+      "application/json"
+    ],
     "query": [
       "timecode",
       "hydrate",
       "fields"
+    ],
+    "queryArgs": [
+      {
+        "name": "field",
+        "wire": "fields"
+      },
+      {
+        "name": "hydrate",
+        "wire": "hydrate"
+      },
+      {
+        "name": "timecode",
+        "wire": "timecode"
+      }
     ],
     "auth": null,
     "status": 200,
@@ -83,9 +106,23 @@ const PLAN: any[] = [
       "season": 2024
     },
     "headers": [],
+    "cookies": [],
+    "responseMedia": [
+      "application/json"
+    ],
     "query": [
       "season",
       "hydrate"
+    ],
+    "queryArgs": [
+      {
+        "name": "hydrate",
+        "wire": "hydrate"
+      },
+      {
+        "name": "season",
+        "wire": "season"
+      }
     ],
     "auth": null,
     "status": 200,
@@ -122,18 +159,44 @@ const PLAN: any[] = [
     "args": [],
     "select": {
       "date": "03/15/2024",
-      "game_type": "v1",
+      "game_type": "R",
       "hydrate": "v1",
       "season": 2024,
-      "sport_id": "v1"
+      "sport_id": 1
     },
     "headers": [],
+    "cookies": [],
+    "responseMedia": [
+      "application/json"
+    ],
     "query": [
       "sportId",
       "season",
       "gameType",
       "date",
       "hydrate"
+    ],
+    "queryArgs": [
+      {
+        "name": "date",
+        "wire": "date"
+      },
+      {
+        "name": "game_type",
+        "wire": "gameType"
+      },
+      {
+        "name": "hydrate",
+        "wire": "hydrate"
+      },
+      {
+        "name": "season",
+        "wire": "season"
+      },
+      {
+        "name": "sport_id",
+        "wire": "sportId"
+      }
     ],
     "auth": null,
     "status": 200,
@@ -143,8 +206,8 @@ const PLAN: any[] = [
           "date": "2026-01-01",
           "games": [
             {
-              "gameDate": "2026-01-01T00:00:00Z",
               "gamePk": 1,
+              "gameDate": "2026-01-01T00:00:00Z",
               "teams": {}
             }
           ]
@@ -172,20 +235,34 @@ const PLAN: any[] = [
       "season": 2024
     },
     "headers": [],
+    "cookies": [],
+    "responseMedia": [
+      "application/json"
+    ],
     "query": [
       "season",
       "hydrate"
+    ],
+    "queryArgs": [
+      {
+        "name": "hydrate",
+        "wire": "hydrate"
+      },
+      {
+        "name": "season",
+        "wire": "season"
+      }
     ],
     "auth": null,
     "status": 200,
     "sample": {
       "roster": [
         {
-          "jerseyNumber": "x",
           "person": {
-            "fullName": "x",
-            "id": 1
+            "id": 1,
+            "fullName": "x"
           },
+          "jerseyNumber": "x",
           "position": {
             "code": "x",
             "name": "x",
@@ -215,9 +292,23 @@ const PLAN: any[] = [
       "season": 2024
     },
     "headers": [],
+    "cookies": [],
+    "responseMedia": [
+      "application/json"
+    ],
     "query": [
       "season",
       "hydrate"
+    ],
+    "queryArgs": [
+      {
+        "name": "hydrate",
+        "wire": "hydrate"
+      },
+      {
+        "name": "season",
+        "wire": "season"
+      }
     ],
     "auth": null,
     "status": 200,

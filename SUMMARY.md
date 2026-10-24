@@ -22,7 +22,7 @@ Key fields to recognise:
 
 - `gameData`: Metadata about the game including teams, venue, and game status
 - `liveData`: Real-time game data including plays, boxscore, and current state
-- `timestamps`: Array of timestamp strings in format yyyymmdd_######
+- `timestamps`: Array of timestamp strings in format `yyyymmdd_`######
 
 ### Player
 

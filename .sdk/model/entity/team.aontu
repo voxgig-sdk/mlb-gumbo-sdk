@@ -69,15 +69,17 @@ main: kit: entity: team: {
           q: {
             "$action": "roster"
             exist: [
-              "hydrate"
               "id"
-              "season"
             ]
           }
           r: {
             param: {
               teamId: "id"
             }
+          }
+          rs: {
+            kind: "json"
+            media: "application/json"
           }
           s: [
             {
@@ -139,15 +141,17 @@ main: kit: entity: team: {
           o: "/teams/{teamId}"
           q: {
             exist: [
-              "hydrate"
               "id"
-              "season"
             ]
           }
           r: {
             param: {
               teamId: "id"
             }
+          }
+          rs: {
+            kind: "json"
+            media: "application/json"
           }
           s: [
             {

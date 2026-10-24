@@ -58,15 +58,17 @@ main: kit: entity: player: {
           o: "/people/{playerId}"
           q: {
             exist: [
-              "hydrate"
               "player_id"
-              "season"
             ]
           }
           r: {
             param: {
               playerId: "player_id"
             }
+          }
+          rs: {
+            kind: "json"
+            media: "application/json"
           }
           s: [
             {

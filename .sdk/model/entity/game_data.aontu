@@ -58,6 +58,10 @@ main: kit: entity: game_data: {
               "game_pk"
             ]
           }
+          rs: {
+            kind: "json"
+            media: "application/json"
+          }
           s: [
             {
               lit: "game"
@@ -132,11 +136,12 @@ main: kit: entity: game_data: {
           o: "/game/{game_pk}/feed/live"
           q: {
             exist: [
-              "field"
               "game_pk"
-              "hydrate"
-              "timecode"
             ]
+          }
+          rs: {
+            kind: "json"
+            media: "application/json"
           }
           s: [
             {

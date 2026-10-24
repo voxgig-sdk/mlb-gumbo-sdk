@@ -15,6 +15,9 @@ import type { Context, Feature } from './types'
 import { config } from './Config'
 import { MlbGumboEntityBase } from './MlbGumboEntityBase'
 import { Utility } from './utility/Utility'
+import { unreadableBody } from './utility/ResultBodyUtility'
+import { abortError } from './utility/MakeRequestUtility'
+import { allowed } from './utility/PrepareMethodUtility'
 
 
 import { BaseFeature } from './feature/base/BaseFeature'
@@ -22,6 +25,13 @@ import { BaseFeature } from './feature/base/BaseFeature'
 
 
 const stdutil = new Utility()
+
+
+// A request's outcome: ok is false alone on an error with no response, so a
+// caller narrowing on it reaches the status and the data.
+type DirectResult =
+  | { ok: false, err: any, status?: undefined, headers?: undefined, data?: undefined }
+  | { ok: boolean, status: number, headers: any, data: any, err?: any }
 
 
 class MlbGumboSDK {
@@ -132,13 +142,19 @@ class MlbGumboSDK {
     }, this._rootctx)
 
     const options = this._options
+    const method = String(fetchargs.method || 'GET').toUpperCase()
+
+    if (!allowed(options.allow.method, method)) {
+      return ctx.error('spec_method_allow', 'Method "' + method +
+        '" not allowed by SDK option allow.method value: "' + options.allow.method + '"')
+    }
 
     const spec: any = {
       base: options.base,
       prefix: options.prefix,
       suffix: options.suffix,
       path: fetchargs.path || '',
-      method: fetchargs.method || 'GET',
+      method,
       params: fetchargs.params || {},
       query: fetchargs.query || {},
       headers: prepareHeaders(ctx),
@@ -169,8 +185,8 @@ class MlbGumboSDK {
   // Raw endpoint access is operator-controllable, like every entity op.
   // Blocking it means denying BOTH the 'direct' and 'graphql' tokens, since
   // either one reaches the same endpoint.
-  async direct(fetchargs?: any) {
-    if (!this._options.allow.op.includes('direct')) {
+  async direct(fetchargs?: any): Promise<DirectResult> {
+    if (!allowed(this._options.allow.op, 'direct')) {
       return {
         ok: false,
         err: new Error('MlbGumboSDK: direct: operation not allowed by' +
@@ -186,7 +202,7 @@ class MlbGumboSDK {
   // checks its own allow.op token first. Private, rather than a flag on
   // fetchargs: a caller-supplied marker would let anyone opt straight back
   // out of the gate by passing it.
-  async _rawRequest(fetchargs?: any) {
+  async _rawRequest(fetchargs?: any): Promise<DirectResult> {
     const utility = this._utility
 
     const fetcher = utility.fetcher
@@ -194,7 +210,7 @@ class MlbGumboSDK {
 
     const fetchdef = await this.prepare(fetchargs)
     if (fetchdef instanceof Error) {
-      return fetchdef
+      return { ok: false, err: utility.clean(this._rootctx, fetchdef) }
     }
 
     let ctx: Context = makeContext({
@@ -203,13 +219,17 @@ class MlbGumboSDK {
     }, this._rootctx)
 
     try {
+      if (true === fetchdef.signal?.aborted) {
+        throw fetchdef.signal.reason
+      }
+
       const fetched = await fetcher(ctx, fetchdef.url, fetchdef)
 
       if (null == fetched) {
         return { ok: false, err: ctx.error('direct_no_response', 'response: undefined') }
       }
       else if (fetched instanceof Error) {
-        return { ok: false, err: utility.clean(ctx, fetched) }
+        return { ok: false, err: utility.clean(ctx, abortError(ctx, fetched)) }
       }
 
       const status = fetched.status
@@ -224,26 +244,41 @@ class MlbGumboSDK {
       const noBody = 204 === status || 304 === status || '0' === String(contentLength)
 
       let json: any = undefined
+      let err: any = undefined
       if (!noBody) {
+        let text: any = undefined
         try {
-          json = 'function' === typeof fetched.json ? await fetched.json() : fetched.json
+          const raw: any = fetched
+          if ('function' === typeof raw.text) {
+            text = await raw.text()
+            json = '' === text.trim() ? undefined : JSON.parse(text)
+          }
+          else {
+            json = 'function' === typeof fetched.json ? await fetched.json() : fetched.json
+          }
         }
-        catch (parseErr) {
-          // Body wasn't valid JSON — surface the raw response rather than
-          // throwing. data stays undefined; callers can inspect status/headers.
-          json = undefined
+        catch (parseErr: any) {
+          if ('SyntaxError' !== parseErr?.name) {
+            throw parseErr
+          }
+          err = unreadableBody(ctx, {
+            status, headers, text: text ?? parseErr.text, sent: fetchdef.headers,
+            failed: 200 <= status && status < 300 ? undefined :
+              ctx.error('request_status', 'request: ' + status + ': ' + fetched.statusText),
+          })
         }
       }
 
       return {
-        ok: status >= 200 && status < 300,
+        ok: null == err && status >= 200 && status < 300,
         status,
         headers: fetched.headers,
         data: json,
+        ...(null == err ? {} : { err: utility.clean(ctx, err) }),
       }
     }
     catch (err: any) {
-      return { ok: false, err: utility.clean(ctx, err) }
+      return { ok: false, err: utility.clean(ctx, abortError(ctx, err)) }
     }
   }
 
@@ -252,7 +287,7 @@ class MlbGumboSDK {
   async graphql(query: string, variables?: any, ctrl?: any) {
     const options = this._options
 
-    if (!options.allow.op.includes('graphql')) {
+    if (!allowed(options.allow.op, 'graphql')) {
       return {
         ok: false,
         err: new Error('MlbGumboSDK: graphql: operation not allowed by' +
@@ -266,10 +301,6 @@ class MlbGumboSDK {
       body: { query, variables: variables || {} },
       ctrl,
     })
-
-    if (res instanceof Error) {
-      return res
-    }
 
     // Errors are read BEFORE any status check: a GraphQL parse or validation
     // failure comes back as HTTP 400 carrying the standard { errors: [...] }
@@ -386,3 +417,4 @@ export {
 }
 
 
+export type { DirectResult }

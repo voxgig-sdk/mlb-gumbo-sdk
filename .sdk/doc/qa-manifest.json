@@ -3,5 +3,21 @@
     "SUMMARY.md"
   ],
   "config": ".sdk/doc/qa/vale.ini",
-  "routes": {}
+  "routes": {},
+  "quoted": {
+    "SUMMARY.md": [
+      "Array of timestamp strings in format `yyyymmdd_`######",
+      "MLB Stats API v1 Server",
+      "MLB Stats API v1.1 Server",
+      "Metadata about the game including teams, venue, and game status",
+      "Real-time game data including plays, boxscore, and current state",
+      "Successfully retrieved list of timestamps",
+      "Successfully retrieved live game feed",
+      "Successfully retrieved player information",
+      "Successfully retrieved schedule",
+      "Successfully retrieved team information",
+      "Successfully retrieved team roster",
+      "The MLB GUMBO API provides real-time access to comprehensive Major League Baseball data, including live game information and player statistics. Developers can utilize this API to create applications that enhance fan engagement using advanced data insights and machine learning capabilities. The GUMBO (Grand Unified Master Baseball Object) live data feed provides a standardized JSON response that summarizes the entire state of a selected game upon each update."
+    ]
+  }
 }

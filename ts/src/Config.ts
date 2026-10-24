@@ -102,6 +102,7 @@ class Config {
       },
       "optspec": {
         "clearTimer": "`$FUNCTION`",
+        "now": "`$FUNCTION`",
         "setTimer": "`$FUNCTION`"
       },
       "strict": false,
@@ -213,6 +214,10 @@ class Config {
                 "exist": [
                   "game_pk"
                 ]
+              },
+              "response": {
+                "kind": "json",
+                "media": "application/json"
               }
             }
           ]
@@ -286,11 +291,12 @@ class Config {
               },
               "select": {
                 "exist": [
-                  "field",
-                  "game_pk",
-                  "hydrate",
-                  "timecode"
+                  "game_pk"
                 ]
+              },
+              "response": {
+                "kind": "json",
+                "media": "application/json"
               }
             }
           ]
@@ -369,10 +375,12 @@ class Config {
               },
               "select": {
                 "exist": [
-                  "hydrate",
-                  "player_id",
-                  "season"
+                  "player_id"
                 ]
+              },
+              "response": {
+                "kind": "json",
+                "media": "application/json"
               }
             }
           ]
@@ -426,7 +434,8 @@ class Config {
                     "orig": "date",
                     "type": "`$STRING`",
                     "kind": "query",
-                    "example": "03/15/2024"
+                    "example": "03/15/2024",
+                    "field": true
                   },
                   {
                     "name": "game_type",
@@ -457,14 +466,10 @@ class Config {
                   }
                 ]
               },
-              "select": {
-                "exist": [
-                  "date",
-                  "game_type",
-                  "hydrate",
-                  "season",
-                  "sport_id"
-                ]
+              "select": {},
+              "response": {
+                "kind": "json",
+                "media": "application/json"
               }
             }
           ]
@@ -556,10 +561,12 @@ class Config {
               "select": {
                 "$action": "roster",
                 "exist": [
-                  "hydrate",
-                  "id",
-                  "season"
+                  "id"
                 ]
+              },
+              "response": {
+                "kind": "json",
+                "media": "application/json"
               }
             }
           ]
@@ -622,10 +629,12 @@ class Config {
               },
               "select": {
                 "exist": [
-                  "hydrate",
-                  "id",
-                  "season"
+                  "id"
                 ]
+              },
+              "response": {
+                "kind": "json",
+                "media": "application/json"
               }
             }
           ]

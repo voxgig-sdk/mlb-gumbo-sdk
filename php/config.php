@@ -93,6 +93,7 @@ class MlbGumboConfig
           ],
           'optspec' => [
             'clearTimer' => '`$FUNCTION`',
+            'now' => '`$FUNCTION`',
             'setTimer' => '`$FUNCTION`',
           ],
           'strict' => false,
@@ -189,6 +190,10 @@ class MlbGumboConfig
                       'game_pk',
                     ],
                   ],
+                  'response' => [
+                    'kind' => 'json',
+                    'media' => 'application/json',
+                  ],
                 ],
               ],
             ],
@@ -261,11 +266,12 @@ class MlbGumboConfig
                   ],
                   'select' => [
                     'exist' => [
-                      'field',
                       'game_pk',
-                      'hydrate',
-                      'timecode',
                     ],
+                  ],
+                  'response' => [
+                    'kind' => 'json',
+                    'media' => 'application/json',
                   ],
                 ],
               ],
@@ -344,10 +350,12 @@ class MlbGumboConfig
                   ],
                   'select' => [
                     'exist' => [
-                      'hydrate',
                       'player_id',
-                      'season',
                     ],
+                  ],
+                  'response' => [
+                    'kind' => 'json',
+                    'media' => 'application/json',
                   ],
                 ],
               ],
@@ -402,6 +410,7 @@ class MlbGumboConfig
                         'type' => '`$STRING`',
                         'kind' => 'query',
                         'example' => '03/15/2024',
+                        'field' => true,
                       ],
                       [
                         'name' => 'game_type',
@@ -432,14 +441,10 @@ class MlbGumboConfig
                       ],
                     ],
                   ],
-                  'select' => [
-                    'exist' => [
-                      'date',
-                      'game_type',
-                      'hydrate',
-                      'season',
-                      'sport_id',
-                    ],
+                  'select' => [],
+                  'response' => [
+                    'kind' => 'json',
+                    'media' => 'application/json',
                   ],
                 ],
               ],
@@ -531,10 +536,12 @@ class MlbGumboConfig
                   'select' => [
                     '$action' => 'roster',
                     'exist' => [
-                      'hydrate',
                       'id',
-                      'season',
                     ],
+                  ],
+                  'response' => [
+                    'kind' => 'json',
+                    'media' => 'application/json',
                   ],
                 ],
               ],
@@ -597,10 +604,12 @@ class MlbGumboConfig
                   ],
                   'select' => [
                     'exist' => [
-                      'hydrate',
                       'id',
-                      'season',
                     ],
+                  ],
+                  'response' => [
+                    'kind' => 'json',
+                    'media' => 'application/json',
                   ],
                 ],
               ],
