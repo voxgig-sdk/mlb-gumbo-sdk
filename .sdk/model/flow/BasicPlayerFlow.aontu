@@ -7,22 +7,16 @@ main: kit: flow: BasicPlayerFlow:
   name: "BasicPlayerFlow",
   step: [
     {
-      i: {
-        ref: "player_ref01",
-        srcdatavar: "player_ref01_data",
-        suffix: "_dt0"
-      }
-
       m: {
-        id: "player01"
+        player_id: "player01"
       }
 
-      o: "load",
+      o: "list",
       v: [
         {
-          apply: "TextFieldMark",
+          apply: "ItemExists",
           def: {
-            mark: "Mark01-player_ref01"
+            ref: "player_ref01"
           }
         }
       ]

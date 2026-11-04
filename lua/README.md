@@ -127,6 +127,18 @@ local result, err = client:Schedule():list()
 -- result is an array of entities, one per mock record; err is set on failure
 ```
 
+### Verify the server over HTTPS
+
+An `https://` request goes through LuaSocket and LuaSec, and the SDK checks
+the server itself before any of the request is sent: its certificate against
+the system's trust store, and its name against the host (an address against
+the certificate's addresses). Nothing turns that off. `SSL_CERT_FILE` or
+`SSL_CERT_DIR` names the trust store, as for OpenSSL; with neither set and no
+system store found, an `https://` request fails rather than going unverified.
+`MLB_GUMBO_CA_BUNDLE` names a PEM file of roots added to the store,
+for a local service with its own certificate authority or a self-signed
+certificate. A different policy is a custom fetch function, described next.
+
 ### Use a custom fetch function
 
 Replace the HTTP transport with your own function:
@@ -259,9 +271,20 @@ API path: `/game/{game_pk}/feed/live/timestamps`
 
 | Field | Description |
 | --- | --- |
-| `people` |  |
+| `batSide` |  |
+| `birthDate` |  |
+| `currentAge` |  |
+| `firstName` |  |
+| `fullName` |  |
+| `height` |  |
+| `id` |  |
+| `lastName` |  |
+| `pitchHand` |  |
+| `primaryNumber` |  |
+| `primaryPosition` |  |
+| `weight` |  |
 
-Operations: Load.
+Operations: List.
 
 API path: `/people/{playerId}`
 
@@ -280,10 +303,15 @@ API path: `/schedule`
 
 | Field | Description |
 | --- | --- |
+| `abbreviation` |  |
+| `division` |  |
 | `id` |  |
-| `teams` |  |
+| `league` |  |
+| `locationName` |  |
+| `name` |  |
+| `teamName` |  |
 
-Operations: List, Load.
+Operations: List.
 
 API path: `/teams/{teamId}/roster`
 
@@ -332,18 +360,29 @@ Create an instance: `local player = client:Player(nil)`
 
 | Method | Description |
 | --- | --- |
-| `load(match)` | Load a single entity by match criteria. |
+| `list(match)` | List entities matching the criteria. |
 
 #### Fields
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `people` | `table` |  |
+| `batSide` | `table` |  |
+| `birthDate` | `string` |  |
+| `currentAge` | `number` |  |
+| `firstName` | `string` |  |
+| `fullName` | `string` |  |
+| `height` | `string` |  |
+| `id` | `number` |  |
+| `lastName` | `string` |  |
+| `pitchHand` | `table` |  |
+| `primaryNumber` | `string` |  |
+| `primaryPosition` | `table` |  |
+| `weight` | `number` |  |
 
-#### Example: Load
+#### Example: List
 
 ```lua
-local player, err = client:Player():load({ player_id = 1 })
+local players, err = client:Player():list({ player_id = 1 })
 ```
 
 
@@ -380,25 +419,23 @@ Create an instance: `local team = client:Team(nil)`
 | Method | Description |
 | --- | --- |
 | `list(match)` | List entities matching the criteria. |
-| `load(match)` | Load a single entity by match criteria. |
 
 #### Fields
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `id` | `string` |  |
-| `teams` | `table` |  |
-
-#### Example: Load
-
-```lua
-local team, err = client:Team():load({ id = 1 })
-```
+| `abbreviation` | `string` |  |
+| `division` | `table` |  |
+| `id` | `number` |  |
+| `league` | `table` |  |
+| `locationName` | `string` |  |
+| `name` | `string` |  |
+| `teamName` | `string` |  |
 
 #### Example: List
 
 ```lua
-local teams, err = client:Team():list({ id = 1 })
+local teams, err = client:Team():list({ team_id = 1 })
 ```
 
 ## Features

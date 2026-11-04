@@ -39,45 +39,6 @@ describe('TeamDirect', async () => {
   })
 
 
-  test('direct-load-team', async (t: any) => {
-    if (liveScenariosActive()) { t.skip('Covered by live operation scenarios'); return }
-    const setup = directSetup({ id: 'direct01' })
-    if (maybeSkipControl(t, 'direct', 'direct-load-team', setup.live)) return
-    const { client, calls } = setup
-
-    const params: any = {}
-    const query: any = {}
-    if (setup.live) {
-      params.id = 119
-    } else {
-      params.id = 'direct01'
-    }
-
-    const result: any = await client.direct({
-      path: 'teams/{id}',
-      method: 'GET',
-      params,
-      query,
-    })
-
-    if (setup.live) {
-      if (!result.ok || result.status < 200 || result.status >= 300) {
-        return void liveMiss(t, LIVE_STRICT, 'Live load failed: ' + describeLive(result))
-      }
-      if (!(null != result.data)) {
-        return void liveMiss(t, LIVE_STRICT, 'Live load returned no data: ' + describeLive(result))
-      }
-    } else {
-      assert(result.ok === true)
-      assert(result.status === 200)
-      assert(null != result.data)
-      assert(result.data.id === 'direct01')
-      assert(calls.length === 1)
-      assert(calls[0].init.method === 'GET')
-      assert(calls[0].url.includes('direct01'))
-    }
-  })
-
   test('direct-list-team', async (t: any) => {
     if (liveScenariosActive()) { t.skip('Covered by live operation scenarios'); return }
     const setup = directSetup([{ id: 'direct01' }, { id: 'direct02' }])
@@ -153,6 +114,9 @@ function directSetup(mockres?: any) {
     if ('string' === typeof idmap && idmap.startsWith('{')) {
       idmap = JSON.parse(idmap)
     }
+    // A path parameter's example stands in for an id *_ENTID does not give.
+    idmap = Object.assign({ team01: 119 },
+      'object' === typeof idmap ? idmap : {})
 
     return { client, calls, live, idmap, transport }
   }

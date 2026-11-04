@@ -169,9 +169,9 @@ The API exposes 4 entities:
 | Entity | Description | API path |
 | --- | --- | --- |
 | **GameData** | The GameData entity (list, load). | `/game/{game_pk}/feed/live/timestamps` |
-| **Player** | The Player entity (load). | `/people/{playerId}` |
+| **Player** | The Player entity (list). | `/people/{playerId}` |
 | **Schedule** | The Schedule entity (list). | `/schedule` |
-| **Team** | The Team entity (list, load). | `/teams/{teamId}/roster` |
+| **Team** | The Team entity (list). | `/teams/{teamId}` |
 
 The operations available across these entities are **load**, **list** — see each entity's
 own list above for exactly which it supports.

@@ -37,14 +37,25 @@ class GameDataListMatch(TypedDict):
 
 
 class Player(TypedDict, total=False):
-    people: list
+    batSide: dict
+    birthDate: str
+    currentAge: int
+    firstName: str
+    fullName: str
+    height: str
+    id: int
+    lastName: str
+    pitchHand: dict
+    primaryNumber: str
+    primaryPosition: dict
+    weight: int
 
 
-class PlayerLoadMatchRequired(TypedDict):
+class PlayerListMatchRequired(TypedDict):
     player_id: int
 
 
-class PlayerLoadMatch(PlayerLoadMatchRequired, total=False):
+class PlayerListMatch(PlayerListMatchRequired, total=False):
     hydrate: str
     season: int
 
@@ -63,21 +74,17 @@ class ScheduleListMatch(TypedDict, total=False):
 
 
 class Team(TypedDict, total=False):
-    id: str
-    teams: list
-
-
-class TeamLoadMatchRequired(TypedDict):
+    abbreviation: str
+    division: dict
     id: int
-
-
-class TeamLoadMatch(TeamLoadMatchRequired, total=False):
-    hydrate: str
-    season: int
+    league: dict
+    locationName: str
+    name: str
+    teamName: str
 
 
 class TeamListMatchRequired(TypedDict):
-    id: int
+    team_id: int
 
 
 class TeamListMatch(TeamListMatchRequired, total=False):

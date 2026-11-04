@@ -504,6 +504,103 @@ describe("PrimaryUtility", function()
   end)
 
 
+  -- A Django route answers its slashless form with a relative Location. The
+  -- transport follows each hop, and answers a "manual" fetch with the 3xx.
+  -- Lua has no threads, so the server is a second interpreter.
+  local redirect_server = [[
+    local socket = require("socket")
+    local server = assert(socket.bind("127.0.0.1", 0))
+    server:settimeout(20)
+    io.stdout:write(select(2, server:getsockname()), "\n")
+    io.stdout:flush()
+    local moved = { ["/redirect/r1"] = { 301, "/redirect/r1/" }, ["/redirect/r1/"] = { 308, "done" } }
+    for _ = 1, 4 do
+      local sock = server:accept()
+      if not sock then break end
+      sock:settimeout(20)
+      local path = string.match(sock:receive("*l") or "", "^%S+ (%S+)") or ""
+      repeat local line = sock:receive("*l") until line == nil or line == ""
+      io.stdout:write(path, "\n")
+      local hop = moved[path]
+      local body = path == "/redirect/r1/done" and '{"id":"r1"}' or ""
+      sock:send("HTTP/1.1 " .. (hop and hop[1] or (body == "" and 404 or 200)) .. " X\r\n" ..
+        (hop and ("Location: " .. hop[2] .. "\r\n") or "") .. "Content-Type: application/json\r\n" ..
+        "Content-Length: " .. #body .. "\r\nConnection: close\r\n\r\n" .. body)
+      sock:close()
+    end
+  ]]
+
+  local has_socket = pcall(require, "socket.http")
+  ;(has_socket and it or pending)("fetcher-redirect", function()
+    local first = 0
+    while arg and arg[first - 1] ~= nil do first = first - 1 end
+    local lua = arg and first < 0 and arg[first] or "lua"
+    local script = os.tmpname()
+    local f = assert(io.open(script, "w"))
+    f:write(string.format("package.path = %q\npackage.cpath = %q\n", package.path, package.cpath), redirect_server)
+    f:close()
+    local child = assert(io.popen(string.format("%q %q", lua, script)))
+    local base = "http://127.0.0.1:" .. assert(child:read("*l"))
+
+    local live_client = sdk.new({ base = base })
+    local live_utility = live_client:get_utility()
+    local ctx = live_utility.make_context({
+      opname = "load",
+      client = live_client,
+      utility = live_utility,
+    }, nil)
+    local res, err = live_utility.fetcher(ctx, base .. "/redirect/r1", { method = "GET", headers = {} })
+    local manual, merr = live_utility.fetcher(ctx, base .. "/redirect/r1",
+      { method = "GET", headers = {}, redirect = "manual" })
+    local seen = child:read("*a")
+    child:close()
+    os.remove(script)
+
+    assert.is_nil(err)
+    assert.are.equal(200, res.status)
+    assert.are.same({ id = "r1" }, res.json())
+    assert.are.equal("/redirect/r1\n/redirect/r1/\n/redirect/r1/done\n/redirect/r1\n", seen)
+    assert.is_nil(merr)
+    assert.are.equal(301, manual.status)
+  end)
+
+
+  -- Nothing listens on port 9: a request the guard let through fails there.
+  -- Lua cannot set its own environment, so the test answers for os.getenv.
+  it("fetcher-getonly-guard", function()
+    local live_client = sdk.new({ base = "http://127.0.0.1:9" })
+    local live_utility = live_client:get_utility()
+    local ctx = live_utility.make_context({
+      opname = "create",
+      client = live_client,
+      utility = live_utility,
+    }, nil)
+    local url = "http://127.0.0.1:9/planet/p1?apikey=GUARDKEY01"
+
+    local getenv = os.getenv
+    os.getenv = function(name)
+      if name == "VOXGIG_GETONLY_GUARD" then
+        return "TRUE"
+      end
+      return getenv(name)
+    end
+    local passed, failure = pcall(function()
+      local _, err = live_utility.fetcher(ctx, url, { method = "POST", headers = {} })
+      assert.are.equal("fetch_getonly_block", type(err) == "table" and err.code or tostring(err))
+      assert.is_truthy(string.find(err.msg, "[GET-ONLY GUARD] blocked POST /planet/p1", 1, true))
+      assert.is_falsy(string.find(err.msg, "GUARDKEY01", 1, true))
+
+      local _, geterr = live_utility.fetcher(ctx, url, { method = "GET", headers = {} })
+      assert.is_not_nil(geterr)
+      assert.are_not.equal("fetch_getonly_block", type(geterr) == "table" and geterr.code or geterr)
+    end)
+    os.getenv = getenv
+    if not passed then
+      error(failure, 0)
+    end
+  end)
+
+
   it("makeContext-basic", function()
     runsection("makeContext", function(vin)
       if type(vin) ~= "table" then

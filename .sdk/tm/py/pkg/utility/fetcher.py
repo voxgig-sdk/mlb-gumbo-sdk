@@ -2,17 +2,20 @@
 
 from __future__ import annotations
 import json
+import os
+import re
 import threading
 from http.cookiejar import DefaultCookiePolicy
 from projectname_sdk.utility.voxgig_struct import voxgig_struct as vs
+from projectname_sdk.core.error import MlbGumboError
 
 
 # Default User-Agent — many CDNs (notably Cloudflare) reject requests with
 # a library's default UA, returning 403 before the request even reaches
-# the origin. Set a Mozilla-shaped UA so the SDK behaves like every other
-# HTTP client by default. Users can still override by passing a User-Agent
-# header in fetchdef.
-_DEFAULT_USER_AGENT = "Mozilla/5.0 (compatible; MlbGumboSDK/1.0)"
+# the origin. The project's agent (main.kit.http.useragent) is browser-shaped
+# unless the model says otherwise. Users can still override by passing a
+# User-Agent header in fetchdef.
+_DEFAULT_USER_AGENT = "PROJECTUSERAGENT"
 
 
 _SESSION = None
@@ -27,6 +30,7 @@ def _session():
         with _SESSION_LOCK:
             if _SESSION is None:
                 session = requests.Session()
+                session.max_redirects = 5
                 session.cookies.set_policy(DefaultCookiePolicy(allowed_domains=[]))
                 _SESSION = session
     return _SESSION
@@ -43,8 +47,28 @@ def _request_data(body):
     return None
 
 
+_GETONLY_ENV = "VOXGIG_GETONLY_GUARD"
+
+
+# A GET-only live run refuses any other method before it is sent. The error
+# names the path alone: the query can carry a credential.
+def _getonly_refusal(fullurl, method):
+    method = str(method or "GET").upper()
+    if os.environ.get(_GETONLY_ENV) != "TRUE" or method == "GET":
+        return None
+    rest = fullurl
+    if "://" in rest:
+        rest = re.sub(r"^[^/?#]*", "", rest.split("://", 1)[1])
+    path = re.split(r"[?#]", rest, maxsplit=1)[0] or "/"
+    return MlbGumboError(
+        "fetch_getonly_block", "[GET-ONLY GUARD] blocked " + method + " " + path)
+
+
 def _default_http_fetch(fullurl, fetchdef):
     method = fetchdef.get("method", "GET")
+    refused = _getonly_refusal(fullurl, method)
+    if refused is not None:
+        return None, refused
     headers = fetchdef.get("headers", {})
 
     data = _request_data(fetchdef.get("body"))

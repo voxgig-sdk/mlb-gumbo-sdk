@@ -183,14 +183,24 @@ declare class Config {
             };
         };
         player: {
-            fields: {
+            fields: ({
                 name: string;
                 title: string;
                 type: string;
-            }[];
+                format?: undefined;
+            } | {
+                name: string;
+                title: string;
+                type: string;
+                format: string;
+            })[];
+            id: {
+                field: string;
+                name: string;
+            };
             name: string;
             op: {
-                load: {
+                list: {
                     input: string;
                     name: string;
                     points: {
@@ -339,7 +349,7 @@ declare class Config {
                 list: {
                     input: string;
                     name: string;
-                    points: {
+                    points: ({
                         kind: string;
                         method: string;
                         orig: string;
@@ -391,12 +401,7 @@ declare class Config {
                             kind: string;
                             media: string;
                         };
-                    }[];
-                };
-                load: {
-                    input: string;
-                    name: string;
-                    points: {
+                    } | {
                         kind: string;
                         method: string;
                         orig: string;
@@ -442,12 +447,13 @@ declare class Config {
                         };
                         select: {
                             exist: string[];
+                            $action?: undefined;
                         };
                         response: {
                             kind: string;
                             media: string;
                         };
-                    }[];
+                    })[];
                 };
             };
             relations: {

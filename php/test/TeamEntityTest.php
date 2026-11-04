@@ -33,7 +33,7 @@ class TeamEntityTest extends TestCase
         $client = MlbGumboSDK::test(null, ["feature" => ["validate" => ["active" => true]]]);
         $err = null;
         try {
-            $client->Team(null)->list(["id" => 'x'], null);
+            $client->Team(null)->list(["team_id" => 'x'], null);
         } catch (\Throwable $e) {
             $err = $e;
         }
@@ -45,7 +45,7 @@ class TeamEntityTest extends TestCase
         $setup = team_basic_setup(null);
         // Per-op sdk-test-control.json skip.
         $_live = !empty($setup["live"]);
-        foreach (["load"] as $_op) {
+        foreach (["list"] as $_op) {
             [$_shouldSkip, $_reason] = Runner::is_control_skipped("entityOp", "team." . $_op, $_live ? "live" : "unit");
             if ($_shouldSkip) {
                 $this->markTestSkipped($_reason ?? "skipped via sdk-test-control.json");
@@ -53,7 +53,11 @@ class TeamEntityTest extends TestCase
             }
         }
         if (!empty($setup["live"])) {
-            Runner::live_miss(self::LIVE_STRICT, "Live entity test blocked: " . "the flow loads a team record it has no list to find");
+            foreach (["team01" => 119] as $_liveKey => $_liveEx) {
+                if (!empty($setup["synthetic_only"]) || null === ($setup["idmap"][$_liveKey] ?? null)) {
+                    $setup["idmap"][$_liveKey] = $_liveEx;
+                }
+            }
         }
         $client = $setup["client"];
 
@@ -65,15 +69,17 @@ class TeamEntityTest extends TestCase
             $team_ref01_data = Helpers::to_map($team_ref01_data_raw[0][1]);
         }
 
-        // LOAD
+        if (!empty($setup["live"])) {
+            Runner::live_pace();
+        }
+        // LIST
         $team_ref01_ent = $client->Team(null);
-        $team_ref01_match_dt0 = [
-            "id" => $team_ref01_data["id"],
+        $team_ref01_match = [
+            "team_id" => $setup["idmap"]["team01"],
         ];
-        $team_ref01_data_dt0_loaded = $team_ref01_ent->load($team_ref01_match_dt0, null);
-        $team_ref01_data_dt0_load_result = Helpers::to_map(is_object($team_ref01_data_dt0_loaded) && method_exists($team_ref01_data_dt0_loaded, 'data_get') ? $team_ref01_data_dt0_loaded->data_get() : $team_ref01_data_dt0_loaded);
-        $this->assertNotNull($team_ref01_data_dt0_load_result);
-        $this->assertEquals($team_ref01_data_dt0_load_result["id"], $team_ref01_data["id"]);
+
+        $team_ref01_list_result = $team_ref01_ent->list($team_ref01_match, null);
+        $this->assertIsArray($team_ref01_list_result);
 
     }
 }

@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 // MlbGumbo SDK utility: fetcher
 
+require_once __DIR__ . '/../core/Error.php';
+
 class MlbGumboFetcher
 {
     // Default User-Agent — many CDNs (notably Cloudflare) reject requests
     // with PHP's default UA (which file_get_contents doesn't even set),
-    // returning 403 before the request reaches the origin. Set a Mozilla-
-    // shaped UA so the SDK behaves like every other HTTP client by default.
-    // Users can override by passing a User-Agent header in fetchdef.
+    // returning 403 before the request reaches the origin. The project's
+    // agent (main.kit.http.useragent) is browser-shaped unless the model says
+    // otherwise. Users can override by passing a User-Agent header in fetchdef.
     public const DEFAULT_USER_AGENT = 'Mozilla/5.0 (compatible; MlbGumboSDK/1.0)';
 
     // One cURL handle per process, reset between calls rather than closed:
@@ -28,9 +30,105 @@ class MlbGumboFetcher
         return self::$curl;
     }
 
+    public const GETONLY_ENV = 'VOXGIG_GETONLY_GUARD';
+
+    // A GET-only live run refuses any other method before it is sent, on
+    // either transport below. The path alone: the query can carry a
+    // credential, and nothing has cleaned this line.
+    public static function getOnlyRefusal(string $fullurl, string $method): ?MlbGumboError
+    {
+        if (getenv(self::GETONLY_ENV) !== 'TRUE' || $method === 'GET') {
+            return null;
+        }
+        $path = parse_url($fullurl, PHP_URL_PATH);
+        $path = is_string($path) && $path !== '' ? $path : '/';
+        fwrite(STDERR, "[GET-ONLY GUARD] blocked {$method} {$path}\n");
+        return new MlbGumboError('fetch_getonly_block', "[GET-ONLY GUARD] blocked {$method} {$path}");
+    }
+
+    public const REDIRECT_STATUS = [301, 302, 303, 307, 308];
+    public const REDIRECT_MAX = 5;
+
+    // Neither transport below follows a redirect. A GET or HEAD follows one
+    // here, unless the fetch definition says "manual", each hop passing the
+    // GET-only guard first; past REDIRECT_MAX hops the last 3xx is the answer.
+    // Another origin is not sent the request's credentials.
     public static function defaultHttpFetch(string $fullurl, array $fetchdef): array
     {
         $method_str = strtoupper($fetchdef['method'] ?? 'GET');
+        $follow = in_array($method_str, ['GET', 'HEAD'], true) && ($fetchdef['redirect'] ?? null) !== 'manual';
+        $url = $fullurl;
+        for ($hops = 0; ; $hops++) {
+            $refused = self::getOnlyRefusal($url, $method_str);
+            if (null !== $refused) {
+                return [null, $refused];
+            }
+            [$res, $err] = self::sendOnce($url, $method_str, $fetchdef);
+            $location = is_array($res) ? ($res['headers']['location'] ?? null) : null;
+            $next = $follow && is_string($location) && $hops < self::REDIRECT_MAX
+                && in_array($res['status'], self::REDIRECT_STATUS, true)
+                ? self::resolveLocation($url, $location) : null;
+            if (null === $next) {
+                return [$res, $err];
+            }
+            if (self::origin($next) !== self::origin($url)) {
+                $fetchdef['headers'] = array_filter($fetchdef['headers'] ?? [],
+                    fn($k) => !in_array(strtolower((string)$k), ['authorization', 'cookie', 'proxy-authorization'], true),
+                    ARRAY_FILTER_USE_KEY);
+            }
+            $url = $next;
+        }
+    }
+
+    // The Location resolved against the URL that answered with it (RFC 3986 5.2).
+    public static function resolveLocation(string $base, string $loc): ?string
+    {
+        $loc = preg_replace('/#.*$/s', '', preg_replace('/\s+/', '', $loc));
+        if (preg_match('/^[A-Za-z][A-Za-z0-9+.-]*:/', $loc)) {
+            return $loc;
+        }
+        if (!preg_match('~^([^:/?#]+):(?://([^/?#]*))?([^?#]*)(\?[^#]*)?~', $base, $m)) {
+            return null;
+        }
+        [$scheme, $auth, $path, $query] = [$m[1], $m[2] ?? '', $m[3] ?? '', $m[4] ?? ''];
+        if (str_starts_with($loc, '//')) {
+            return $scheme . ':' . $loc;
+        }
+        $path = '' === $path ? '/' : $path;
+        $qat = strpos($loc, '?');
+        $lpath = false === $qat ? $loc : substr($loc, 0, $qat);
+        $lquery = false === $qat ? null : substr($loc, $qat);
+        if ('' === $lpath) {
+            $lpath = $path;
+            $lquery = $lquery ?? $query;
+        } elseif ('/' !== $lpath[0]) {
+            $lpath = substr($path, 0, strrpos($path, '/') + 1) . $lpath;
+        }
+        $out = [];
+        foreach (explode('/', $lpath) as $seg) {
+            if ('..' === $seg) {
+                if (1 < count($out)) {
+                    array_pop($out);
+                }
+            } elseif ('.' !== $seg) {
+                $out[] = $seg;
+            }
+        }
+        if (preg_match('~(^|/)\.\.?$~', $lpath)) {
+            $out[] = '';
+        }
+        return $scheme . '://' . $auth . implode('/', $out) . ($lquery ?? '');
+    }
+
+    private static function origin(string $url): string
+    {
+        $p = parse_url(strtolower($url));
+        $scheme = $p['scheme'] ?? '';
+        return $scheme . '://' . ($p['host'] ?? '') . ':' . ($p['port'] ?? ('https' === $scheme ? 443 : 80));
+    }
+
+    private static function sendOnce(string $fullurl, string $method_str, array $fetchdef): array
+    {
         $body_str = $fetchdef['body'] ?? null;
         if (is_resource($body_str)) {
             $body_str = stream_get_contents($body_str);
@@ -54,8 +152,7 @@ class MlbGumboFetcher
         // Prefer cURL when available — its header capture is reliable across
         // PHP versions, while file_get_contents + custom stream wrappers
         // don't propagate $http_response_header for user-defined wrappers
-        // in PHP 8.3+. (cURL is configured with FOLLOWLOCATION off, so the
-        // manual-redirect annotation below holds there by construction.)
+        // in PHP 8.3+.
         if (function_exists('curl_init')) {
             return self::curlFetch($fullurl, $method_str, $body_str, $header_lines);
         }
@@ -64,18 +161,9 @@ class MlbGumboFetcher
             'http' => [
                 'method' => $method_str,
                 'ignore_errors' => true,
+                'follow_location' => 0,
             ],
         ];
-
-        // Honour a redirect annotation on the fetch definition (set by the
-        // station feature's middleware under a hosts policy): "manual"
-        // surfaces a 3xx as an ordinary response instead of auto-following
-        // it — the http stream wrapper otherwise replays the request,
-        // headers included, against whatever host Location names, carrying
-        // injected credentials to a host no policy approved.
-        if (($fetchdef['redirect'] ?? null) === 'manual') {
-            $opts['http']['follow_location'] = 0;
-        }
 
         if (is_string($body_str)) {
             $opts['http']['content'] = $body_str;
@@ -118,6 +206,13 @@ class MlbGumboFetcher
             }
         }
 
+        // The stream wrapper does not decode a compressed body, which a
+        // server may send whatever the request asked for.
+        [$response_body, $decode_err] = self::decodeBody($response_body, $resp_headers['content-encoding'] ?? '');
+        if (null !== $decode_err) {
+            return [null, $decode_err];
+        }
+
         $json_body = null;
         $unreadable = false;
         if (trim($response_body) !== '') {
@@ -142,29 +237,34 @@ class MlbGumboFetcher
         ];
     }
 
+    // A gzip or deflate body decoded, as cURL does with CURLOPT_ENCODING; a
+    // deflate body is zlib-wrapped, or raw as some servers
+    // send it. Any other encoding is left as it came.
+    public static function decodeBody(string $body, string $encoding): array
+    {
+        $encoding = strtolower(trim($encoding));
+        if ('' === $body || !in_array($encoding, ['gzip', 'x-gzip', 'deflate'], true)) {
+            return [$body, null];
+        }
+        if (!function_exists('gzdecode')) {
+            return [null, "response body is {$encoding} encoded, and this PHP has no zlib to decode it"];
+        }
+        if ('deflate' === $encoding) {
+            $decoded = @gzuncompress($body);
+            if (false === $decoded) {
+                $decoded = @gzinflate($body);
+            }
+        } else {
+            $decoded = @gzdecode($body);
+        }
+        if (!is_string($decoded)) {
+            return [null, "response body is not valid {$encoding} data"];
+        }
+        return [$decoded, null];
+    }
+
     private static function curlFetch(string $fullurl, string $method, $body_str, array $header_lines): array
     {
-        // GET-only guard for live tests — set by pub-live-test. We respect
-        // it here at the SDK level since cURL bypasses PHP stream wrappers
-        // (so the wrapper-based guard wouldn't see this call).
-        if (getenv('VOXGIG_GETONLY_GUARD') === 'TRUE' && $method !== 'GET') {
-            // The path alone: the query can carry a credential, and nothing
-            // has cleaned this line.
-            $path = parse_url($fullurl, PHP_URL_PATH);
-            $path = is_string($path) && $path !== '' ? $path : '/';
-            fwrite(STDERR, "[GET-ONLY GUARD] blocked {$method} {$path}\n");
-            return [
-                [
-                    'status' => 0,
-                    'statusText' => 'Blocked',
-                    'headers' => [],
-                    'json' => function () { return null; },
-                    'body' => '',
-                ],
-                "GET-only guard blocked {$method} {$path}",
-            ];
-        }
-
         $ch = self::curlHandle($fullurl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, false);
@@ -172,6 +272,9 @@ class MlbGumboFetcher
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+        // '' offers every encoding this cURL decodes, and decodes it: a
+        // server may compress its answer whatever the request asked for.
+        curl_setopt($ch, CURLOPT_ENCODING, '');
         if (!empty($header_lines)) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $header_lines);
         }
@@ -256,12 +359,8 @@ class MlbGumboFetcher
                 "Request blocked as test feature is active (URL was: \"{$fullurl}\")")];
         }
 
-        $sys_fetch = \Voxgig\Struct\Struct::getpath($options, 'system.fetch');
+        $sys_fetch = self::systemFetch($options);
 
-        // Treat null OR an empty stdClass/array as "no fetcher provided" and
-        // fall through to the default HTTP fetcher. The options builder
-        // sometimes materializes `system.fetch` as an empty stdClass even
-        // when the user didn't set one — that's a placeholder, not a value.
         if (self::usesDefault($ctx)) {
             if (null !== $ctx->spec) {
                 $ctx->spec->headers = self::sentHeaders($ctx->spec->headers);
@@ -275,9 +374,19 @@ class MlbGumboFetcher
         return [null, $ctx->make_error('fetch_invalid', 'system.fetch is not a valid function')];
     }
 
+    // getpath answers a missing path with the struct port's UNDEF sentinel:
+    // one stdClass for the whole process, which setprop writes into when it
+    // is handed as a parent. It must never be read, or kept, as a fetcher.
+    public static function systemFetch(mixed $options): mixed
+    {
+        $fetch = \Voxgig\Struct\Struct::getpath($options, 'system.fetch');
+        return $fetch === \Voxgig\Struct\Struct::undef() ? null : $fetch;
+    }
+
+    // An empty map or list for `system.fetch` names no fetcher either.
     public static function usesDefault(MlbGumboContext $ctx): bool
     {
-        $sys_fetch = \Voxgig\Struct\Struct::getpath($ctx->client->options_map(), 'system.fetch');
+        $sys_fetch = self::systemFetch($ctx->client->options_map());
         $is_empty_obj = ($sys_fetch instanceof \stdClass) && empty(get_object_vars($sys_fetch));
         $is_empty_arr = is_array($sys_fetch) && empty($sys_fetch);
         return $sys_fetch === null || $is_empty_obj || $is_empty_arr;

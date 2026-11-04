@@ -141,8 +141,8 @@ operation, of the 4 the SDK has:
 
 | Tool | Entities |
 |------|----------|
-| `mlb-gumbo_list` | game_data, schedule, team |
-| `mlb-gumbo_load` | game_data, player, team |
+| `mlb-gumbo_list` | game_data, player, schedule, team |
+| `mlb-gumbo_load` | game_data |
 
 JSON schemas are emitted by the SDK from each tool's argument struct's
 `json` / `jsonschema` tags — no schema is hand-written. Each tool's

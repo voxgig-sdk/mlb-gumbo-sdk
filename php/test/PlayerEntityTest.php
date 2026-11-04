@@ -33,7 +33,7 @@ class PlayerEntityTest extends TestCase
         $client = MlbGumboSDK::test(null, ["feature" => ["validate" => ["active" => true]]]);
         $err = null;
         try {
-            $client->Player(null)->load(["player_id" => 'x'], null);
+            $client->Player(null)->list(["player_id" => 'x'], null);
         } catch (\Throwable $e) {
             $err = $e;
         }
@@ -45,11 +45,18 @@ class PlayerEntityTest extends TestCase
         $setup = player_basic_setup(null);
         // Per-op sdk-test-control.json skip.
         $_live = !empty($setup["live"]);
-        foreach ([] as $_op) {
+        foreach (["list"] as $_op) {
             [$_shouldSkip, $_reason] = Runner::is_control_skipped("entityOp", "player." . $_op, $_live ? "live" : "unit");
             if ($_shouldSkip) {
                 $this->markTestSkipped($_reason ?? "skipped via sdk-test-control.json");
                 return;
+            }
+        }
+        if (!empty($setup["live"])) {
+            foreach (["player01" => 660271] as $_liveKey => $_liveEx) {
+                if (!empty($setup["synthetic_only"]) || null === ($setup["idmap"][$_liveKey] ?? null)) {
+                    $setup["idmap"][$_liveKey] = $_liveEx;
+                }
             }
         }
         $client = $setup["client"];
@@ -61,6 +68,18 @@ class PlayerEntityTest extends TestCase
         if (count($player_ref01_data_raw) > 0) {
             $player_ref01_data = Helpers::to_map($player_ref01_data_raw[0][1]);
         }
+
+        if (!empty($setup["live"])) {
+            Runner::live_pace();
+        }
+        // LIST
+        $player_ref01_ent = $client->Player(null);
+        $player_ref01_match = [
+            "player_id" => $setup["idmap"]["player01"],
+        ];
+
+        $player_ref01_list_result = $player_ref01_ent->list($player_ref01_match, null);
+        $this->assertIsArray($player_ref01_list_result);
 
     }
 }

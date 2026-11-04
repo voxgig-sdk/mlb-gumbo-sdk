@@ -115,7 +115,7 @@ class MlbGumboContext
   end
 
   def make_error(code, msg)
-    MlbGumboError.new(code, msg, self)
+    MlbGumboError.new(msg, code: code, ctx: self)
   end
 
   # The serialised context leaves the pipeline (a logger, an error dump), so

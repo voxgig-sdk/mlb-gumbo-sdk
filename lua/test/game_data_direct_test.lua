@@ -38,9 +38,13 @@ describe("GameDataDirect", function()
         end
       end
     end
+    if setup.live then
+      runner.live_pace()
+    end
     local client = setup.client
 
     local params = {}
+    local query = {}
     if setup.live then
       params["game_pk"] = setup.idmap["game_pk01"]
     else
@@ -51,6 +55,7 @@ describe("GameDataDirect", function()
       path = "game/{game_pk}/feed/live/timestamps",
       method = "GET",
       params = params,
+      query = query,
     })
     if setup.live then
       if not live_ok(result, err) then
@@ -76,6 +81,9 @@ describe("GameDataDirect", function()
     if _should_skip then
       pending(_reason or "skipped via sdk-test-control.json")
       return
+    end
+    if setup.live then
+      runner.live_pace()
     end
     local client = setup.client
 
@@ -140,6 +148,15 @@ function game_data_direct_setup(mockres)
     end
     local client = sdk.new(merged_opts)
     local idmap = env["MLB_GUMBO_TEST_GAME_DATA_ENTID"]
+    if type(idmap) ~= "table" then
+      idmap = {}
+    end
+    -- A path parameter's example stands in for an id *_ENTID does not give.
+    for _k, _v in pairs({["game_pk01"] = "716463"}) do
+      if idmap[_k] == nil then
+        idmap[_k] = _v
+      end
+    end
     return {
       client = client,
       calls = calls,

@@ -29,7 +29,7 @@ describe("PlayerEntity", function()
       return
     end
     local client = sdk.test(nil, { feature = { validate = { active = true } } })
-    local _, err = client:Player(nil):load({ ["player_id"] = "x" }, nil)
+    local _, err = client:Player(nil):list({ ["player_id"] = "x" }, nil)
     assert.are.equal("validate_failed", type(err) == "table" and err.code or nil)
   end)
 
@@ -37,11 +37,18 @@ describe("PlayerEntity", function()
     local setup = player_basic_setup(nil)
     -- Per-op sdk-test-control.json skip.
     local _live = setup.live or false
-    for _, _op in ipairs({}) do
+    for _, _op in ipairs({"list"}) do
       local _should_skip, _reason = runner.is_control_skipped("entityOp", "player." .. _op, _live and "live" or "unit")
       if _should_skip then
         pending(_reason or "skipped via sdk-test-control.json")
         return
+      end
+    end
+    if setup.live then
+      for _live_key, _live_ex in pairs({["player01"] = 660271}) do
+        if setup.synthetic_only or setup.idmap[_live_key] == nil then
+          setup.idmap[_live_key] = _live_ex
+        end
       end
     end
     local client = setup.client
@@ -53,6 +60,19 @@ describe("PlayerEntity", function()
     if #player_ref01_data_raw > 0 then
       player_ref01_data = helpers.to_map(player_ref01_data_raw[1][2])
     end
+
+    if setup.live then
+      runner.live_pace()
+    end
+    -- LIST
+    local player_ref01_ent = client:Player(nil)
+    local player_ref01_match = {
+      ["player_id"] = setup.idmap["player01"],
+    }
+
+    local player_ref01_list_result, err = player_ref01_ent:list(player_ref01_match, nil)
+    assert.is_nil(err)
+    assert.is_table(player_ref01_list_result)
 
   end)
 end)

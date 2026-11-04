@@ -212,6 +212,9 @@ func TestScheduleEntity(t *testing.T) {
 		// happen not to consume the bootstrap data (e.g. list-only flows).
 		_ = scheduleRef01Data
 
+		if setup.live {
+			livePace()
+		}
 		// LIST
 		scheduleRef01Ent := client.Schedule(nil)
 		scheduleRef01Match := map[string]any{}

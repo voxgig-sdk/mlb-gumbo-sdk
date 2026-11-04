@@ -25,11 +25,14 @@ import {
   buildIdNames,
   getMatchEntries,
   isAuthActive,
-  entityDataIdField, envName, envToken,
+  entityDataIdField, entityRecordIdField, envName, envToken, luaKey,
   serverVarEnv,
   serverVariables,
   invalidRequest,
   liveFlowNeeds, liveStrict, liveStrictNote,
+  liveRouteExamples, liveStepExamples, flowLoadRoute, flowLoadReadsRecord,
+  liveGates, liveExcludedLines, liveExcludedSummary, LIVE_GETONLY_ENV,
+  liveEntity, liveIdentity, liveRepeatsId, liveLoadComparesId, liveUnrouted,
 } from '@voxgig/sdkgen'
 
 import { formatLuaValue } from './utility_lua'
@@ -49,8 +52,19 @@ type OpGen = (ctx: GenCtx, step: ModelEntityFlowStep, index: number) => void
 // The live prologue of a flow built from offline fixtures: blocked without
 // the ids it binds, a create-less load reading the first listed record, and
 // a lenient run observing its checks rather than failing on them.
-function liveFlowGate(entity: any, needs: any, entidEnv: string, strict: boolean): string {
+function liveFlowGate(entity: any, needs: any, identity: any, entidEnv: string, strict: boolean): string {
   let out = ''
+  if (null != needs.examples) {
+    out += `    if setup.live then
+      for _live_key, _live_ex in pairs({${needs.examples
+      .map(([k, ex]: any) => '[' + JSON.stringify(k) + '] = ' + formatLuaValue(ex)).join(', ')}}) do
+        if setup.synthetic_only or setup.idmap[_live_key] == nil then
+          setup.idmap[_live_key] = _live_ex
+        end
+      end
+    end
+`
+  }
   if (0 < needs.keys.length) {
     out += `    if setup.live then
       for _, _live_key in ipairs({${needs.keys.map((k: string) => JSON.stringify(k)).join(', ')}}) do
@@ -68,13 +82,34 @@ function liveFlowGate(entity: any, needs: any, entidEnv: string, strict: boolean
 `
   }
   out += '    local client = setup.client\n'
-  if (null != needs.discover) {
-    const match = Object.entries(needs.discover)
-      .map(([k, v]: any) => `[${JSON.stringify(k)}] = setup.idmap[${JSON.stringify(v)}]`).join(', ')
+  if (null != needs.record) {
+    const id = `setup.idmap[${JSON.stringify(needs.record)}]`
     out += `    if setup.live then
       runner.live_existing(pending, setup, LIVE_STRICT, ${JSON.stringify(entity.name)}, function()
-        return client:${entity.Name}(nil):list({${match}}, nil)
-      end)
+        return { { id = ${id} } }
+      end, ${JSON.stringify(identity.field)}, ${id})
+    end
+`
+  }
+  if (null != needs.discover) {
+    const match = '{' + Object.entries(needs.discover)
+      .map(([k, v]: any) => `[${JSON.stringify(k)}] = setup.idmap[${JSON.stringify(v)}]`)
+      .concat(liveRouteExamples(entity, 'list', Object.keys(needs.discover))
+        .map(([k, ex]) => `[${JSON.stringify(k)}] = ${formatLuaValue(ex)}`)).join(', ') + '}'
+    const omit = needs.unrouted || []
+    out += `    if setup.live then
+      local _live_id = nil
+      if not setup.synthetic_only then
+        _live_id = setup.idmap[${JSON.stringify(identity.key)}]
+      end
+${undefined === identity.ex ? '' : `      if _live_id == nil then
+        _live_id = ${formatLuaValue(identity.ex)}
+      end
+`}${0 === omit.length ? '' : `      local _live_match = ${match}
+${liveOmit(omit, '_live_match', '      ')}`}      runner.live_pace()
+      runner.live_existing(pending, setup, LIVE_STRICT, ${JSON.stringify(entity.name)}, function()
+        return client:${entity.Name}(nil):list(${0 === omit.length ? match : '_live_match'}, nil)
+      end, ${JSON.stringify(identity.field)}, _live_id)
     end
 `
   }
@@ -90,7 +125,7 @@ const TestEntity = cmp(function TestEntity(props: any) {
   const model: Model = ctx$.model
 
   const target = props.target
-  const entity: ModelEntity = props.entity
+  const entity: ModelEntity = liveEntity(ctx$, props.entity)
 
   // The stream test streams the "list" op with no match and asserts a 3-item
   // collection, so it only applies to an entity whose list a bare call can
@@ -140,7 +175,6 @@ const TestEntity = cmp(function TestEntity(props: any) {
   const genCtx: GenCtx = { model, entity, flow: basicflow, PROJUPPER }
 
   const strict = liveStrict(model, target.name)
-  const needs = liveFlowNeeds(entity, basicflow)
   const entidEnv = PROJUPPER + '_TEST_' + envToken(entity.name) + '_ENTID'
 
   File({ name: entity.name + '_entity_test.' + target.ext }, () => {
@@ -218,13 +252,16 @@ ${failureTests(entity)}` : ''}${validateTest(entity)}
         return
       end
     end
-${liveFlowGate(entity, needs, entidEnv, strict)}
 `)
 
-    // Check if the flow has a create step
-    const flowHasCreate = allSteps.some((s: any) => s.o === 'create')
-    if (!flowHasCreate) {
-      Content(`    -- Bootstrap entity data from existing test data.
+    const flowBody = (flow: any) => {
+      const steps = flowSteps(flow) as any[]
+      Content(liveFlowGate(entity, liveFlowNeeds(entity, flow), liveIdentity(entity, flow), entidEnv, strict) + '\n')
+
+      // Check if the flow has a create step
+      const flowHasCreate = steps.some((s: any) => s.o === 'create')
+      if (!flowHasCreate) {
+        Content(`    -- Bootstrap entity data from existing test data.
     local ${entity.name}_ref01_data_raw = vs.items(helpers.to_map(
       vs.getpath(setup.data, "existing.${entity.name}")))
     local ${entity.name}_ref01_data = nil
@@ -233,30 +270,55 @@ ${liveFlowGate(entity, needs, entidEnv, strict)}
     end
 
 `)
-    }
-
-    // Model-driven step iteration
-    each(flowSteps(basicflow), (step: any, index: any) => {
-      // Never emit a REMOVE (or its removed-item verify LIST) without a
-      // preceding CREATE: a coherent CRUD flow only removes what it created,
-      // so a create-less remove would mutate pre-existing (live) data.
-      if (!flowHasCreate) {
-        if ('remove' === step.o) { return }
-        if ('list' === step.o &&
-          (step.v || []).some((v: any) => 'ItemNotExists' === v.apply)) { return }
       }
-      const opgen: OpGen = GENERATE_OP[step.o]
-      if (opgen) {
-        opgen(genCtx, step, index)
-        Content('\n')
-      }
-    })
 
-    Content(`${strict ? '' : `    end)
+      // Model-driven step iteration
+      each(steps, (step: any, index: any) => {
+        // Never emit a REMOVE (or its removed-item verify LIST) without a
+        // preceding CREATE: a coherent CRUD flow only removes what it created,
+        // so a create-less remove would mutate pre-existing (live) data.
+        if (!flowHasCreate) {
+          if ('remove' === step.o) { return }
+          if ('list' === step.o &&
+            (step.v || []).some((v: any) => 'ItemNotExists' === v.apply)) { return }
+        }
+        const opgen: OpGen = GENERATE_OP[step.o]
+        if (opgen) {
+          Content(LIVE_PACE)
+          opgen({ ...genCtx, flow }, step, index)
+          Content('\n')
+        }
+      })
+
+      Content(strict ? '' : `    end)
     if not _live_ok then
       runner.live_observe(pending, _live_err, setup, LIVE_STRICT)
     end
-`}  end)
+`)
+    }
+
+    for (const { getOnly, plan, runs } of liveGates(entity, basicflow)) {
+      Content(`    if setup.live${getOnly ? ` and os.getenv(${formatLuaValue(LIVE_GETONLY_ENV)}) == "TRUE"` : ''} then
+${liveExcludedLines(plan).map((line) => '      print(' + formatLuaValue(line) + ')\n').join('')}`)
+      if (!runs) {
+        Content(`      pending(${formatLuaValue(liveExcludedSummary(plan))})
+      return
+    end
+
+`)
+      }
+      else {
+        flowBody(plan.flow)
+        Content(`      return
+    end
+
+`)
+      }
+    }
+
+    flowBody(basicflow)
+
+    Content(`  end)
 end)
 
 `)
@@ -274,7 +336,7 @@ end)
   f:close()
 
   local entity_data = json.decode(entity_data_source)
-
+${fixtureIdentity(entity)}
   local options = {}
   options["entity"] = entity_data["existing"]
 
@@ -401,7 +463,7 @@ const generateCreate: OpGen = (ctx, step, index) => {
     assert.is_not_nil(${datavar})
 `)
   if (null != ctx.entity.id) {
-    Content(`    assert.is_not_nil(${datavar}["id"])
+    Content(`    assert.is_not_nil(${datavar}[${rid(ctx.entity)}])
 `)
   }
 }
@@ -440,6 +502,7 @@ const generateList: OpGen = (ctx, step, index) => {
     Content(`    }
 `)
   }
+  Content(liveFill(entity, step, matchvar, flow))
 
   Content(`
     local ${listvar}_result, err = ${entvar}:list(${matchvar}, nil)
@@ -460,7 +523,7 @@ const generateList: OpGen = (ctx, step, index) => {
         Content(`
     local found_item = vs.select(
       runner.entity_list_to_data(${listvar}_result),
-      { id = ${refDataVar}["id"] })
+      { ${luaKey(entityRecordIdField(entity))} = ${refDataVar}[${rid(entity)}] })
     assert.is_false(vs.isempty(found_item))
 `)
       } else if ('ItemNotExists' === validator.apply && hasRefData && hasDataId) {
@@ -468,7 +531,7 @@ const generateList: OpGen = (ctx, step, index) => {
         Content(`
     local not_found_item = vs.select(
       runner.entity_list_to_data(${listvar}_result),
-      { id = ${refDataVar}["id"] })
+      { ${luaKey(entityRecordIdField(entity))} = ${refDataVar}[${rid(entity)}] })
     assert.is_true(vs.isempty(not_found_item))
 `)
       }
@@ -501,7 +564,7 @@ const generateUpdate: OpGen = (ctx, step, index) => {
   Content(`    local ${datavar}_up = {
 `)
   if (hasEntIdU) {
-    Content(`      id = ${srcdatavar}["id"],
+    Content(`      id = ${srcdatavar}[${rid(entity)}],
 `)
   }
 
@@ -537,8 +600,7 @@ const generateUpdate: OpGen = (ctx, step, index) => {
     assert.is_not_nil(${resdatavar})
 `)
   if (hasEntIdU) {
-    Content(`    assert.are.equal(${resdatavar}["id"], ${datavar}_up["id"])
-`)
+    Content(sameId(liveRepeatsId(entity), `${resdatavar}[${rid(entity)}]`, `${datavar}_up["id"]`))
   }
 
   if (step.s) {
@@ -584,7 +646,7 @@ const generateLoad: OpGen = (ctx, step, index) => {
     Content(`    local ${entvar} = client:${entity.Name}(nil)
 `)
   }
-  if (!hasSrcData && hasEntId) {
+  if (!hasSrcData && (hasEntId || flowLoadReadsRecord(entity, step))) {
     Content(`    local ${srcdatavar}_raw = vs.items(helpers.to_map(
       vs.getpath(setup.data, "existing.${entity.name}")))
     local ${srcdatavar} = nil
@@ -595,18 +657,17 @@ const generateLoad: OpGen = (ctx, step, index) => {
   }
   if (hasEntId) {
     Content(`    local ${matchvar} = {
-      id = ${srcdatavar}["id"],
+      id = ${srcdatavar}[${rid(entity)}],
     }
-${parentMatch(step, matchvar)}    local ${datavar}_loaded, err = ${entvar}:load(${matchvar}, nil)
+${loadMatch(entity, step, matchvar, srcdatavar)}${liveFill(entity, step, matchvar, flow)}    local ${datavar}_loaded, err = ${entvar}:load(${matchvar}, nil)
     assert.is_nil(err)
     local ${datavar}_load_result = helpers.to_map(type(${datavar}_loaded) == 'table' and ${datavar}_loaded.data_get and ${datavar}_loaded:data_get() or ${datavar}_loaded)
     assert.is_not_nil(${datavar}_load_result)
-    assert.are.equal(${datavar}_load_result["id"], ${srcdatavar}["id"])
-`)
+${sameId(liveLoadComparesId(entity, flow), `${datavar}_load_result[${rid(entity)}]`, `${srcdatavar}[${rid(entity)}]`)}`)
   }
   else {
     Content(`    local ${matchvar} = {}
-${parentMatch(step, matchvar)}    local ${datavar}_loaded, err = ${entvar}:load(${matchvar}, nil)
+${loadMatch(entity, step, matchvar, srcdatavar)}${liveFill(entity, step, matchvar, flow)}    local ${datavar}_loaded, err = ${entvar}:load(${matchvar}, nil)
     assert.is_nil(err)
     assert.is_not_nil(${datavar}_loaded)
 `)
@@ -636,7 +697,7 @@ const generateRemove: OpGen = (ctx, step, index) => {
   }
   // Always match the prior-created entity by id to avoid mock-order flakes.
   Content(`    local ${matchvar} = {
-      id = ${srcdatavar}["id"],
+      id = ${srcdatavar}[${rid(entity)}],
     }
 ${parentMatch(step, matchvar)}    local _, err = ${entvar}:remove(${matchvar}, nil)
     assert.is_nil(err)
@@ -645,15 +706,108 @@ ${parentMatch(step, matchvar)}    local _, err = ${entvar}:remove(${matchvar}, n
 
 
 
+// The record field the entity's identity is read from, as a Lua string.
+function rid(entity: any): string {
+  return JSON.stringify(entityRecordIdField(entity))
+}
+
+
+const LIVE_PACE = `    if setup.live then
+      runner.live_pace()
+    end
+`
+
+
+// A result's identity matches the one asked for, live only as the live
+// entity harness compares it.
+function sameId(compares: boolean, result: string, expected: string): string {
+  const check = `assert.is_true(runner.live_same_id(${result}, ${expected}))`
+  return !compares ? `    if not setup.live then
+      ${check}
+    end
+` : `    ${check}
+`
+}
+
+
+// The fixture keeps each record's key in `id`; an entity keeping its identity
+// in another field reads the key from there too.
+function fixtureIdentity(entity: any): string {
+  const field = entityRecordIdField(entity)
+  return 'id' === field ? '' : `
+  for _, rec in pairs(((entity_data["existing"] or {})[${JSON.stringify(entity.name)}]) or {}) do
+    if type(rec) == "table" and rec["id"] ~= nil then
+      rec[${JSON.stringify(field)}] = rec["id"]
+    end
+  end
+`
+}
+
+
 // A child's route names its parents, and an entity no earlier step has
 // filled knows none of them, so the call itself gives each parent id. A live
 // ENTID may key a parent by its field name, the fixture by its own name.
+// A live step sends each example its route requires and the step leaves unbound.
+function liveFill(entity: any, step: any, matchvar: string, flow: any): string {
+  const fills = liveStepExamples(entity, step, flow)
+  const omit = liveUnrouted(entity, step, flow)
+  return 0 === fills.length + omit.length ? '' : `    if setup.live then
+${fills.map(([k, ex]) => `      ${matchvar}[${JSON.stringify(k)}] = ${formatLuaValue(ex)}\n`).join('')}${liveOmit(omit, matchvar, '      ')}    end
+`
+}
+
+
+// A binding the live route does not take is sent only as *_ENTID gives it.
+function liveOmit(omit: [string, string][], matchvar: string, indent: string): string {
+  return omit.map(([name, key]) => `${indent}if setup.synthetic_only or setup.idmap[${JSON.stringify(key)}] == nil then
+${indent}  ${matchvar}[${JSON.stringify(name)}] = nil
+${indent}end
+`).join('')
+}
+
+
 function parentMatch(step: any, matchvar: string): string {
   return Object.entries(step.m || {})
     .filter(([k]: any) => k !== 'id' && !k.endsWith('$'))
     .map(([key, val]: any) => `    ${matchvar}["${key}"] = setup.idmap["${key}"] or setup.idmap["${val}"]
 `).join('')
 }
+
+// A load of a known record fills its route from that record, and from the
+// step's binding where the record holds no scalar for it. A record only the
+// fixture holds replaces the step's binding offline.
+function loadMatch(entity: any, step: any, matchvar: string, srcdatavar: string): string {
+  const route = flowLoadRoute(entity, step)
+  if (null == route) {
+    return parentMatch(step, matchvar)
+  }
+  if (route.offline) {
+    const own = route.args.filter((arg) => null != arg.field)
+    return parentMatch(step, matchvar) + (0 === own.length ? '' : `    if not setup.live then
+${own.map((arg) => `      do
+        local own = ${srcdatavar}["${arg.field}"]
+        if type(own) == "string" or type(own) == "number" or type(own) == "boolean" then
+          ${matchvar}["${arg.name}"] = own
+        end
+      end
+`).join('')}    end
+`)
+  }
+  return route.args.map((arg) => {
+    const bound = arg.idmap.map((key) => `setup.idmap["${key}"]`).join(' or ')
+    return null == arg.field ? `    ${matchvar}["${arg.name}"] = ${bound}
+` : `    do
+      local own = ${srcdatavar}["${arg.field}"]
+      if type(own) == "string" or type(own) == "number" or type(own) == "boolean" then
+        ${matchvar}["${arg.name}"] = own
+      else
+        ${matchvar}["${arg.name}"] = ${bound}
+      end
+    end
+`
+  }).join('')
+}
+
 
 const GENERATE_OP: Record<string, OpGen> = {
   create: generateCreate,

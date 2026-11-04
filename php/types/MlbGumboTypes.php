@@ -38,11 +38,22 @@ class GameDataListMatch
 /** Player entity data model. */
 class Player
 {
-    public ?array $people = null;
+    public ?array $batSide = null;
+    public ?string $birthDate = null;
+    public ?int $currentAge = null;
+    public ?string $firstName = null;
+    public ?string $fullName = null;
+    public ?string $height = null;
+    public ?int $id = null;
+    public ?string $lastName = null;
+    public ?array $pitchHand = null;
+    public ?string $primaryNumber = null;
+    public ?array $primaryPosition = null;
+    public ?int $weight = null;
 }
 
-/** Request payload for Player#load. */
-class PlayerLoadMatch
+/** Request payload for Player#list. */
+class PlayerListMatch
 {
     public int $player_id;
     public ?string $hydrate = null;
@@ -69,22 +80,19 @@ class ScheduleListMatch
 /** Team entity data model. */
 class Team
 {
-    public ?string $id = null;
-    public ?array $teams = null;
-}
-
-/** Request payload for Team#load. */
-class TeamLoadMatch
-{
-    public int $id;
-    public ?string $hydrate = null;
-    public ?int $season = null;
+    public ?string $abbreviation = null;
+    public ?array $division = null;
+    public ?int $id = null;
+    public ?array $league = null;
+    public ?string $locationName = null;
+    public ?string $name = null;
+    public ?string $teamName = null;
 }
 
 /** Request payload for Team#list. */
 class TeamListMatch
 {
-    public int $id;
+    public int $team_id;
     public ?string $hydrate = null;
     public ?int $season = null;
 }

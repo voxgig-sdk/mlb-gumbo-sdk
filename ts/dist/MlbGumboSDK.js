@@ -119,6 +119,12 @@ class MlbGumboSDK {
                 spec.headers[key] = uheaders[key];
             }
         }
+        // A raw request has no point to declare its response type, so it asks
+        // for the JSON it reads: an API that negotiates on Accept otherwise
+        // answers in its own default format. A caller's own accept wins.
+        if (!Object.keys(spec.headers).some((key) => 'accept' === key.toLowerCase())) {
+            spec.headers.accept = 'application/json';
+        }
         const authResult = prepareAuth(ctx);
         if (authResult instanceof Error) {
             return authResult;

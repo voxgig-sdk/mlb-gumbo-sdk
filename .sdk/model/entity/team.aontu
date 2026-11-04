@@ -5,17 +5,47 @@ main: kit: entity: team: {
   alias: field: {}
 
   fields: {
+    abbreviation: {
+      h: "Abbreviation"
+      n: "abbreviation"
+      r: false
+      t: "`$STRING`"
+    }
+    division: {
+      h: "Division"
+      n: "division"
+      r: false
+      t: "`$OBJECT`"
+    }
     id: {
       h: "Id"
       n: "id"
       r: false
+      t: "`$INTEGER`"
+    }
+    league: {
+      h: "League"
+      n: "league"
+      r: false
+      t: "`$OBJECT`"
+    }
+    locationName: {
+      h: "Location Name"
+      n: "locationName"
+      r: false
       t: "`$STRING`"
     }
-    teams: {
-      h: "Teams"
-      n: "teams"
+    name: {
+      h: "Name"
+      n: "name"
       r: false
-      t: "`$ARRAY`"
+      t: "`$STRING`"
+    }
+    teamName: {
+      h: "Team Name"
+      n: "teamName"
+      r: false
+      t: "`$STRING`"
     }
   }
 
@@ -97,11 +127,6 @@ main: kit: entity: team: {
             res: "`body.roster`"
           }
         }
-      ]
-    }
-    load: {
-      name: "load"
-      points: [
         {
           co: {
             id: "GET /teams/{teamId}"
@@ -113,7 +138,7 @@ main: kit: entity: team: {
               {
                 ex: 119
                 k: "param"
-                n: "id"
+                n: "team_id"
                 or: "teamId"
                 r: true
                 t: "`$INTEGER`"
@@ -141,12 +166,12 @@ main: kit: entity: team: {
           o: "/teams/{teamId}"
           q: {
             exist: [
-              "id"
+              "team_id"
             ]
           }
           r: {
             param: {
-              teamId: "id"
+              teamId: "team_id"
             }
           }
           rs: {
@@ -158,12 +183,12 @@ main: kit: entity: team: {
               lit: "teams"
             }
             {
-              var: "id"
+              var: "team_id"
             }
           ]
           t: {
             req: "`reqdata`"
-            res: "`body`"
+            res: "`body.teams`"
           }
         }
       ]

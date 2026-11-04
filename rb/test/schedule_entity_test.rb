@@ -181,6 +181,7 @@ class ScheduleEntityTest < Minitest::Test
       schedule_ref01_data = Helpers.to_map(schedule_ref01_data_raw[0][1])
     end
 
+    Runner.live_pace if setup[:live]
     # LIST
     schedule_ref01_ent = client.Schedule(nil)
     schedule_ref01_match = {}

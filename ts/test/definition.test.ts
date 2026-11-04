@@ -91,7 +91,7 @@ const PLAN: any[] = [
   {
     "entity": "player",
     "accessor": "Player",
-    "op": "load",
+    "op": "list",
     "method": "GET",
     "path": "/people/{playerId}",
     "args": [
@@ -277,12 +277,12 @@ const PLAN: any[] = [
   {
     "entity": "team",
     "accessor": "Team",
-    "op": "load",
+    "op": "list",
     "method": "GET",
     "path": "/teams/{teamId}",
     "args": [
       {
-        "name": "id",
+        "name": "team_id",
         "wire": "teamId",
         "value": 119
       }

@@ -40,15 +40,20 @@ class GameDataDirectTest extends TestCase
                 }
             }
         }
+        if (!empty($setup["live"])) {
+            Runner::live_pace();
+        }
         $client = $setup["client"];
 
         $params = [];
+        $query = [];
         $params["game_pk"] = $setup["live"] ? ($setup["idmap"]["game_pk01"] ?? null) : "direct01";
 
         $result = $client->direct([
             "path" => "game/{game_pk}/feed/live/timestamps",
             "method" => "GET",
             "params" => $params,
+            "query" => $query,
         ]);
         if ($setup["live"]) {
             if (!self::liveOk($result)) {
@@ -75,6 +80,9 @@ class GameDataDirectTest extends TestCase
         if ($_shouldSkip) {
             $this->markTestSkipped($_reason ?? "skipped via sdk-test-control.json");
             return;
+        }
+        if (!empty($setup["live"])) {
+            Runner::live_pace();
         }
         $client = $setup["client"];
 
@@ -135,6 +143,9 @@ function game_data_direct_setup($mockres)
         ]);
         $client = new MlbGumboSDK($merged_opts);
         $idmap = $env["MLB_GUMBO_TEST_GAME_DATA_ENTID"] ?? [];
+        // A path parameter's example stands in for an id *_ENTID does not give.
+        $idmap = array_merge(["game_pk01" => '716463'],
+            is_array($idmap) ? $idmap : []);
         return [
             "client" => $client,
             "calls" => $calls,

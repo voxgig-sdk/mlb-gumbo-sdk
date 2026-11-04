@@ -164,6 +164,9 @@ describe("ScheduleEntity", function()
       schedule_ref01_data = helpers.to_map(schedule_ref01_data_raw[1][2])
     end
 
+    if setup.live then
+      runner.live_pace()
+    end
     -- LIST
     local schedule_ref01_ent = client:Schedule(nil)
     local schedule_ref01_match = {}

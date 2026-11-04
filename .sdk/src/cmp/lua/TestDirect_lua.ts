@@ -15,16 +15,35 @@ import {
   serverVarEnv,
   serverVariables,
   pointParts,
+  pointSlash,
+  pointPlaceholders,
   liveStrict,
   liveStrictNote,
   pointIsGraphql,
   graphqlDirectSkip,
+  liveExampleIds,
+  liveQueryExamples,
+  liveEntity,
+  liveDirectGetOnly, liveExcludedLines, liveExcludedSummary, LIVE_GETONLY_ENV,
+  liveDirectDiscovery,
 } from '@voxgig/sdkgen'
 
 import { formatLuaValue } from './utility_lua'
 
 
 // Blocked without the ids its request needs, rather than sent with nil.
+// A GET-only live run excludes a test needing an id that only a write gives.
+function getOnlyKeysBlock(model: any, entity: any, test: string, keys: string[]): string {
+  return liveDirectGetOnly(model, entity, test, keys).map((miss) =>
+    `    if setup.live and os.getenv(${formatLuaValue(LIVE_GETONLY_ENV)}) == "TRUE" and setup.idmap[${formatLuaValue(miss.key)}] == nil then
+      print(${formatLuaValue(liveExcludedLines({ excluded: [miss] })[0])})
+      pending(${formatLuaValue(liveExcludedSummary({ excluded: [miss] }))})
+      return
+    end
+`).join('')
+}
+
+
 function liveKeysBlock(keys: string[], entidEnvVar: string): string {
   return 0 === keys.length ? '' : `    if setup.live then
       for _, _live_key in ipairs({${keys.map((k) => JSON.stringify(k)).join(', ')}}) do
@@ -80,7 +99,7 @@ const TestDirect = cmp(function TestDirect(props: any) {
   const model: Model = ctx$.model
 
   const target = props.target
-  const entity: ModelEntity = props.entity
+  const entity: ModelEntity = liveEntity(ctx$, props.entity)
 
   const PROJECTNAME = envName(model)
 
@@ -117,19 +136,14 @@ const TestDirect = cmp(function TestDirect(props: any) {
   const listOp = entity.op?.list
 
   const loadPoint = loadOp?.points?.[0]
-  const loadPath = loadPoint ? normalizePathParams(pointParts(loadPoint), loadPoint?.g?.params || [], loadPoint?.r?.param) : ''
+  const loadPath = loadPoint ? normalizePathParams(pointParts(loadPoint), loadPoint?.g?.params || [], loadPoint?.r?.param) + pointSlash(loadPoint) : ''
   const allLoadParams = loadPoint?.g?.params || []
   // Some upstream OpenAPI specs declare a parameter as `in: path` even when
   // that path has no `{name}` placeholder for it. Only path params that
   // actually appear in the URL template should drive direct-test path-param
   // setup and URL-substitution asserts; otherwise the SDK silently drops
   // them and the URL-includes assert fails.
-  const _pathPlaceholders = new Set<string>()
-  for (const part of pointParts(loadPoint)) {
-    if (typeof part === 'string' && part.startsWith('{') && part.endsWith('}')) {
-      _pathPlaceholders.add(part.slice(1, -1))
-    }
-  }
+  const _pathPlaceholders = new Set<string>(pointPlaceholders(loadPoint))
   const _renameMap = (loadPoint?.r?.param || {}) as Record<string, string>
   const _renamedPlaceholders = new Set<string>()
   for (const ph of _pathPlaceholders) {
@@ -142,15 +156,12 @@ const TestDirect = cmp(function TestDirect(props: any) {
     _renamedPlaceholders.has(p.n) || _renamedPlaceholders.has(p.or))
 
   const listPoint = listOp?.points?.[0]
-  const listPath = listPoint ? normalizePathParams(pointParts(listPoint), listPoint?.g?.params || [], listPoint?.r?.param) : ''
+  const listPath = listPoint ? normalizePathParams(pointParts(listPoint), listPoint?.g?.params || [], listPoint?.r?.param) + pointSlash(listPoint) : ''
   const listParams = listPoint?.g?.params || []
 
   // Required query params with spec-provided examples — needed in live mode.
-  const loadQuery = loadPoint?.g?.query || []
-  const loadLiveQueryEntries = loadQuery
-    .filter((q: any) => q.r && undefined !== q.ex && null !== q.ex)
-  const loadLiveQueryLines = loadLiveQueryEntries
-    .map((q: any) => `      query["${q.n}"] = ${JSON.stringify(q.ex)}`)
+  const loadLiveQueryLines = liveQueryExamples(loadPoint)
+    .map(([name, ex]) => `      query["${name}"] = ${formatLuaValue(ex)}`)
     .join('\n')
 
   const loadAllHaveExamples =
@@ -161,6 +172,10 @@ const TestDirect = cmp(function TestDirect(props: any) {
     : ''
 
   const entidEnvVar = `${PROJECTNAME}_TEST_${envToken(entity.name)}_ENTID`
+
+  const exampleIds = liveExampleIds(entity)
+  const listLiveQueryLines = liveQueryExamples(listPoint)
+    .map(([name, ex]) => `      query["${name}"] = ${formatLuaValue(ex)}\n`).join('')
 
   // The *_ENTID key a live test reads a parameter's value from.
   const liveKey = (param: any): string =>
@@ -208,10 +223,14 @@ describe("${entity.Name}Direct", function()
       pending(_reason or "skipped via sdk-test-control.json")
       return
     end
-${liveKeysBlock(listParams.map(liveKey), entidEnvVar)}    local client = setup.client
+${getOnlyKeysBlock(model, entity, 'direct-list-' + entity.name, listParams.map(liveKey))}${liveKeysBlock(listParams.map(liveKey), entidEnvVar)}    if setup.live then
+      runner.live_pace()
+    end
+    local client = setup.client
 
     local params = {}
-`)
+    local query = {}
+${listLiveQueryLines ? '    if setup.live then\n' + listLiveQueryLines + '    end\n' : ''}`)
       listParams.forEach((lp: any, i: number) => {
         Content(`    if setup.live then
       params["${lp.n}"] = setup.idmap["${liveKey(lp)}"]
@@ -225,6 +244,7 @@ ${liveKeysBlock(listParams.map(liveKey), entidEnvVar)}    local client = setup.c
       path = "${listPath}",
       method = "GET",
       params = params,
+      query = query,
     })
     if setup.live then
       if not live_ok(result, err) then
@@ -255,8 +275,10 @@ ${liveKeysBlock(listParams.map(liveKey), entidEnvVar)}    local client = setup.c
 `)
     }
     else if (hasLoad && loadPoint) {
-      const discover = !loadAllHaveExamples && hasList && 0 < loadParams.length
-      const idParam = loadParams.find((p: any) => 'id' === p.n)?.n ?? loadParams[0]?.n ?? 'id'
+      const discovery = liveDirectDiscovery(entity, loadParams, listPoint)
+      const discover = null != discovery
+      const idParam = discovery?.param
+      const idField = discovery?.field
       const loadLiveIdKeys: string[] = loadAllHaveExamples ? [] :
         discover ? listParams.map(liveKey).concat(loadParams.filter((p: any) => idParam !== p.n).map(liveKey)) :
           loadParams.map(liveKey)
@@ -267,7 +289,10 @@ ${liveKeysBlock(listParams.map(liveKey), entidEnvVar)}    local client = setup.c
       pending(_reason or "skipped via sdk-test-control.json")
       return
     end
-${liveKeysBlock([...new Set(loadLiveIdKeys)], entidEnvVar)}    local client = setup.client
+${getOnlyKeysBlock(model, entity, 'direct-load-' + entity.name, [...new Set(loadLiveIdKeys)])}${liveKeysBlock([...new Set(loadLiveIdKeys)], entidEnvVar)}    if setup.live then
+      runner.live_pace()
+    end
+    local client = setup.client
 
     local params = {}
     local query = {}
@@ -277,10 +302,14 @@ ${loadLiveQueryLines ? loadLiveQueryLines + '\n' : ''}`)
         Content(loadExampleLines + '\n')
       }
       else if (discover) {
+        // The list sends the query its route requires, as direct-list does.
+        const listQuery = liveQueryExamples(listPoint)
+          .map(([name, ex]) => `[${formatLuaValue(name)}] = ${formatLuaValue(ex)}`).join(', ')
         Content(`      local list_result, list_err = client:direct({
         path = "${listPath}",
         method = "GET",
-        params = {${listParams.map((p: any) => `["${p.n}"] = setup.idmap["${liveKey(p)}"]`).join(', ')}},
+        params = {${listParams.map((p: any) => `["${p.n}"] = setup.idmap["${liveKey(p)}"]`).join(', ')}},${'' === listQuery ? '' : `
+        query = {${listQuery}},`}
       })
       if not live_ok(list_result, list_err) then
         runner.live_miss(pending, LIVE_STRICT, "Live list discovery failed: " .. runner.live_describe(list_result, list_err))
@@ -293,7 +322,7 @@ ${loadLiveQueryLines ? loadLiveQueryLines + '\n' : ''}`)
         runner.live_empty(pending, "The account has no ${entity.name} record to load")
       end
       local first = type(records[1]) == "table" and records[1] or {}
-      local found = first["${idParam}"] or first["id"]
+      local found = first["${idField}"]
       if found == nil then
         runner.live_miss(pending, LIVE_STRICT, "Live load blocked: discovery returned no usable identity")
       end
@@ -374,7 +403,16 @@ function ${entity.name}_direct_setup(mockres)
     end
     local client = sdk.new(merged_opts)
     local idmap = env["${entidEnvVar}"]
-    return {
+${0 === exampleIds.length ? '' : `    if type(idmap) ~= "table" then
+      idmap = {}
+    end
+    -- A path parameter's example stands in for an id *_ENTID does not give.
+    for _k, _v in pairs({${exampleIds.map(([key, ex]) => `["${key}"] = ${formatLuaValue(ex)}`).join(', ')}}) do
+      if idmap[_k] == nil then
+        idmap[_k] = _v
+      end
+    end
+`}    return {
       client = client,
       calls = calls,
       live = true,

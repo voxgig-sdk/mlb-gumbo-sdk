@@ -223,16 +223,27 @@ const player = client.Player()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `people` | `any[]` | No |  |
+| `batSide` | `Record<string, any>` | No |  |
+| `birthDate` | `string` | No |  |
+| `currentAge` | `number` | No |  |
+| `firstName` | `string` | No |  |
+| `fullName` | `string` | No |  |
+| `height` | `string` | No |  |
+| `id` | `number` | No |  |
+| `lastName` | `string` | No |  |
+| `pitchHand` | `Record<string, any>` | No |  |
+| `primaryNumber` | `string` | No |  |
+| `primaryPosition` | `Record<string, any>` | No |  |
+| `weight` | `number` | No |  |
 
 ### Operations
 
-#### `load(match: object, ctrl?: object)`
+#### `list(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
+List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
-const result = await client.Player().load({ player_id: 1 })
+const results = await client.Player().list({ player_id: 1 })
 ```
 
 ### Common Methods
@@ -324,8 +335,13 @@ const team = client.Team()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `id` | `string` | No |  |
-| `teams` | `any[]` | No |  |
+| `abbreviation` | `string` | No |  |
+| `division` | `Record<string, any>` | No |  |
+| `id` | `number` | No |  |
+| `league` | `Record<string, any>` | No |  |
+| `locationName` | `string` | No |  |
+| `name` | `string` | No |  |
+| `teamName` | `string` | No |  |
 
 ### Actions
 
@@ -354,15 +370,7 @@ const result = await client.Team().list({
 List entities matching the given criteria. Resolves to an array of entities, one per record.
 
 ```ts
-const results = await client.Team().list({ id: 1 })
-```
-
-#### `load(match: object, ctrl?: object)`
-
-Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
-
-```ts
-const result = await client.Team().load({ id: 1 })
+const results = await client.Team().list({ team_id: 1 })
 ```
 
 ### Common Methods

@@ -33,8 +33,8 @@ type GameDataListMatch struct {
 type Player struct {
 }
 
-// PlayerLoadMatch is the typed request payload for Player.LoadTyped.
-type PlayerLoadMatch struct {
+// PlayerListMatch is the typed request payload for Player.ListTyped.
+type PlayerListMatch struct {
 	PlayerId int `json:"player_id"`
 	Hydrate *string `json:"hydrate,omitempty"`
 	Season *int `json:"season,omitempty"`
@@ -57,16 +57,9 @@ type ScheduleListMatch struct {
 type Team struct {
 }
 
-// TeamLoadMatch is the typed request payload for Team.LoadTyped.
-type TeamLoadMatch struct {
-	Id int `json:"id"`
-	Hydrate *string `json:"hydrate,omitempty"`
-	Season *int `json:"season,omitempty"`
-}
-
 // TeamListMatch is the typed request payload for Team.ListTyped.
 type TeamListMatch struct {
-	Id int `json:"id"`
+	TeamId int `json:"team_id"`
 	Hydrate *string `json:"hydrate,omitempty"`
 	Season *int `json:"season,omitempty"`
 }

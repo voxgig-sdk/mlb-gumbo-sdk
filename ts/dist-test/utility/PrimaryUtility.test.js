@@ -1,7 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_test_1 = require("node:test");
 const node_assert_1 = require("node:assert");
+const node_assert_2 = __importDefault(require("node:assert"));
+const node_http_1 = __importDefault(require("node:http"));
 const omni_1 = require("../omni");
 const index_1 = require("./index");
 (0, node_test_1.describe)('PrimaryUtility', async () => {
@@ -398,6 +403,63 @@ const index_1 = require("./index");
         const result = await blockedUtility.fetcher(ctx, 'http://example.com/test', fetchdef);
         (0, node_assert_1.ok)(result instanceof Error);
         (0, node_assert_1.ok)(result.message.includes('mode'));
+    });
+    // Nothing listens on port 9: a request the guard let through fails there.
+    (0, node_test_1.test)('fetcher-getonly-guard', async () => {
+        const liveClient = new index_1.SDK({ base: 'http://127.0.0.1:9' });
+        const liveUtility = liveClient.utility();
+        const ctx = liveUtility.makeContext({ opname: 'create' }, liveClient._rootctx);
+        ctx.client = liveClient;
+        const url = 'http://127.0.0.1:9/planet/p1?apikey=GUARDKEY01';
+        const prior = process.env.VOXGIG_GETONLY_GUARD;
+        process.env.VOXGIG_GETONLY_GUARD = 'TRUE';
+        try {
+            const refused = await liveUtility.fetcher(ctx, url, { method: 'POST', headers: {} });
+            (0, node_assert_1.equal)(refused?.code, 'fetch_getonly_block');
+            (0, node_assert_1.ok)(refused.message.includes('[GET-ONLY GUARD] blocked POST /planet/p1'), refused.message);
+            (0, node_assert_1.ok)(!refused.message.includes('GUARDKEY01'));
+            await node_assert_2.default.rejects(liveUtility.fetcher(ctx, url, { method: 'GET', headers: {} }));
+        }
+        finally {
+            if (undefined === prior)
+                delete process.env.VOXGIG_GETONLY_GUARD;
+            else
+                process.env.VOXGIG_GETONLY_GUARD = prior;
+        }
+    });
+    // A Django route answers its slashless form with a relative Location. The
+    // transport follows each hop, and answers a "manual" fetch with the 3xx.
+    (0, node_test_1.test)('fetcher-redirect', async () => {
+        const seen = [];
+        const moved = {
+            '/redirect/r1': [301, '/redirect/r1/'],
+            '/redirect/r1/': [308, 'done'],
+        };
+        const server = node_http_1.default.createServer((req, res) => {
+            seen.push(req.url);
+            const to = moved[req.url];
+            const done = '/redirect/r1/done' === req.url;
+            res.writeHead(to ? to[0] : done ? 200 : 404, to ? { location: to[1], connection: 'close' } :
+                { 'content-type': 'application/json', connection: 'close' });
+            res.end(done ? '{"id":"r1"}' : '');
+        });
+        await new Promise((resolve) => server.listen(0, '127.0.0.1', () => resolve()));
+        const base = 'http://127.0.0.1:' + server.address().port;
+        try {
+            const liveClient = new index_1.SDK({ base });
+            const liveUtility = liveClient.utility();
+            const ctx = liveUtility.makeContext({ opname: 'load' }, liveClient._rootctx);
+            ctx.client = liveClient;
+            const res = await liveUtility.fetcher(ctx, base + '/redirect/r1', { method: 'GET', headers: {} });
+            (0, node_assert_1.equal)(res.status, 200);
+            (0, node_assert_1.deepStrictEqual)(await res.json(), { id: 'r1' });
+            (0, node_assert_1.deepStrictEqual)(seen, ['/redirect/r1', '/redirect/r1/', '/redirect/r1/done']);
+            const manual = await liveUtility.fetcher(ctx, base + '/redirect/r1', { method: 'GET', headers: {}, redirect: 'manual' });
+            (0, node_assert_1.equal)(manual.status, 301);
+        }
+        finally {
+            server.close();
+        }
     });
     (0, node_test_1.test)('makeError-no-throw', () => {
         const ctx = makeFullCtx();

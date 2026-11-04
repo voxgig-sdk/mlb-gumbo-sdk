@@ -2,26 +2,66 @@
   "existing": {
     "player": {
       "PLAYER00": {
-        "people": [],
-        "player_id": "PLAYER01",
-        "id": "PLAYER00"
+        "batSide": {},
+        "birthDate": "s79",
+        "currentAge": 122,
+        "firstName": "s7b",
+        "fullName": "s7c",
+        "height": "s7d",
+        "id": "PLAYER00",
+        "lastName": "s7f",
+        "pitchHand": {},
+        "primaryNumber": "s81",
+        "primaryPosition": {},
+        "weight": 131,
+        "player_id": "PLAYER01"
       },
       "PLAYER01": {
-        "people": [],
-        "player_id": "PLAYER01",
-        "id": "PLAYER01"
+        "batSide": {},
+        "birthDate": "sf1",
+        "currentAge": 242,
+        "firstName": "sf3",
+        "fullName": "sf4",
+        "height": "sf5",
+        "id": "PLAYER01",
+        "lastName": "sf7",
+        "pitchHand": {},
+        "primaryNumber": "sf9",
+        "primaryPosition": {},
+        "weight": 251,
+        "player_id": "PLAYER01"
       },
       "PLAYER02": {
-        "people": [],
-        "player_id": "PLAYER01",
-        "id": "PLAYER02"
+        "batSide": {},
+        "birthDate": "s169",
+        "currentAge": 362,
+        "firstName": "s16b",
+        "fullName": "s16c",
+        "height": "s16d",
+        "id": "PLAYER02",
+        "lastName": "s16f",
+        "pitchHand": {},
+        "primaryNumber": "s171",
+        "primaryPosition": {},
+        "weight": 371,
+        "player_id": "PLAYER01"
       }
     }
   },
   "new": {
     "player": {
       "player_ref01": {
-        "people": []
+        "batSide": {},
+        "birthDate": "s1e1",
+        "currentAge": 482,
+        "firstName": "s1e3",
+        "fullName": "s1e4",
+        "height": "s1e5",
+        "lastName": "s1e7",
+        "pitchHand": {},
+        "primaryNumber": "s1e9",
+        "primaryPosition": {},
+        "weight": 491
       }
     }
   },

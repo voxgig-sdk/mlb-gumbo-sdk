@@ -153,6 +153,8 @@ class TestScheduleEntity:
         if len(schedule_ref01_data_raw) > 0:
             schedule_ref01_data = helpers.to_map(schedule_ref01_data_raw[0][1])
 
+        if setup["live"]:
+            runner.live_pace()
         # LIST
         schedule_ref01_ent = client.Schedule(None)
         schedule_ref01_match = {}

@@ -38,7 +38,7 @@ func TestTeamEntity(t *testing.T) {
 		client := sdk.TestSDK(nil, map[string]any{
 			"feature": map[string]any{"validate": map[string]any{"active": true}},
 		})
-		_, err := client.Team(nil).List(map[string]any{"id": "x"}, nil)
+		_, err := client.Team(nil).List(map[string]any{"team_id": "x"}, nil)
 		if sdkerr, ok := err.(*core.MlbGumboError); !ok || "validate_failed" != sdkerr.Code {
 			t.Fatalf("expected validate_failed, got %v", err)
 		}
@@ -53,7 +53,7 @@ func TestTeamEntity(t *testing.T) {
 		if setup.live {
 			_mode = "live"
 		}
-		for _, _op := range []string{"load"} {
+		for _, _op := range []string{"list"} {
 			if _shouldSkip, _reason := isControlSkipped("entityOp", "team." + _op, _mode); _shouldSkip {
 				if _reason == "" {
 					_reason = "skipped via sdk-test-control.json"
@@ -63,7 +63,11 @@ func TestTeamEntity(t *testing.T) {
 			}
 		}
 		if setup.live {
-			liveMiss(t, teamEntityLiveStrict, "Live entity test blocked: %s", "the flow loads a team record it has no list to find")
+			for _liveKey, _liveEx := range map[string]any{"team01": float64(119)} {
+				if setup.syntheticOnly || setup.idmap[_liveKey] == nil {
+					setup.idmap[_liveKey] = _liveEx
+				}
+			}
 		}
 		client := setup.client
 		_ = client
@@ -78,21 +82,22 @@ func TestTeamEntity(t *testing.T) {
 		// happen not to consume the bootstrap data (e.g. list-only flows).
 		_ = teamRef01Data
 
-		// LOAD
+		if setup.live {
+			livePace()
+		}
+		// LIST
 		teamRef01Ent := client.Team(nil)
-		teamRef01MatchDt0 := map[string]any{
-			"id": teamRef01Data["id"],
+		teamRef01Match := map[string]any{
+			"team_id": setup.idmap["team01"],
 		}
-		teamRef01DataDt0Loaded, err := teamRef01Ent.Load(teamRef01MatchDt0, nil)
+
+		teamRef01ListResult, err := teamRef01Ent.List(teamRef01Match, nil)
 		if err != nil {
-			t.Fatalf("load failed: %v", err)
+			t.Fatalf("list failed: %v", err)
 		}
-		teamRef01DataDt0LoadResult := core.ToMapAny(entityData(teamRef01DataDt0Loaded))
-		if teamRef01DataDt0LoadResult == nil {
-			t.Fatal("expected load result to be a map")
-		}
-		if teamRef01DataDt0LoadResult["id"] != teamRef01Data["id"] {
-			t.Fatal("expected load result id to match")
+		_, teamRef01ListOk := teamRef01ListResult.([]any)
+		if !teamRef01ListOk {
+			t.Fatalf("expected list result to be an array, got %T", teamRef01ListResult)
 		}
 
 	})

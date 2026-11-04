@@ -13,13 +13,13 @@ import (
 
 // ListArgs is what an agent sends to mlb-gumbo_list.
 type ListArgs struct {
-	Entity string         `json:"entity" jsonschema:"one of: game_data | schedule | team"`
+	Entity string         `json:"entity" jsonschema:"one of: game_data | player | schedule | team"`
 	Query  map[string]any `json:"query,omitempty" jsonschema:"optional filter map; omit it for the first page"`
 }
 
 // LoadArgs is what an agent sends to mlb-gumbo_load.
 type LoadArgs struct {
-	Entity string         `json:"entity" jsonschema:"one of: game_data | player | team"`
+	Entity string         `json:"entity" jsonschema:"one of: game_data"`
 	Query  map[string]any `json:"query" jsonschema:"match map naming the record, such as {\"id\":1}"`
 }
 
@@ -28,7 +28,7 @@ func registerTools(server *mcp.Server, client *sdk.MlbGumboSDK) {
 		Name:        "mlb-gumbo_list",
 		Description: "List records from MlbGumbo. Args: entity, query (optional filter map; omit it for the first page). Returns the first page of records as JSON.",
 		Annotations: &mcp.ToolAnnotations{ReadOnlyHint: true},
-		InputSchema: entitySchema[ListArgs]("game_data", "schedule", "team"),
+		InputSchema: entitySchema[ListArgs]("game_data", "player", "schedule", "team"),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, args ListArgs) (*mcp.CallToolResult, any, error) {
 		return runOp(ctx, client, "list", args.Entity, args.Query)
 	})
@@ -36,7 +36,7 @@ func registerTools(server *mcp.Server, client *sdk.MlbGumboSDK) {
 		Name:        "mlb-gumbo_load",
 		Description: "Load one record from MlbGumbo. Args: entity, query (match map naming the record, such as {\"id\":1}). Returns the record as JSON.",
 		Annotations: &mcp.ToolAnnotations{ReadOnlyHint: true},
-		InputSchema: entitySchema[LoadArgs]("game_data", "player", "team"),
+		InputSchema: entitySchema[LoadArgs]("game_data"),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, args LoadArgs) (*mcp.CallToolResult, any, error) {
 		return runOp(ctx, client, "load", args.Entity, args.Query)
 	})
@@ -101,7 +101,7 @@ func runOp(_ context.Context, client *sdk.MlbGumboSDK, op string, entity string,
 
 // entityFor dispatches on the lowercase entity name. The generator
 // emits one `case "<name>":` per entity defined in the SDK model.
-func entityFor(client *sdk.MlbGumboSDK, name string) (sdk.MlbGumboEntity, error) {
+func entityFor(client *sdk.MlbGumboSDK, name string) (sdk.MlbGumboEntityBase, error) {
 	switch strings.ToLower(name) {
 	case "game_data":
 		return client.GameData(nil), nil

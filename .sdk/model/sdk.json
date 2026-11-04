@@ -24,6 +24,7 @@
         "repr": "auto"
       },
       "contributor": {},
+      "copies": "merge",
       "doc": {
         "active": true,
         "assets": {
@@ -282,19 +283,101 @@
             "field": {}
           },
           "fields": {
-            "people": {
+            "batSide": {
               "a": true,
-              "h": "People",
-              "n": "people",
+              "h": "Bat Side",
+              "n": "batSide",
               "r": false,
-              "t": "`$ARRAY`"
+              "t": "`$OBJECT`"
+            },
+            "birthDate": {
+              "a": true,
+              "fo": "date",
+              "h": "Birth Date",
+              "n": "birthDate",
+              "r": false,
+              "t": "`$STRING`"
+            },
+            "currentAge": {
+              "a": true,
+              "h": "Current Age",
+              "n": "currentAge",
+              "r": false,
+              "t": "`$INTEGER`"
+            },
+            "firstName": {
+              "a": true,
+              "h": "First Name",
+              "n": "firstName",
+              "r": false,
+              "t": "`$STRING`"
+            },
+            "fullName": {
+              "a": true,
+              "h": "Full Name",
+              "n": "fullName",
+              "r": false,
+              "t": "`$STRING`"
+            },
+            "height": {
+              "a": true,
+              "h": "Height",
+              "n": "height",
+              "r": false,
+              "t": "`$STRING`"
+            },
+            "id": {
+              "a": true,
+              "h": "Id",
+              "n": "id",
+              "r": false,
+              "t": "`$INTEGER`"
+            },
+            "lastName": {
+              "a": true,
+              "h": "Last Name",
+              "n": "lastName",
+              "r": false,
+              "t": "`$STRING`"
+            },
+            "pitchHand": {
+              "a": true,
+              "h": "Pitch Hand",
+              "n": "pitchHand",
+              "r": false,
+              "t": "`$OBJECT`"
+            },
+            "primaryNumber": {
+              "a": true,
+              "h": "Primary Number",
+              "n": "primaryNumber",
+              "r": false,
+              "t": "`$STRING`"
+            },
+            "primaryPosition": {
+              "a": true,
+              "h": "Primary Position",
+              "n": "primaryPosition",
+              "r": false,
+              "t": "`$OBJECT`"
+            },
+            "weight": {
+              "a": true,
+              "h": "Weight",
+              "n": "weight",
+              "r": false,
+              "t": "`$INTEGER`"
             }
+          },
+          "id": {
+            "field": "id",
+            "name": "id"
           },
           "name": "player",
           "op": {
-            "load": {
+            "list": {
               "input": "data",
-              "name": "load",
+              "name": "list",
               "points": [
                 {
                   "a": true,
@@ -363,7 +446,7 @@
                   ],
                   "t": {
                     "req": "`reqdata`",
-                    "res": "`body`"
+                    "res": "`body.people`"
                   }
                 }
               ]
@@ -488,19 +571,54 @@
             "field": {}
           },
           "fields": {
+            "abbreviation": {
+              "a": true,
+              "h": "Abbreviation",
+              "n": "abbreviation",
+              "r": false,
+              "t": "`$STRING`"
+            },
+            "division": {
+              "a": true,
+              "h": "Division",
+              "n": "division",
+              "r": false,
+              "t": "`$OBJECT`"
+            },
             "id": {
               "a": true,
               "h": "Id",
               "n": "id",
               "r": false,
+              "t": "`$INTEGER`"
+            },
+            "league": {
+              "a": true,
+              "h": "League",
+              "n": "league",
+              "r": false,
+              "t": "`$OBJECT`"
+            },
+            "locationName": {
+              "a": true,
+              "h": "Location Name",
+              "n": "locationName",
+              "r": false,
               "t": "`$STRING`"
             },
-            "teams": {
+            "name": {
               "a": true,
-              "h": "Teams",
-              "n": "teams",
+              "h": "Name",
+              "n": "name",
               "r": false,
-              "t": "`$ARRAY`"
+              "t": "`$STRING`"
+            },
+            "teamName": {
+              "a": true,
+              "h": "Team Name",
+              "n": "teamName",
+              "r": false,
+              "t": "`$STRING`"
             }
           },
           "id": {
@@ -585,13 +703,7 @@
                     "req": "`reqdata`",
                     "res": "`body.roster`"
                   }
-                }
-              ]
-            },
-            "load": {
-              "input": "data",
-              "name": "load",
-              "points": [
+                },
                 {
                   "a": true,
                   "co": {
@@ -605,7 +717,7 @@
                         "a": true,
                         "ex": 119,
                         "k": "param",
-                        "n": "id",
+                        "n": "team_id",
                         "or": "teamId",
                         "r": true,
                         "t": "`$INTEGER`"
@@ -636,12 +748,12 @@
                   "o": "/teams/{teamId}",
                   "q": {
                     "exist": [
-                      "id"
+                      "team_id"
                     ]
                   },
                   "r": {
                     "param": {
-                      "teamId": "id"
+                      "teamId": "team_id"
                     }
                   },
                   "rs": {
@@ -653,12 +765,12 @@
                       "lit": "teams"
                     },
                     {
-                      "var": "id"
+                      "var": "team_id"
                     }
                   ],
                   "t": {
                     "req": "`reqdata`",
-                    "res": "`body`"
+                    "res": "`body.teams`"
                   }
                 }
               ]
@@ -1142,21 +1254,17 @@
             {
               "a": true,
               "d": {},
-              "i": {
-                "ref": "player_ref01",
-                "srcdatavar": "player_ref01_data",
-                "suffix": "_dt0"
-              },
+              "i": {},
               "m": {
-                "id": "player01"
+                "player_id": "player01"
               },
-              "o": "load",
+              "o": "list",
               "s": [],
               "v": [
                 {
-                  "apply": "TextFieldMark",
+                  "apply": "ItemExists",
                   "def": {
-                    "mark": "Mark01-player_ref01"
+                    "ref": "player_ref01"
                   }
                 }
               ]
@@ -1214,31 +1322,12 @@
                   }
                 }
               ]
-            },
-            {
-              "a": true,
-              "d": {},
-              "i": {
-                "ref": "team_ref01",
-                "srcdatavar": "team_ref01_data",
-                "suffix": "_dt0"
-              },
-              "m": {
-                "id": "team01"
-              },
-              "o": "load",
-              "s": [],
-              "v": [
-                {
-                  "apply": "TextFieldMark",
-                  "def": {
-                    "mark": "Mark01-team_ref01"
-                  }
-                }
-              ]
             }
           ]
         }
+      },
+      "http": {
+        "useragent": ""
       },
       "info": {
         "auth": false,

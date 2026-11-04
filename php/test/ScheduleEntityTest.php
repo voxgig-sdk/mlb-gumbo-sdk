@@ -229,6 +229,9 @@ class ScheduleEntityTest extends TestCase
             $schedule_ref01_data = Helpers::to_map($schedule_ref01_data_raw[0][1]);
         }
 
+        if (!empty($setup["live"])) {
+            Runner::live_pace();
+        }
         // LIST
         $schedule_ref01_ent = $client->Schedule(null);
         $schedule_ref01_match = [];

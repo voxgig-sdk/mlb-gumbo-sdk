@@ -262,16 +262,76 @@ func MakeConfig() map[string]any {
 			"player": map[string]any{
 				"fields": []any{
 					map[string]any{
-						"name": "people",
-						"title": "People",
-						"type": "`$ARRAY`",
+						"name": "batSide",
+						"title": "Bat Side",
+						"type": "`$OBJECT`",
 					},
+					map[string]any{
+						"name": "birthDate",
+						"title": "Birth Date",
+						"type": "`$STRING`",
+						"format": "date",
+					},
+					map[string]any{
+						"name": "currentAge",
+						"title": "Current Age",
+						"type": "`$INTEGER`",
+					},
+					map[string]any{
+						"name": "firstName",
+						"title": "First Name",
+						"type": "`$STRING`",
+					},
+					map[string]any{
+						"name": "fullName",
+						"title": "Full Name",
+						"type": "`$STRING`",
+					},
+					map[string]any{
+						"name": "height",
+						"title": "Height",
+						"type": "`$STRING`",
+					},
+					map[string]any{
+						"name": "id",
+						"title": "Id",
+						"type": "`$INTEGER`",
+					},
+					map[string]any{
+						"name": "lastName",
+						"title": "Last Name",
+						"type": "`$STRING`",
+					},
+					map[string]any{
+						"name": "pitchHand",
+						"title": "Pitch Hand",
+						"type": "`$OBJECT`",
+					},
+					map[string]any{
+						"name": "primaryNumber",
+						"title": "Primary Number",
+						"type": "`$STRING`",
+					},
+					map[string]any{
+						"name": "primaryPosition",
+						"title": "Primary Position",
+						"type": "`$OBJECT`",
+					},
+					map[string]any{
+						"name": "weight",
+						"title": "Weight",
+						"type": "`$INTEGER`",
+					},
+				},
+				"id": map[string]any{
+					"field": "id",
+					"name": "id",
 				},
 				"name": "player",
 				"op": map[string]any{
-					"load": map[string]any{
+					"list": map[string]any{
 						"input": "data",
-						"name": "load",
+						"name": "list",
 						"points": []any{
 							map[string]any{
 								"kind": "http",
@@ -296,7 +356,7 @@ func MakeConfig() map[string]any {
 								},
 								"transform": map[string]any{
 									"req": "`reqdata`",
-									"res": "`body`",
+									"res": "`body.people`",
 								},
 								"args": map[string]any{
 									"params": []any{
@@ -435,14 +495,39 @@ func MakeConfig() map[string]any {
 			"team": map[string]any{
 				"fields": []any{
 					map[string]any{
-						"name": "id",
-						"title": "Id",
+						"name": "abbreviation",
+						"title": "Abbreviation",
 						"type": "`$STRING`",
 					},
 					map[string]any{
-						"name": "teams",
-						"title": "Teams",
-						"type": "`$ARRAY`",
+						"name": "division",
+						"title": "Division",
+						"type": "`$OBJECT`",
+					},
+					map[string]any{
+						"name": "id",
+						"title": "Id",
+						"type": "`$INTEGER`",
+					},
+					map[string]any{
+						"name": "league",
+						"title": "League",
+						"type": "`$OBJECT`",
+					},
+					map[string]any{
+						"name": "locationName",
+						"title": "Location Name",
+						"type": "`$STRING`",
+					},
+					map[string]any{
+						"name": "name",
+						"title": "Name",
+						"type": "`$STRING`",
+					},
+					map[string]any{
+						"name": "teamName",
+						"title": "Team Name",
+						"type": "`$STRING`",
 					},
 				},
 				"id": map[string]any{
@@ -522,12 +607,6 @@ func MakeConfig() map[string]any {
 									"media": "application/json",
 								},
 							},
-						},
-					},
-					"load": map[string]any{
-						"input": "data",
-						"name": "load",
-						"points": []any{
 							map[string]any{
 								"kind": "http",
 								"method": "GET",
@@ -537,26 +616,26 @@ func MakeConfig() map[string]any {
 										"lit": "teams",
 									},
 									map[string]any{
-										"var": "id",
+										"var": "team_id",
 									},
 								},
 								"parts": []any{
 									"teams",
-									"{id}",
+									"{team_id}",
 								},
 								"rename": map[string]any{
 									"param": map[string]any{
-										"teamId": "id",
+										"teamId": "team_id",
 									},
 								},
 								"transform": map[string]any{
 									"req": "`reqdata`",
-									"res": "`body`",
+									"res": "`body.teams`",
 								},
 								"args": map[string]any{
 									"params": []any{
 										map[string]any{
-											"name": "id",
+											"name": "team_id",
 											"orig": "teamId",
 											"type": "`$INTEGER`",
 											"kind": "param",
@@ -582,7 +661,7 @@ func MakeConfig() map[string]any {
 								},
 								"select": map[string]any{
 									"exist": []any{
-										"id",
+										"team_id",
 									},
 								},
 								"response": map[string]any{

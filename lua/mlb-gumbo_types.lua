@@ -21,9 +21,20 @@
 ---@field game_pk string
 
 ---@class Player
----@field people? table
+---@field batSide? table
+---@field birthDate? string
+---@field currentAge? number
+---@field firstName? string
+---@field fullName? string
+---@field height? string
+---@field id? number
+---@field lastName? string
+---@field pitchHand? table
+---@field primaryNumber? string
+---@field primaryPosition? table
+---@field weight? number
 
----@class PlayerLoadMatch
+---@class PlayerListMatch
 ---@field player_id number
 ---@field hydrate? string
 ---@field season? number
@@ -40,16 +51,16 @@
 ---@field sport_id? number
 
 ---@class Team
----@field id? string
----@field teams? table
-
----@class TeamLoadMatch
----@field id number
----@field hydrate? string
----@field season? number
+---@field abbreviation? string
+---@field division? table
+---@field id? number
+---@field league? table
+---@field locationName? string
+---@field name? string
+---@field teamName? string
 
 ---@class TeamListMatch
----@field id number
+---@field team_id number
 ---@field hydrate? string
 ---@field season? number
 

@@ -2,23 +2,46 @@
   "existing": {
     "team": {
       "TEAM00": {
+        "abbreviation": "s46",
+        "division": {},
         "id": "TEAM00",
-        "teams": []
+        "league": {},
+        "locationName": "s4a",
+        "name": "s4b",
+        "teamName": "s4c",
+        "team_id": "TEAM01"
       },
       "TEAM01": {
+        "abbreviation": "s8c",
+        "division": {},
         "id": "TEAM01",
-        "teams": []
+        "league": {},
+        "locationName": "s90",
+        "name": "s91",
+        "teamName": "s92",
+        "team_id": "TEAM01"
       },
       "TEAM02": {
+        "abbreviation": "sd2",
+        "division": {},
         "id": "TEAM02",
-        "teams": []
+        "league": {},
+        "locationName": "sd6",
+        "name": "sd7",
+        "teamName": "sd8",
+        "team_id": "TEAM01"
       }
     }
   },
   "new": {
     "team": {
       "team_ref01": {
-        "teams": []
+        "abbreviation": "s118",
+        "division": {},
+        "league": {},
+        "locationName": "s11c",
+        "name": "s11d",
+        "teamName": "s11e"
       }
     }
   },

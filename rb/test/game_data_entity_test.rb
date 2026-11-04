@@ -42,9 +42,9 @@ class GameDataEntityTest < Minitest::Test
       end
     end
     if setup[:live]
-      ["game_pk01"].each do |_live_key|
+      { "game_pk01" => "716463" }.each do |_live_key, _live_ex|
         if setup[:synthetic_only] || setup[:idmap][_live_key].nil?
-          Runner.live_miss(LIVE_STRICT, "Live entity test blocked: needs #{_live_key} via MLB_GUMBO_TEST_GAME_DATA_ENTID")
+          setup[:idmap][_live_key] = _live_ex
         end
       end
     end
@@ -58,6 +58,7 @@ class GameDataEntityTest < Minitest::Test
       game_data_ref01_data = Helpers.to_map(game_data_ref01_data_raw[0][1])
     end
 
+    Runner.live_pace if setup[:live]
     # LIST
     game_data_ref01_ent = client.GameData(nil)
     game_data_ref01_match = {

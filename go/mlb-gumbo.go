@@ -13,7 +13,11 @@ type Context = core.Context
 type Utility = core.Utility
 type Feature = core.Feature
 type Entity = core.Entity
-type MlbGumboEntity = core.MlbGumboEntity
+type MlbGumboEntityBase = core.MlbGumboEntityBase
+
+// Deprecated: use MlbGumboEntityBase.
+type MlbGumboEntity = core.MlbGumboEntityBase
+
 type StreamItem = core.StreamItem
 type FetcherFunc = core.FetcherFunc
 type Spec = core.Spec
@@ -42,16 +46,16 @@ func init() {
 	core.NewTimeoutFeatureFunc = func() core.Feature {
 		return feature.NewTimeoutFeature()
 	}
-	core.NewGameDataEntityFunc = func(client *core.MlbGumboSDK, entopts map[string]any) core.MlbGumboEntity {
+	core.NewGameDataEntityFunc = func(client *core.MlbGumboSDK, entopts map[string]any) core.MlbGumboEntityBase {
 		return entity.NewGameDataEntity(client, entopts)
 	}
-	core.NewPlayerEntityFunc = func(client *core.MlbGumboSDK, entopts map[string]any) core.MlbGumboEntity {
+	core.NewPlayerEntityFunc = func(client *core.MlbGumboSDK, entopts map[string]any) core.MlbGumboEntityBase {
 		return entity.NewPlayerEntity(client, entopts)
 	}
-	core.NewScheduleEntityFunc = func(client *core.MlbGumboSDK, entopts map[string]any) core.MlbGumboEntity {
+	core.NewScheduleEntityFunc = func(client *core.MlbGumboSDK, entopts map[string]any) core.MlbGumboEntityBase {
 		return entity.NewScheduleEntity(client, entopts)
 	}
-	core.NewTeamEntityFunc = func(client *core.MlbGumboSDK, entopts map[string]any) core.MlbGumboEntity {
+	core.NewTeamEntityFunc = func(client *core.MlbGumboSDK, entopts map[string]any) core.MlbGumboEntityBase {
 		return entity.NewTeamEntity(client, entopts)
 	}
 }

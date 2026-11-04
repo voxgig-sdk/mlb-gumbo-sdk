@@ -231,14 +231,14 @@ Creates a test-mode client with mock transport. Both arguments may be `nil`.
 | `GetUtility` | `() *Utility` | Copy of the SDK utility object. |
 | `Prepare` | `(fetchargs map[string]any) (map[string]any, error)` | Build an HTTP request definition without sending. |
 | `Direct` | `(fetchargs map[string]any) (map[string]any, error)` | Build and send an HTTP request. |
-| `GameData` | `(data map[string]any) MlbGumboEntity` | Create a GameData entity instance. |
-| `Player` | `(data map[string]any) MlbGumboEntity` | Create a Player entity instance. |
-| `Schedule` | `(data map[string]any) MlbGumboEntity` | Create a Schedule entity instance. |
-| `Team` | `(data map[string]any) MlbGumboEntity` | Create a Team entity instance. |
+| `GameData` | `(data map[string]any) MlbGumboEntityBase` | Create a GameData entity instance. |
+| `Player` | `(data map[string]any) MlbGumboEntityBase` | Create a Player entity instance. |
+| `Schedule` | `(data map[string]any) MlbGumboEntityBase` | Create a Schedule entity instance. |
+| `Team` | `(data map[string]any) MlbGumboEntityBase` | Create a Team entity instance. |
 
-### Entity interface (MlbGumboEntity)
+### Entity interface (MlbGumboEntityBase)
 
-All entities implement the `MlbGumboEntity` interface.
+All entities implement the `MlbGumboEntityBase` interface.
 
 | Method | Signature | Description |
 | --- | --- | --- |
@@ -288,9 +288,20 @@ API path: `/game/{game_pk}/feed/live/timestamps`
 
 | Field | Description |
 | --- | --- |
-| `"people"` |  |
+| `"batSide"` |  |
+| `"birthDate"` |  |
+| `"currentAge"` |  |
+| `"firstName"` |  |
+| `"fullName"` |  |
+| `"height"` |  |
+| `"id"` |  |
+| `"lastName"` |  |
+| `"pitchHand"` |  |
+| `"primaryNumber"` |  |
+| `"primaryPosition"` |  |
+| `"weight"` |  |
 
-Operations: Load.
+Operations: List.
 
 API path: `/people/{playerId}`
 
@@ -309,10 +320,15 @@ API path: `/schedule`
 
 | Field | Description |
 | --- | --- |
+| `"abbreviation"` |  |
+| `"division"` |  |
 | `"id"` |  |
-| `"teams"` |  |
+| `"league"` |  |
+| `"locationName"` |  |
+| `"name"` |  |
+| `"teamName"` |  |
 
-Operations: List, Load.
+Operations: List.
 
 API path: `/teams/{teamId}/roster`
 
@@ -372,22 +388,36 @@ Create an instance: `player := client.Player(nil)`
 
 | Method | Description |
 | --- | --- |
-| `Load(match, ctrl)` | Load a single entity by match criteria. |
+| `List(match, ctrl)` | List entities matching the criteria. |
 
 #### Fields
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `people` | `[]any` |  |
+| `batSide` | `map[string]any` |  |
+| `birthDate` | `string` |  |
+| `currentAge` | `int` |  |
+| `firstName` | `string` |  |
+| `fullName` | `string` |  |
+| `height` | `string` |  |
+| `id` | `int` |  |
+| `lastName` | `string` |  |
+| `pitchHand` | `map[string]any` |  |
+| `primaryNumber` | `string` |  |
+| `primaryPosition` | `map[string]any` |  |
+| `weight` | `int` |  |
 
-#### Example: Load
+#### Example: List
 
 ```go
-player, err := client.Player(nil).Load(map[string]any{"player_id": 1}, nil)
+players, err := client.Player(nil).List(map[string]any{"player_id": 1}, nil)
 if err != nil {
     panic(err)
 }
-fmt.Println(player.(sdk.Entity).Data()) // the loaded entity's record
+// A []any of entities, one per record.
+for _, item := range players.([]any) {
+    fmt.Println(item.(sdk.Entity).Data())
+}
 ```
 
 
@@ -431,29 +461,23 @@ Create an instance: `team := client.Team(nil)`
 | Method | Description |
 | --- | --- |
 | `List(match, ctrl)` | List entities matching the criteria. |
-| `Load(match, ctrl)` | Load a single entity by match criteria. |
 
 #### Fields
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `id` | `string` |  |
-| `teams` | `[]any` |  |
-
-#### Example: Load
-
-```go
-team, err := client.Team(nil).Load(map[string]any{"id": 1}, nil)
-if err != nil {
-    panic(err)
-}
-fmt.Println(team.(sdk.Entity).Data()) // the loaded entity's record
-```
+| `abbreviation` | `string` |  |
+| `division` | `map[string]any` |  |
+| `id` | `int` |  |
+| `league` | `map[string]any` |  |
+| `locationName` | `string` |  |
+| `name` | `string` |  |
+| `teamName` | `string` |  |
 
 #### Example: List
 
 ```go
-teams, err := client.Team(nil).List(map[string]any{"id": 1}, nil)
+teams, err := client.Team(nil).List(map[string]any{"team_id": 1}, nil)
 if err != nil {
     panic(err)
 }

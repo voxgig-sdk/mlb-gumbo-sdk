@@ -222,37 +222,35 @@ class PlayerEntity
   end
 
   
-  # Load a single Player.
+
+  
+  # List Player items matching the given filter.
   #
-  # @param reqmatch [PlayerLoadMatch, Hash, nil] match criteria (id/query fields);
-  #   optional — an entity with no id-like key loads with no match (nil is treated
-  #   as an empty match, so client.Player.load works with no args).
+  # @param reqmatch [PlayerListMatch, Hash, nil] match filter (any subset of
+  #   Player fields); defaults to nil, treated as an empty match that lists all.
   # @param ctrl [Object, nil] optional per-call control
-  # @return [PlayerEntity] the loaded Player entity (data_get reads its record);
-  #   raises MlbGumboError on failure
-  def load(reqmatch = nil, ctrl = nil)
+  # @return [Array<PlayerEntity>] the matching Player items, one entity per
+  #   record (data_get reads the record); raises MlbGumboError on failure
+  def list(reqmatch = nil, ctrl = nil)
     utility = @_utility
     ctx = utility.make_context.call({
-      "opname" => "load",
+      "opname" => "list",
       "ctrl" => ctrl,
       "match" => @_match,
       "data" => @_data,
       "reqmatch" => reqmatch,
     }, @_entctx)
 
-    _run_op(ctx) do
+    records = _run_op(ctx) do
       if ctx.result
         @_match = ctx.result.resmatch if ctx.result.resmatch
-        if ctx.result.resdata
-          @_data = MlbGumboHelpers.to_map(VoxgigStruct.clone(ctx.result.resdata)) || {}
-        end
       end
     end
+
+    records
   end
 
 
-
-  
 
   
 

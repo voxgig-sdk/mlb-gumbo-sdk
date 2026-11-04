@@ -41,9 +41,13 @@ func TestGameDataDirect(t *testing.T) {
 				}
 			}
 		}
+		if setup.live {
+			livePace()
+		}
 		client := setup.client
 
 		params := map[string]any{}
+		query := map[string]any{}
 		if setup.live {
 			params["game_pk"] = setup.idmap["game_pk01"]
 		} else {
@@ -54,6 +58,7 @@ func TestGameDataDirect(t *testing.T) {
 			"path":   "game/{game_pk}/feed/live/timestamps",
 			"method": "GET",
 			"params": params,
+			"query":  query,
 		})
 		if setup.live {
 			if err != nil {
@@ -115,6 +120,9 @@ func TestGameDataDirect(t *testing.T) {
 			}
 			t.Skip(_reason)
 			return
+		}
+		if setup.live {
+			livePace()
 		}
 		client := setup.client
 
@@ -221,6 +229,12 @@ func game_dataDirectSetup(mockres any) *game_dataDirectSetupResult {
 				json.Unmarshal([]byte(entidStr), &idmap)
 			} else if entidMap, ok := entidRaw.(map[string]any); ok {
 				idmap = entidMap
+			}
+		}
+		// A path parameter's example stands in for an id *_ENTID does not give.
+		for k, v := range map[string]any{"game_pk01": "716463"} {
+			if idmap[k] == nil {
+				idmap[k] = v
 			}
 		}
 

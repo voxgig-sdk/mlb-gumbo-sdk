@@ -138,18 +138,15 @@ print_r($fetchdef["headers"]);
 
 ### Use test mode
 
-Create a mock client for unit testing — no server required. Seed fixture
-data via the `entity` option so offline calls resolve without a live server:
+Create a mock client for unit testing — no server required:
 
 ```php
-$client = MlbGumboSDK::test([
-    "entity" => ["team" => ["test01" => ["id" => "test01"]]],
-]);
+$client = MlbGumboSDK::test();
 
 // list() returns entity instances (throws on error);
 // call data_get() for the mock record.
-$team = $client->Team()->list(["id" => 1]);
-print_r(array_map(fn($item) => $item->data_get(), $team));
+$schedule = $client->Schedule()->list();
+print_r(array_map(fn($item) => $item->data_get(), $schedule));
 ```
 
 ### Use a custom fetch function
@@ -284,9 +281,20 @@ API path: `/game/{game_pk}/feed/live/timestamps`
 
 | Field | Description |
 | --- | --- |
-| `people` |  |
+| `batSide` |  |
+| `birthDate` |  |
+| `currentAge` |  |
+| `firstName` |  |
+| `fullName` |  |
+| `height` |  |
+| `id` |  |
+| `lastName` |  |
+| `pitchHand` |  |
+| `primaryNumber` |  |
+| `primaryPosition` |  |
+| `weight` |  |
 
-Operations: Load.
+Operations: List.
 
 API path: `/people/{playerId}`
 
@@ -305,10 +313,15 @@ API path: `/schedule`
 
 | Field | Description |
 | --- | --- |
+| `abbreviation` |  |
+| `division` |  |
 | `id` |  |
-| `teams` |  |
+| `league` |  |
+| `locationName` |  |
+| `name` |  |
+| `teamName` |  |
 
-Operations: List, Load.
+Operations: List.
 
 API path: `/teams/{teamId}/roster`
 
@@ -359,19 +372,30 @@ Create an instance: `$player = $client->Player();`
 
 | Method | Description |
 | --- | --- |
-| `load(match)` | Load a single entity by match criteria. |
+| `list(match)` | List entities matching the criteria. |
 
 #### Fields
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `people` | `array` |  |
+| `batSide` | `array` |  |
+| `birthDate` | `string` |  |
+| `currentAge` | `int` |  |
+| `firstName` | `string` |  |
+| `fullName` | `string` |  |
+| `height` | `string` |  |
+| `id` | `int` |  |
+| `lastName` | `string` |  |
+| `pitchHand` | `array` |  |
+| `primaryNumber` | `string` |  |
+| `primaryPosition` | `array` |  |
+| `weight` | `int` |  |
 
-#### Example: Load
+#### Example: List
 
 ```php
-// load() returns the ENTITY — call data_get() for the Player record (throws on error).
-$player = $client->Player()->load(["player_id" => 1]);
+// list() returns an array of Player entities, one per record (throws on error).
+$players = $client->Player()->list(["player_id" => 1]);
 ```
 
 
@@ -409,27 +433,24 @@ Create an instance: `$team = $client->Team();`
 | Method | Description |
 | --- | --- |
 | `list(match)` | List entities matching the criteria. |
-| `load(match)` | Load a single entity by match criteria. |
 
 #### Fields
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `id` | `string` |  |
-| `teams` | `array` |  |
-
-#### Example: Load
-
-```php
-// load() returns the ENTITY — call data_get() for the Team record (throws on error).
-$team = $client->Team()->load(["id" => 1]);
-```
+| `abbreviation` | `string` |  |
+| `division` | `array` |  |
+| `id` | `int` |  |
+| `league` | `array` |  |
+| `locationName` | `string` |  |
+| `name` | `string` |  |
+| `teamName` | `string` |  |
 
 #### Example: List
 
 ```php
 // list() returns an array of Team entities, one per record (throws on error).
-$teams = $client->Team()->list(["id" => 1]);
+$teams = $client->Team()->list(["team_id" => 1]);
 ```
 
 ## Features

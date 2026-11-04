@@ -323,9 +323,20 @@ API path: `/game/{game_pk}/feed/live/timestamps`
 
 | Field | Description |
 | --- | --- |
-| `people` |  |
+| `batSide` |  |
+| `birthDate` |  |
+| `currentAge` |  |
+| `firstName` |  |
+| `fullName` |  |
+| `height` |  |
+| `id` |  |
+| `lastName` |  |
+| `pitchHand` |  |
+| `primaryNumber` |  |
+| `primaryPosition` |  |
+| `weight` |  |
 
-Operations: load.
+Operations: list.
 
 API path: `/people/{playerId}`
 
@@ -344,10 +355,15 @@ API path: `/schedule`
 
 | Field | Description |
 | --- | --- |
+| `abbreviation` |  |
+| `division` |  |
 | `id` |  |
-| `teams` |  |
+| `league` |  |
+| `locationName` |  |
+| `name` |  |
+| `teamName` |  |
 
-Operations: list, load.
+Operations: list.
 
 API path: `/teams/{teamId}/roster`
 
@@ -396,18 +412,29 @@ Create an instance: `const player = client.Player()`
 
 | Method | Description |
 | --- | --- |
-| `load(match)` | Load a single entity by match criteria. |
+| `list(match)` | List entities matching the criteria. |
 
 #### Fields
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `people` | `any[]` |  |
+| `batSide` | `Record<string, any>` |  |
+| `birthDate` | `string` |  |
+| `currentAge` | `number` |  |
+| `firstName` | `string` |  |
+| `fullName` | `string` |  |
+| `height` | `string` |  |
+| `id` | `number` |  |
+| `lastName` | `string` |  |
+| `pitchHand` | `Record<string, any>` |  |
+| `primaryNumber` | `string` |  |
+| `primaryPosition` | `Record<string, any>` |  |
+| `weight` | `number` |  |
 
-#### Example: Load
+#### Example: List
 
 ```ts
-const player = await client.Player().load({ player_id: 1 })
+const players = await client.Player().list({ player_id: 1 })
 ```
 
 
@@ -444,25 +471,23 @@ Create an instance: `const team = client.Team()`
 | Method | Description |
 | --- | --- |
 | `list(match)` | List entities matching the criteria. |
-| `load(match)` | Load a single entity by match criteria. |
 
 #### Fields
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `id` | `string` |  |
-| `teams` | `any[]` |  |
-
-#### Example: Load
-
-```ts
-const team = await client.Team().load({ id: 1 })
-```
+| `abbreviation` | `string` |  |
+| `division` | `Record<string, any>` |  |
+| `id` | `number` |  |
+| `league` | `Record<string, any>` |  |
+| `locationName` | `string` |  |
+| `name` | `string` |  |
+| `teamName` | `string` |  |
 
 #### Example: List
 
 ```ts
-const teams = await client.Team().list({ id: 1 })
+const teams = await client.Team().list({ team_id: 1 })
 ```
 
 ## Features

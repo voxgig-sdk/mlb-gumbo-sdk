@@ -26,11 +26,15 @@ def make_url_util(ctx):
     # Sent with the request, never recorded as the entity's match.
     authquery = getattr(spec, "authquery", None) or []
 
-    # A route the definition ends with a slash keeps it: a server such as a
-    # Django REST one redirects or refuses the route without it.
+    # A route ending in a slash keeps it, as defined or as passed to direct(), for
+    # Django, and a host with no path takes /, or luasocket reads a query as the host.
     orig = vs.getprop(ctx.point, "orig") if ctx.point is not None else None
-    if isinstance(orig, str) and orig.endswith("/") and not spec.suffix \
-            and not url.endswith("/"):
+    slashed = (isinstance(orig, str) and orig.endswith("/")) or \
+        (isinstance(spec.path, str) and spec.path.endswith("/"))
+    if slashed and not spec.suffix and not url.endswith("/"):
+        url += "/"
+    authority = url.find("://")
+    if 0 < authority and not any(c in url[authority + 3:] for c in "/?#"):
         url += "/"
 
     param_items = vs.items(spec.params)

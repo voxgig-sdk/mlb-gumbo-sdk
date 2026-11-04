@@ -57,14 +57,58 @@ GameDataListMatch = Struct.new(
 
 # Player entity data model.
 #
-# @!attribute [rw] people
-#   @return [Array, nil]
+# @!attribute [rw] batSide
+#   @return [Hash, nil]
+#
+# @!attribute [rw] birthDate
+#   @return [String, nil]
+#
+# @!attribute [rw] currentAge
+#   @return [Integer, nil]
+#
+# @!attribute [rw] firstName
+#   @return [String, nil]
+#
+# @!attribute [rw] fullName
+#   @return [String, nil]
+#
+# @!attribute [rw] height
+#   @return [String, nil]
+#
+# @!attribute [rw] id
+#   @return [Integer, nil]
+#
+# @!attribute [rw] lastName
+#   @return [String, nil]
+#
+# @!attribute [rw] pitchHand
+#   @return [Hash, nil]
+#
+# @!attribute [rw] primaryNumber
+#   @return [String, nil]
+#
+# @!attribute [rw] primaryPosition
+#   @return [Hash, nil]
+#
+# @!attribute [rw] weight
+#   @return [Integer, nil]
 Player = Struct.new(
-  :people,
+  :batSide,
+  :birthDate,
+  :currentAge,
+  :firstName,
+  :fullName,
+  :height,
+  :id,
+  :lastName,
+  :pitchHand,
+  :primaryNumber,
+  :primaryPosition,
+  :weight,
   keyword_init: true
 )
 
-# Request payload for Player#load.
+# Request payload for Player#list.
 #
 # @!attribute [rw] player_id
 #   @return [Integer]
@@ -74,7 +118,7 @@ Player = Struct.new(
 #
 # @!attribute [rw] season
 #   @return [Integer, nil]
-PlayerLoadMatch = Struct.new(
+PlayerListMatch = Struct.new(
   :player_id,
   :hydrate,
   :season,
@@ -121,37 +165,40 @@ ScheduleListMatch = Struct.new(
 
 # Team entity data model.
 #
-# @!attribute [rw] id
+# @!attribute [rw] abbreviation
 #   @return [String, nil]
 #
-# @!attribute [rw] teams
-#   @return [Array, nil]
-Team = Struct.new(
-  :id,
-  :teams,
-  keyword_init: true
-)
-
-# Request payload for Team#load.
+# @!attribute [rw] division
+#   @return [Hash, nil]
 #
 # @!attribute [rw] id
-#   @return [Integer]
-#
-# @!attribute [rw] hydrate
-#   @return [String, nil]
-#
-# @!attribute [rw] season
 #   @return [Integer, nil]
-TeamLoadMatch = Struct.new(
+#
+# @!attribute [rw] league
+#   @return [Hash, nil]
+#
+# @!attribute [rw] locationName
+#   @return [String, nil]
+#
+# @!attribute [rw] name
+#   @return [String, nil]
+#
+# @!attribute [rw] teamName
+#   @return [String, nil]
+Team = Struct.new(
+  :abbreviation,
+  :division,
   :id,
-  :hydrate,
-  :season,
+  :league,
+  :locationName,
+  :name,
+  :teamName,
   keyword_init: true
 )
 
 # Request payload for Team#list.
 #
-# @!attribute [rw] id
+# @!attribute [rw] team_id
 #   @return [Integer]
 #
 # @!attribute [rw] hydrate
@@ -160,7 +207,7 @@ TeamLoadMatch = Struct.new(
 # @!attribute [rw] season
 #   @return [Integer, nil]
 TeamListMatch = Struct.new(
-  :id,
+  :team_id,
   :hydrate,
   :season,
   keyword_init: true

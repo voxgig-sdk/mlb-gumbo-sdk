@@ -28,7 +28,7 @@ Key fields to recognise:
 
 Results: Successfully retrieved player information.
 
-SDK operations: `load`.
+SDK operations: `list`.
 
 ### Schedule
 
@@ -40,7 +40,7 @@ SDK operations: `list`.
 
 Results: Successfully retrieved team roster; Successfully retrieved team information.
 
-SDK operations: `list`, `load`.
+SDK operations: `list`.
 
 ### Route map
 
@@ -50,10 +50,10 @@ Use this map to locate a capability. Consult the entity reference before supplyi
 | --- | --- | --- | --- |
 | GameData | `list` | `GET /game/{game_pk}/feed/live/timestamps` | See reference |
 | GameData | `load` | `GET /game/{game_pk}/feed/live` | See reference |
-| Player | `load` | `GET /people/{playerId}` | See reference |
+| Player | `list` | `GET /people/{playerId}` | See reference |
 | Schedule | `list` | `GET /schedule` | See reference |
 | Team | `list` | `GET /teams/{teamId}/roster` | See reference |
-| Team | `load` | `GET /teams/{teamId}` | See reference |
+| Team | `list` | `GET /teams/{teamId}` | See reference |
 
 ## Connect to the API
 
@@ -102,8 +102,8 @@ Use the MCP server to expose supported API operations to an MCP client.
 
 Repository directory: `go-mcp/`. Not published. Build from the go-mcp directory.
 
-- `mlb-gumbo_list`: List records for an entity. Supported entities: `game_data`, `schedule`, `team`.
-- `mlb-gumbo_load`: Load one record for an entity. Supported entities: `game_data`, `player`, `team`.
+- `mlb-gumbo_list`: List records for an entity. Supported entities: `game_data`, `player`, `schedule`, `team`.
+- `mlb-gumbo_load`: Load one record for an entity. Supported entities: `game_data`.
 
 ## Operational features
 

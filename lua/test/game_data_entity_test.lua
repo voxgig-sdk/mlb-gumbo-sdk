@@ -45,9 +45,9 @@ describe("GameDataEntity", function()
       end
     end
     if setup.live then
-      for _, _live_key in ipairs({"game_pk01"}) do
+      for _live_key, _live_ex in pairs({["game_pk01"] = "716463"}) do
         if setup.synthetic_only or setup.idmap[_live_key] == nil then
-          runner.live_miss(pending, LIVE_STRICT, "Live entity test blocked: needs " .. _live_key .. " via MLB_GUMBO_TEST_GAME_DATA_ENTID")
+          setup.idmap[_live_key] = _live_ex
         end
       end
     end
@@ -61,6 +61,9 @@ describe("GameDataEntity", function()
       game_data_ref01_data = helpers.to_map(game_data_ref01_data_raw[1][2])
     end
 
+    if setup.live then
+      runner.live_pace()
+    end
     -- LIST
     local game_data_ref01_ent = client:GameData(nil)
     local game_data_ref01_match = {

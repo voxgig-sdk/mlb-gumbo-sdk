@@ -21,19 +21,21 @@ const utility_1 = require("../../utility");
         (0, node_assert_1.default)('function' === typeof sdk.direct);
         (0, node_assert_1.default)('function' === typeof sdk.prepare);
     });
-    (0, node_test_1.test)('direct-load-player', async (t) => {
+    (0, node_test_1.test)('direct-list-player', async (t) => {
         if (liveScenariosActive()) {
             t.skip('Covered by live operation scenarios');
             return;
         }
-        const setup = directSetup({ id: 'direct01' });
-        if ((0, utility_1.maybeSkipControl)(t, 'direct', 'direct-load-player', setup.live))
+        const setup = directSetup([{ id: 'direct01' }, { id: 'direct02' }]);
+        if ((0, utility_1.maybeSkipControl)(t, 'direct', 'direct-list-player', setup.live))
+            return;
+        if ((0, utility_1.skipIfMissingIds)(t, setup, ["player01"], LIVE_STRICT))
             return;
         const { client, calls } = setup;
         const params = {};
         const query = {};
         if (setup.live) {
-            params.player_id = 660271;
+            params.player_id = setup.idmap['player01'];
         }
         else {
             params.player_id = 'direct01';
@@ -46,17 +48,19 @@ const utility_1 = require("../../utility");
         });
         if (setup.live) {
             if (!result.ok || result.status < 200 || result.status >= 300) {
-                return void (0, utility_1.liveMiss)(t, LIVE_STRICT, 'Live load failed: ' + (0, utility_1.describeLive)(result));
+                return void (0, utility_1.liveMiss)(t, LIVE_STRICT, 'Live list failed: ' + (0, utility_1.describeLive)(result));
             }
-            if (!(null != result.data)) {
-                return void (0, utility_1.liveMiss)(t, LIVE_STRICT, 'Live load returned no data: ' + (0, utility_1.describeLive)(result));
+            if (!(Array.isArray(unwrapListData(result.data)))) {
+                return void (0, utility_1.liveMiss)(t, LIVE_STRICT, 'Live list returned no list: ' + (0, utility_1.describeLive)(result));
             }
         }
         else {
             (0, node_assert_1.default)(result.ok === true);
             (0, node_assert_1.default)(result.status === 200);
             (0, node_assert_1.default)(null != result.data);
-            (0, node_assert_1.default)(result.data.id === 'direct01');
+            const listArr = unwrapListData(result.data);
+            (0, node_assert_1.default)(Array.isArray(listArr));
+            (0, node_assert_1.default)(listArr.length === 2);
             (0, node_assert_1.default)(calls.length === 1);
             (0, node_assert_1.default)(calls[0].init.method === 'GET');
             (0, node_assert_1.default)(calls[0].url.includes('direct01'));
@@ -86,6 +90,8 @@ function directSetup(mockres) {
         if ('string' === typeof idmap && idmap.startsWith('{')) {
             idmap = JSON.parse(idmap);
         }
+        // A path parameter's example stands in for an id *_ENTID does not give.
+        idmap = Object.assign({ player01: 660271 }, 'object' === typeof idmap ? idmap : {});
         return { client, calls, live, idmap, transport };
     }
     const mockFetch = async (url, init) => {

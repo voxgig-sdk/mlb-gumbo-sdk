@@ -34,15 +34,18 @@ class GameDataDirectTest < Minitest::Test
         end
       end
     end
+    Runner.live_pace if setup[:live]
     client = setup[:client]
 
     params = {}
+    query = {}
     params["game_pk"] = setup[:live] ? setup[:idmap]["game_pk01"] : "direct01"
 
     result = client.direct({
       "path" => "game/{game_pk}/feed/live/timestamps",
       "method" => "GET",
       "params" => params,
+      "query" => query,
     })
     if setup[:live]
       unless live_ok(result)
@@ -69,6 +72,7 @@ class GameDataDirectTest < Minitest::Test
       skip(_reason || "skipped via sdk-test-control.json")
       return
     end
+    Runner.live_pace if setup[:live]
     client = setup[:client]
 
     params = {}
@@ -127,6 +131,9 @@ def game_data_direct_setup(mockres)
     })
     client = MlbGumboSDK.new(merged_opts)
     idmap = env["MLB_GUMBO_TEST_GAME_DATA_ENTID"]
+    # A path parameter's example stands in for an id *_ENTID does not give.
+    idmap = { "game_pk01" => "716463" }
+      .merge(idmap.is_a?(Hash) ? idmap : {})
     return {
       client: client,
       calls: calls,

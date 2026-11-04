@@ -27,10 +27,13 @@ import {
   isAuthActive,
   serverVarEnv,
   serverVariables,
-  entityDataIdField, envName, envToken,
+  entityDataIdField, entityRecordIdField, envName, envToken,
   phpEntityAccessor,
   invalidRequest,
   liveFlowNeeds, liveStrict, liveStrictNote,
+  liveRouteExamples, liveStepExamples, flowLoadRoute, flowLoadReadsRecord,
+  liveGates, liveExcludedLines, liveExcludedSummary, LIVE_GETONLY_ENV,
+  liveEntity, liveIdentity, liveRepeatsId, liveLoadComparesId, liveUnrouted,
 } from '@voxgig/sdkgen'
 
 import { formatPhpValue } from './utility_php'
@@ -39,9 +42,20 @@ import { formatPhpValue } from './utility_php'
 // The live prologue of a flow built from offline fixtures: blocked without
 // the ids it binds, a create-less load reading the first listed record, and
 // a lenient run observing its checks rather than failing on them.
-function liveFlowGate(entity: any, needs: any, entidEnv: string, accessor: string,
+function liveFlowGate(entity: any, needs: any, identity: any, entidEnv: string, accessor: string,
   strict: boolean): string {
   let out = ''
+  if (null != needs.examples) {
+    out += `        if (!empty($setup["live"])) {
+            foreach ([${needs.examples
+      .map(([k, ex]: any) => JSON.stringify(k) + ' => ' + formatPhpValue(ex)).join(', ')}] as $_liveKey => $_liveEx) {
+                if (!empty($setup["synthetic_only"]) || null === ($setup["idmap"][$_liveKey] ?? null)) {
+                    $setup["idmap"][$_liveKey] = $_liveEx;
+                }
+            }
+        }
+`
+  }
   if (0 < needs.keys.length) {
     out += `        if (!empty($setup["live"])) {
             foreach ([${needs.keys.map((k: string) => JSON.stringify(k)).join(', ')}] as $_liveKey) {
@@ -59,12 +73,27 @@ function liveFlowGate(entity: any, needs: any, entidEnv: string, accessor: strin
 `
   }
   out += '        $client = $setup["client"];\n'
-  if (null != needs.discover) {
-    const match = Object.entries(needs.discover)
-      .map(([k, v]: any) => `${JSON.stringify(k)} => $setup["idmap"][${JSON.stringify(v)}] ?? null`).join(', ')
+  if (null != needs.record) {
+    const id = `$setup["idmap"][${JSON.stringify(needs.record)}] ?? null`
     out += `        if (!empty($setup["live"])) {
             Runner::live_existing($setup, self::LIVE_STRICT, ${JSON.stringify(entity.name)},
-                fn() => $client->${accessor}(null)->list([${match}], null));
+                fn() => [["id" => ${id}]], ${JSON.stringify(identity.field)}, ${id});
+        }
+`
+  }
+  if (null != needs.discover) {
+    const match = '[' + Object.entries(needs.discover)
+      .map(([k, v]: any) => `${JSON.stringify(k)} => $setup["idmap"][${JSON.stringify(v)}] ?? null`)
+      .concat(liveRouteExamples(entity, 'list', Object.keys(needs.discover))
+        .map(([k, ex]) => `${JSON.stringify(k)} => ${formatPhpValue(ex)}`)).join(', ') + ']'
+    const omit = needs.unrouted || []
+    out += `        if (!empty($setup["live"])) {
+            $_liveId = empty($setup["synthetic_only"]) ? ($setup["idmap"][${JSON.stringify(identity.key)}] ?? null) : null;
+${undefined === identity.ex ? '' : `            $_liveId = $_liveId ?? ${formatPhpValue(identity.ex)};
+`}${0 === omit.length ? '' : `            $_liveMatch = ${match};
+${liveOmit(omit, '_liveMatch', '            ')}`}            Runner::live_pace();
+            Runner::live_existing($setup, self::LIVE_STRICT, ${JSON.stringify(entity.name)},
+                fn() => $client->${accessor}(null)->list(${0 === omit.length ? match : '$_liveMatch'}, null), ${JSON.stringify(identity.field)}, $_liveId);
         }
 `
   }
@@ -91,7 +120,7 @@ const TestEntity = cmp(function TestEntity(props: any) {
   const model: Model = ctx$.model
 
   const target = props.target
-  const entity: ModelEntity = props.entity
+  const entity: ModelEntity = liveEntity(ctx$, props.entity)
 
   // The stream test streams the "list" op with no match and asserts a 3-item
   // collection, so it only applies to an entity whose list a bare call can
@@ -144,7 +173,6 @@ const TestEntity = cmp(function TestEntity(props: any) {
   const genCtx: GenCtx = { model, entity, flow: basicflow, PROJUPPER, accessor }
 
   const strict = liveStrict(model, target.name)
-  const needs = liveFlowNeeds(entity, basicflow)
   const entidEnv = PROJUPPER + '_TEST_' + envToken(entity.name) + '_ENTID'
 
   File({ name: entity.Name + 'EntityTest.' + target.ext }, () => {
@@ -223,13 +251,17 @@ ${failureTests(model, entity, accessor)}${validateListTest(model, entity, access
                 return;
             }
         }
-${liveFlowGate(entity, needs, entidEnv, accessor, strict)}
 `)
 
-    // Check if the flow has a create step
-    const flowHasCreate = allSteps.some((s: any) => s.o === 'create')
-    if (!flowHasCreate) {
-      Content(`        // Bootstrap entity data from existing test data.
+    const flowBody = (flow: any) => {
+      const steps = flowSteps(flow) as any[]
+      Content(liveFlowGate(entity, liveFlowNeeds(entity, flow), liveIdentity(entity, flow), entidEnv, accessor,
+        strict) + '\n')
+
+      // Check if the flow has a create step
+      const flowHasCreate = steps.some((s: any) => s.o === 'create')
+      if (!flowHasCreate) {
+        Content(`        // Bootstrap entity data from existing test data.
         $${entity.name}_ref01_data_raw = Vs::items(Helpers::to_map(
             Vs::getpath($setup["data"], "existing.${entity.name}")));
         $${entity.name}_ref01_data = null;
@@ -238,29 +270,54 @@ ${liveFlowGate(entity, needs, entidEnv, accessor, strict)}
         }
 
 `)
-    }
-
-    // Model-driven step iteration
-    each(flowSteps(basicflow), (step: any, index: any) => {
-      // Never emit a REMOVE (or its removed-item verify LIST) without a
-      // preceding CREATE: a coherent CRUD flow only removes what it created,
-      // so a create-less remove would mutate pre-existing (live) data.
-      if (!flowHasCreate) {
-        if ('remove' === step.o) { return }
-        if ('list' === step.o &&
-          (step.v || []).some((v: any) => 'ItemNotExists' === v.apply)) { return }
       }
-      const opgen: OpGen = GENERATE_OP[step.o]
-      if (opgen) {
-        opgen(genCtx, step, index)
-        Content('\n')
-      }
-    })
 
-    Content(`${strict ? '' : `        } catch (\\Throwable $e) {
+      // Model-driven step iteration
+      each(steps, (step: any, index: any) => {
+        // Never emit a REMOVE (or its removed-item verify LIST) without a
+        // preceding CREATE: a coherent CRUD flow only removes what it created,
+        // so a create-less remove would mutate pre-existing (live) data.
+        if (!flowHasCreate) {
+          if ('remove' === step.o) { return }
+          if ('list' === step.o &&
+            (step.v || []).some((v: any) => 'ItemNotExists' === v.apply)) { return }
+        }
+        const opgen: OpGen = GENERATE_OP[step.o]
+        if (opgen) {
+          Content(LIVE_PACE)
+          opgen({ ...genCtx, flow }, step, index)
+          Content('\n')
+        }
+      })
+
+      Content(strict ? '' : `        } catch (\\Throwable $e) {
             Runner::live_observe($e, $setup, self::LIVE_STRICT);
         }
-`}    }
+`)
+    }
+
+    for (const { getOnly, plan, runs } of liveGates(entity, basicflow)) {
+      Content(`        if (!empty($setup["live"])${getOnly ? ` && getenv(${formatPhpValue(LIVE_GETONLY_ENV)}) === "TRUE"` : ''}) {
+${liveExcludedLines(plan).map((line) =>
+  '            fwrite(STDOUT, ' + formatPhpValue(line) + ' . "\\n");\n').join('')}`)
+      if (!runs) {
+        Content(`            $this->markTestSkipped(${formatPhpValue(liveExcludedSummary(plan))});
+        }
+
+`)
+      }
+      else {
+        flowBody(plan.flow)
+        Content(`            return;
+        }
+
+`)
+      }
+    }
+
+    flowBody(basicflow)
+
+    Content(`    }
 }
 
 `)
@@ -273,7 +330,7 @@ ${liveFlowGate(entity, needs, entidEnv, accessor, strict)}
     $entity_data_file = __DIR__ . '/../../.sdk/test/entity/${entity.name}/${entity.Name}TestData.json';
     $entity_data_source = file_get_contents($entity_data_file);
     $entity_data = json_decode($entity_data_source, true);
-
+${fixtureIdentity(entity)}
     $options = [];
     $options["entity"] = $entity_data["existing"];
 
@@ -406,7 +463,7 @@ const generateCreate: OpGen = (ctx, step, index) => {
         $this->assertNotNull($${datavar});
 `)
   if (null != ctx.entity.id) {
-    Content(`        $this->assertNotNull($${datavar}["id"]);
+    Content(`        $this->assertNotNull($${datavar}[${rid(ctx.entity)}]);
 `)
   }
 }
@@ -438,13 +495,16 @@ const generateList: OpGen = (ctx, step, index) => {
   } else {
     Content(`        $${matchvar} = [
 `)
+    // *_ENTID may not give a binding the live route does not take.
+    const unrouted = liveUnrouted(entity, step, flow).map(([name]) => name)
     for (const [key, val] of matchEntries) {
-      Content(`            "${key}" => $setup["idmap"]["${val}"],
+      Content(`            "${key}" => $setup["idmap"]["${val}"]${unrouted.includes(key) ? ' ?? null' : ''},
 `)
     }
     Content(`        ];
 `)
   }
+  Content(liveFill(entity, step, matchvar, flow))
 
   Content(`
         $${listvar}_result = $${entvar}->list($${matchvar}, null);
@@ -464,7 +524,7 @@ const generateList: OpGen = (ctx, step, index) => {
         Content(`
         $found_item = sdk_select(
             Runner::entity_list_to_data($${listvar}_result),
-            ["id" => $${refDataVar}["id"]]);
+            [${rid(entity)} => $${refDataVar}[${rid(entity)}]]);
         $this->assertNotEmpty($found_item);
 `)
       } else if ('ItemNotExists' === validator.apply && hasRefData && hasDataId) {
@@ -472,7 +532,7 @@ const generateList: OpGen = (ctx, step, index) => {
         Content(`
         $not_found_item = sdk_select(
             Runner::entity_list_to_data($${listvar}_result),
-            ["id" => $${refDataVar}["id"]]);
+            [${rid(entity)} => $${refDataVar}[${rid(entity)}]]);
         $this->assertEmpty($not_found_item);
 `)
       }
@@ -505,7 +565,7 @@ const generateUpdate: OpGen = (ctx, step, index) => {
   Content(`        $${datavar}_up = [
 `)
   if (hasEntIdU) {
-    Content(`            "id" => $${srcdatavar}["id"],
+    Content(`            "id" => $${srcdatavar}[${rid(entity)}],
 `)
   }
 
@@ -540,8 +600,7 @@ const generateUpdate: OpGen = (ctx, step, index) => {
         $this->assertNotNull($${resdatavar});
 `)
   if (hasEntIdU) {
-    Content(`        $this->assertEquals($${resdatavar}["id"], $${datavar}_up["id"]);
-`)
+    Content(sameId(liveRepeatsId(entity), `$${resdatavar}[${rid(entity)}] ?? null`, `$${datavar}_up["id"]`))
   }
 
   if (step.s) {
@@ -587,7 +646,7 @@ const generateLoad: OpGen = (ctx, step, index) => {
     Content(`        $${entvar} = $client->${accessor}(null);
 `)
   }
-  if (!hasSrcData && hasEntId) {
+  if (!hasSrcData && (hasEntId || flowLoadReadsRecord(entity, step))) {
     Content(`        $${srcdatavar}_raw = Vs::items(Helpers::to_map(
             Vs::getpath($setup["data"], "existing.${entity.name}")));
         $${srcdatavar} = null;
@@ -598,17 +657,16 @@ const generateLoad: OpGen = (ctx, step, index) => {
   }
   if (hasEntId) {
     Content(`        $${matchvar} = [
-            "id" => $${srcdatavar}["id"],
+            "id" => $${srcdatavar}[${rid(entity)}],
         ];
-${parentMatch(step, matchvar)}        $${datavar}_loaded = $${entvar}->load($${matchvar}, null);
+${loadMatch(entity, step, matchvar, srcdatavar)}${liveFill(entity, step, matchvar, flow)}        $${datavar}_loaded = $${entvar}->load($${matchvar}, null);
         $${datavar}_load_result = Helpers::to_map(is_object($${datavar}_loaded) && method_exists($${datavar}_loaded, 'data_get') ? $${datavar}_loaded->data_get() : $${datavar}_loaded);
         $this->assertNotNull($${datavar}_load_result);
-        $this->assertEquals($${datavar}_load_result["id"], $${srcdatavar}["id"]);
-`)
+${sameId(liveLoadComparesId(entity, flow), `$${datavar}_load_result[${rid(entity)}] ?? null`, `$${srcdatavar}[${rid(entity)}]`)}`)
   }
   else {
     Content(`        $${matchvar} = [];
-${parentMatch(step, matchvar)}        $${datavar}_loaded = $${entvar}->load($${matchvar}, null);
+${loadMatch(entity, step, matchvar, srcdatavar)}${liveFill(entity, step, matchvar, flow)}        $${datavar}_loaded = $${entvar}->load($${matchvar}, null);
         $this->assertNotNull($${datavar}_loaded);
 `)
   }
@@ -637,7 +695,7 @@ const generateRemove: OpGen = (ctx, step, index) => {
   }
   // Always match the prior-created entity by id to avoid mock-order flakes.
   Content(`        $${matchvar} = [
-            "id" => $${srcdatavar}["id"],
+            "id" => $${srcdatavar}[${rid(entity)}],
         ];
 ${parentMatch(step, matchvar)}        $${entvar}->remove($${matchvar}, null);
 `)
@@ -645,15 +703,101 @@ ${parentMatch(step, matchvar)}        $${entvar}->remove($${matchvar}, null);
 
 
 
+// The record field the entity's identity is read from, as a PHP string.
+function rid(entity: any): string {
+  return JSON.stringify(entityRecordIdField(entity))
+}
+
+
+const LIVE_PACE = `        if (!empty($setup["live"])) {
+            Runner::live_pace();
+        }
+`
+
+
+// A result's identity matches the one asked for, live only as the live
+// entity harness compares it.
+function sameId(compares: boolean, result: string, expected: string): string {
+  const check = `$this->assertTrue(Runner::live_same_id(${result}, ${expected}));`
+  return !compares ? `        if (empty($setup["live"])) {
+            ${check}
+        }
+` : `        ${check}
+`
+}
+
+
+// The fixture keeps each record's key in `id`; an entity keeping its identity
+// in another field reads the key from there too.
+function fixtureIdentity(entity: any): string {
+  const field = entityRecordIdField(entity)
+  const name = JSON.stringify(entity.name)
+  return 'id' === field ? '' : `
+    foreach (($entity_data["existing"][${name}] ?? []) as $rec_key => $rec) {
+        if (is_array($rec) && isset($rec["id"])) {
+            $entity_data["existing"][${name}][$rec_key][${JSON.stringify(field)}] = $rec["id"];
+        }
+    }
+`
+}
+
+
 // A child's route names its parents, and an entity no earlier step has
 // filled knows none of them, so the call itself gives each parent id. A live
 // ENTID may key a parent by its field name, the fixture by its own name.
+// A live step sends each example its route requires and the step leaves unbound.
+function liveFill(entity: any, step: any, matchvar: string, flow: any): string {
+  const fills = liveStepExamples(entity, step, flow)
+  const omit = liveUnrouted(entity, step, flow)
+  return 0 === fills.length + omit.length ? '' : `        if (!empty($setup["live"])) {
+${fills.map(([k, ex]) => `            $${matchvar}[${JSON.stringify(k)}] = ${formatPhpValue(ex)};\n`).join('')}${liveOmit(omit, matchvar, '            ')}        }
+`
+}
+
+
+// A binding the live route does not take is sent only as *_ENTID gives it.
+function liveOmit(omit: [string, string][], matchvar: string, indent: string): string {
+  return omit.map(([name, key]) =>
+    `${indent}if (!empty($setup["synthetic_only"]) || null === ($setup["idmap"][${JSON.stringify(key)}] ?? null)) {
+${indent}    unset($${matchvar}[${JSON.stringify(name)}]);
+${indent}}
+`).join('')
+}
+
+
 function parentMatch(step: any, matchvar: string): string {
   return Object.entries(step.m || {})
     .filter(([k]: any) => k !== 'id' && !k.endsWith('$'))
     .map(([key, val]: any) => `        $${matchvar}["${key}"] = $setup["idmap"]["${key}"] ?? $setup["idmap"]["${val}"] ?? null;
 `).join('')
 }
+
+// A load of a known record fills its route from that record, and from the
+// step's binding where the record holds no scalar for it. A record only the
+// fixture holds replaces the step's binding offline.
+function loadMatch(entity: any, step: any, matchvar: string, srcdatavar: string): string {
+  const route = flowLoadRoute(entity, step)
+  if (null == route) {
+    return parentMatch(step, matchvar)
+  }
+  if (route.offline) {
+    const own = route.args.filter((arg) => null != arg.field)
+    return parentMatch(step, matchvar) + (0 === own.length ? '' : `        if (empty($setup["live"])) {
+${own.map((arg) => `            if (is_scalar($${srcdatavar}["${arg.field}"] ?? null)) {
+                $${matchvar}["${arg.name}"] = $${srcdatavar}["${arg.field}"];
+            }
+`).join('')}        }
+`)
+  }
+  return route.args.map((arg) => {
+    const bound = arg.idmap.map((key) => `$setup["idmap"]["${key}"]`).join(' ?? ') + ' ?? null'
+    const own = `$${srcdatavar}["${arg.field}"]`
+    return `        $${matchvar}["${arg.name}"] = ${null == arg.field ? bound :
+      `is_scalar(${own} ?? null) ? ${own} : (${bound})`};
+`
+  }).join('')
+}
+
 
 const GENERATE_OP: Record<string, OpGen> = {
   create: generateCreate,

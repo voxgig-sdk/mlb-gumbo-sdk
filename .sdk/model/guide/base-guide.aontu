@@ -21,7 +21,8 @@ guide: {
   entity: player: {
     path: "/people/{playerId}": {
       rename: param: "playerId": *"player_id"
-      op: load: method: *GET
+      op: list: method: *GET
+      op: list: transform: res: *("`body.people`")|top
     }
   }
 
@@ -34,8 +35,9 @@ guide: {
 
   entity: team: {
     path: "/teams/{teamId}": {
-      rename: param: "teamId": *"id"
-      op: load: method: *GET
+      rename: param: "teamId": *"team_id"
+      op: list: method: *GET
+      op: list: transform: res: *("`body.teams`")|top
     }
     path: "/teams/{teamId}/roster": {
       action: "roster": {}

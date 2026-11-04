@@ -25,7 +25,7 @@ class PlayerEntityTest < Minitest::Test
     end
     client = MlbGumboSDK.test(nil, { "feature" => { "validate" => { "active" => true } } })
     err = assert_raises(StandardError) do
-      client.Player(nil).load({ "player_id" => "x" }, nil)
+      client.Player(nil).list({ "player_id" => "x" }, nil)
     end
     assert_equal "validate_failed", err.code
   end
@@ -34,11 +34,18 @@ class PlayerEntityTest < Minitest::Test
     setup = player_basic_setup(nil)
     # Per-op sdk-test-control.json skip.
     _live = setup[:live] || false
-    [].each do |_op|
+    ["list"].each do |_op|
       _should_skip, _reason = Runner.is_control_skipped("entityOp", "player." + _op, _live ? "live" : "unit")
       if _should_skip
         skip(_reason || "skipped via sdk-test-control.json")
         return
+      end
+    end
+    if setup[:live]
+      { "player01" => 660271 }.each do |_live_key, _live_ex|
+        if setup[:synthetic_only] || setup[:idmap][_live_key].nil?
+          setup[:idmap][_live_key] = _live_ex
+        end
       end
     end
     client = setup[:client]
@@ -50,6 +57,16 @@ class PlayerEntityTest < Minitest::Test
     if player_ref01_data_raw.length > 0
       player_ref01_data = Helpers.to_map(player_ref01_data_raw[0][1])
     end
+
+    Runner.live_pace if setup[:live]
+    # LIST
+    player_ref01_ent = client.Player(nil)
+    player_ref01_match = {
+      "player_id" => setup[:idmap]["player01"],
+    }
+
+    player_ref01_list_result = player_ref01_ent.list(player_ref01_match, nil)
+    assert player_ref01_list_result.is_a?(Array)
 
   end
 end

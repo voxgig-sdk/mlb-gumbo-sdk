@@ -47,19 +47,19 @@ client := sdk.TestSDK(testopts, sdkopts)
 
 ### Instance Methods
 
-#### `GameData(data map[string]any) MlbGumboEntity`
+#### `GameData(data map[string]any) MlbGumboEntityBase`
 
 Create a new `GameData` entity instance. Pass `nil` for no initial data.
 
-#### `Player(data map[string]any) MlbGumboEntity`
+#### `Player(data map[string]any) MlbGumboEntityBase`
 
 Create a new `Player` entity instance. Pass `nil` for no initial data.
 
-#### `Schedule(data map[string]any) MlbGumboEntity`
+#### `Schedule(data map[string]any) MlbGumboEntityBase`
 
 Create a new `Schedule` entity instance. Pass `nil` for no initial data.
 
-#### `Team(data map[string]any) MlbGumboEntity`
+#### `Team(data map[string]any) MlbGumboEntityBase`
 
 Create a new `Team` entity instance. Pass `nil` for no initial data.
 
@@ -185,20 +185,33 @@ fmt.Println(player.GetName()) // "player"
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `people` | `[]any` | No |  |
+| `batSide` | `map[string]any` | No |  |
+| `birthDate` | `string` | No |  |
+| `currentAge` | `int` | No |  |
+| `firstName` | `string` | No |  |
+| `fullName` | `string` | No |  |
+| `height` | `string` | No |  |
+| `id` | `int` | No |  |
+| `lastName` | `string` | No |  |
+| `pitchHand` | `map[string]any` | No |  |
+| `primaryNumber` | `string` | No |  |
+| `primaryPosition` | `map[string]any` | No |  |
+| `weight` | `int` | No |  |
 
 ### Operations
 
-#### `Load(reqmatch, ctrl map[string]any) (any, error)`
+#### `List(reqmatch, ctrl map[string]any) (any, error)`
 
-Load a single entity matching the given criteria. Returns the entity, whose record `Data()` reads; `err` is non-nil on failure.
+List entities matching the given criteria. Returns a `[]any` of entities, one per record; `err` is non-nil on failure.
 
 ```go
-result, err := client.Player(nil).Load(map[string]any{"player_id": 1}, nil)
+results, err := client.Player(nil).List(map[string]any{"player_id": 1}, nil)
 if err != nil {
     panic(err)
 }
-fmt.Println(result.(sdk.Entity).Data())
+for _, item := range results.([]any) {
+    fmt.Println(item.(sdk.Entity).Data())
+}
 ```
 
 ### Common Methods
@@ -306,8 +319,13 @@ fmt.Println(team.GetName()) // "team"
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `id` | `string` | No |  |
-| `teams` | `[]any` | No |  |
+| `abbreviation` | `string` | No |  |
+| `division` | `map[string]any` | No |  |
+| `id` | `int` | No |  |
+| `league` | `map[string]any` | No |  |
+| `locationName` | `string` | No |  |
+| `name` | `string` | No |  |
+| `teamName` | `string` | No |  |
 
 ### Operations
 
@@ -316,25 +334,13 @@ fmt.Println(team.GetName()) // "team"
 List entities matching the given criteria. Returns a `[]any` of entities, one per record; `err` is non-nil on failure.
 
 ```go
-results, err := client.Team(nil).List(map[string]any{"id": 1}, nil)
+results, err := client.Team(nil).List(map[string]any{"team_id": 1}, nil)
 if err != nil {
     panic(err)
 }
 for _, item := range results.([]any) {
     fmt.Println(item.(sdk.Entity).Data())
 }
-```
-
-#### `Load(reqmatch, ctrl map[string]any) (any, error)`
-
-Load a single entity matching the given criteria. Returns the entity, whose record `Data()` reads; `err` is non-nil on failure.
-
-```go
-result, err := client.Team(nil).Load(map[string]any{"id": 1}, nil)
-if err != nil {
-    panic(err)
-}
-fmt.Println(result.(sdk.Entity).Data())
 ```
 
 ### Common Methods

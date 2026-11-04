@@ -63,9 +63,9 @@ func TestGameDataEntity(t *testing.T) {
 			}
 		}
 		if setup.live {
-			for _, _liveKey := range []string{"game_pk01"} {
+			for _liveKey, _liveEx := range map[string]any{"game_pk01": "716463"} {
 				if setup.syntheticOnly || setup.idmap[_liveKey] == nil {
-					liveMiss(t, game_dataEntityLiveStrict, "Live entity test blocked: needs %s via MLB_GUMBO_TEST_GAME_DATA_ENTID", _liveKey)
+					setup.idmap[_liveKey] = _liveEx
 				}
 			}
 		}
@@ -82,6 +82,9 @@ func TestGameDataEntity(t *testing.T) {
 		// happen not to consume the bootstrap data (e.g. list-only flows).
 		_ = gameDataRef01Data
 
+		if setup.live {
+			livePace()
+		}
 		// LIST
 		gameDataRef01Ent := client.GameData(nil)
 		gameDataRef01Match := map[string]any{

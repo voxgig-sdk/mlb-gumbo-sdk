@@ -162,16 +162,29 @@ player = client.Player()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `people` | `list` | No |  |
+| `batSide` | `dict` | No |  |
+| `birthDate` | `str` | No |  |
+| `currentAge` | `int` | No |  |
+| `firstName` | `str` | No |  |
+| `fullName` | `str` | No |  |
+| `height` | `str` | No |  |
+| `id` | `int` | No |  |
+| `lastName` | `str` | No |  |
+| `pitchHand` | `dict` | No |  |
+| `primaryNumber` | `str` | No |  |
+| `primaryPosition` | `dict` | No |  |
+| `weight` | `int` | No |  |
 
 ### Operations
 
-#### `load(reqmatch, ctrl=None) -> PlayerEntity`
+#### `list(reqmatch=None, ctrl=None) -> list[PlayerEntity]`
 
-Load a single entity matching the given criteria. Returns the entity, whose record `data_get()` reads, and raises on error.
+List entities matching the given criteria. The match is optional — call `list()` with no argument to list all records. Returns a list of entities, one per record, and raises on error.
 
 ```python
-result = client.Player().load({"player_id": 1})
+results = client.Player().list({"player_id": 1})
+for player in results:
+    print(player.data_get())
 ```
 
 ### Common Methods
@@ -267,8 +280,13 @@ team = client.Team()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `id` | `str` | No |  |
-| `teams` | `list` | No |  |
+| `abbreviation` | `str` | No |  |
+| `division` | `dict` | No |  |
+| `id` | `int` | No |  |
+| `league` | `dict` | No |  |
+| `locationName` | `str` | No |  |
+| `name` | `str` | No |  |
+| `teamName` | `str` | No |  |
 
 ### Operations
 
@@ -277,17 +295,9 @@ team = client.Team()
 List entities matching the given criteria. The match is optional — call `list()` with no argument to list all records. Returns a list of entities, one per record, and raises on error.
 
 ```python
-results = client.Team().list({"id": 1})
+results = client.Team().list({"team_id": 1})
 for team in results:
     print(team.data_get())
-```
-
-#### `load(reqmatch, ctrl=None) -> TeamEntity`
-
-Load a single entity matching the given criteria. Returns the entity, whose record `data_get()` reads, and raises on error.
-
-```python
-result = client.Team().load({"id": 1})
 ```
 
 ### Common Methods

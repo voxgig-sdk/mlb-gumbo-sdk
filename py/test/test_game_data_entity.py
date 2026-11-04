@@ -52,9 +52,9 @@ class TestGameDataEntity:
                 pytest.skip(_reason or "skipped via sdk-test-control.json")
                 return
         if setup["live"]:
-            for _live_key in ["game_pk01"]:
+            for _live_key, _live_ex in {"game_pk01": "716463"}.items():
                 if setup.get("synthetic_only") or setup["idmap"].get(_live_key) is None:
-                    runner.live_miss(LIVE_STRICT, f"Live entity test blocked: needs {_live_key} via MLB_GUMBO_TEST_GAME_DATA_ENTID")
+                    setup["idmap"][_live_key] = _live_ex
         client = setup["client"]
 
         # Bootstrap entity data from existing test data.
@@ -64,6 +64,8 @@ class TestGameDataEntity:
         if len(game_data_ref01_data_raw) > 0:
             game_data_ref01_data = helpers.to_map(game_data_ref01_data_raw[0][1])
 
+        if setup["live"]:
+            runner.live_pace()
         # LIST
         game_data_ref01_ent = client.GameData(None)
         game_data_ref01_match = {

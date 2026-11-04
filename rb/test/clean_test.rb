@@ -185,7 +185,7 @@ class MlbGumboCleanTest < Minitest::Test
       [nil, RuntimeError.new("socket hang up (URL was: \"#{url}\")")]
     }],
     # The SDK's own error, its code quoting a registered value.
-    ["coded", ->(_url, _fd) { [nil, MlbGumboError.new("denied_#{CANARY['apikey']}", "coded failure")] }],
+    ["coded", ->(_url, _fd) { [nil, MlbGumboError.new("coded failure", code: "denied_#{CANARY['apikey']}")] }],
     ["notjson", ->(_url, _fd) {
       [{
         "status" => 200, "statusText" => "OK", "headers" => {},

@@ -1,6 +1,7 @@
 # Schedule direct test
 
 import json
+import os
 import pytest
 
 from mlbgumbo_sdk.utility.voxgig_struct import voxgig_struct as vs
@@ -32,14 +33,18 @@ class TestScheduleDirect:
         if _skip:
             pytest.skip(_reason or "skipped via sdk-test-control.json")
             return
+        if setup["live"]:
+            runner.live_pace()
         client = setup["client"]
 
         params = {}
+        query = {}
 
         result = client.direct({
             "path": "schedule",
             "method": "GET",
             "params": params,
+            "query": query,
         })
         if setup["live"]:
             if not _live_ok(result):

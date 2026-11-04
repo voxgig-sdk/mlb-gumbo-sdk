@@ -53,9 +53,9 @@ class GameDataEntityTest extends TestCase
             }
         }
         if (!empty($setup["live"])) {
-            foreach (["game_pk01"] as $_liveKey) {
+            foreach (["game_pk01" => '716463'] as $_liveKey => $_liveEx) {
                 if (!empty($setup["synthetic_only"]) || null === ($setup["idmap"][$_liveKey] ?? null)) {
-                    Runner::live_miss(self::LIVE_STRICT, "Live entity test blocked: needs " . $_liveKey . " via MLB_GUMBO_TEST_GAME_DATA_ENTID");
+                    $setup["idmap"][$_liveKey] = $_liveEx;
                 }
             }
         }
@@ -69,6 +69,9 @@ class GameDataEntityTest extends TestCase
             $game_data_ref01_data = Helpers::to_map($game_data_ref01_data_raw[0][1]);
         }
 
+        if (!empty($setup["live"])) {
+            Runner::live_pace();
+        }
         // LIST
         $game_data_ref01_ent = $client->GameData(null);
         $game_data_ref01_match = [

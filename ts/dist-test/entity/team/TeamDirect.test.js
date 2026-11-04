@@ -21,47 +21,6 @@ const utility_1 = require("../../utility");
         (0, node_assert_1.default)('function' === typeof sdk.direct);
         (0, node_assert_1.default)('function' === typeof sdk.prepare);
     });
-    (0, node_test_1.test)('direct-load-team', async (t) => {
-        if (liveScenariosActive()) {
-            t.skip('Covered by live operation scenarios');
-            return;
-        }
-        const setup = directSetup({ id: 'direct01' });
-        if ((0, utility_1.maybeSkipControl)(t, 'direct', 'direct-load-team', setup.live))
-            return;
-        const { client, calls } = setup;
-        const params = {};
-        const query = {};
-        if (setup.live) {
-            params.id = 119;
-        }
-        else {
-            params.id = 'direct01';
-        }
-        const result = await client.direct({
-            path: 'teams/{id}',
-            method: 'GET',
-            params,
-            query,
-        });
-        if (setup.live) {
-            if (!result.ok || result.status < 200 || result.status >= 300) {
-                return void (0, utility_1.liveMiss)(t, LIVE_STRICT, 'Live load failed: ' + (0, utility_1.describeLive)(result));
-            }
-            if (!(null != result.data)) {
-                return void (0, utility_1.liveMiss)(t, LIVE_STRICT, 'Live load returned no data: ' + (0, utility_1.describeLive)(result));
-            }
-        }
-        else {
-            (0, node_assert_1.default)(result.ok === true);
-            (0, node_assert_1.default)(result.status === 200);
-            (0, node_assert_1.default)(null != result.data);
-            (0, node_assert_1.default)(result.data.id === 'direct01');
-            (0, node_assert_1.default)(calls.length === 1);
-            (0, node_assert_1.default)(calls[0].init.method === 'GET');
-            (0, node_assert_1.default)(calls[0].url.includes('direct01'));
-        }
-    });
     (0, node_test_1.test)('direct-list-team', async (t) => {
         if (liveScenariosActive()) {
             t.skip('Covered by live operation scenarios');
@@ -131,6 +90,8 @@ function directSetup(mockres) {
         if ('string' === typeof idmap && idmap.startsWith('{')) {
             idmap = JSON.parse(idmap);
         }
+        // A path parameter's example stands in for an id *_ENTID does not give.
+        idmap = Object.assign({ team01: 119 }, 'object' === typeof idmap ? idmap : {});
         return { client, calls, live, idmap, transport };
     }
     const mockFetch = async (url, init) => {

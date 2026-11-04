@@ -29,7 +29,7 @@ describe("TeamEntity", function()
       return
     end
     local client = sdk.test(nil, { feature = { validate = { active = true } } })
-    local _, err = client:Team(nil):list({ ["id"] = "x" }, nil)
+    local _, err = client:Team(nil):list({ ["team_id"] = "x" }, nil)
     assert.are.equal("validate_failed", type(err) == "table" and err.code or nil)
   end)
 
@@ -37,7 +37,7 @@ describe("TeamEntity", function()
     local setup = team_basic_setup(nil)
     -- Per-op sdk-test-control.json skip.
     local _live = setup.live or false
-    for _, _op in ipairs({"load"}) do
+    for _, _op in ipairs({"list"}) do
       local _should_skip, _reason = runner.is_control_skipped("entityOp", "team." .. _op, _live and "live" or "unit")
       if _should_skip then
         pending(_reason or "skipped via sdk-test-control.json")
@@ -45,7 +45,11 @@ describe("TeamEntity", function()
       end
     end
     if setup.live then
-      runner.live_miss(pending, LIVE_STRICT, "Live entity test blocked: " .. "the flow loads a team record it has no list to find")
+      for _live_key, _live_ex in pairs({["team01"] = 119}) do
+        if setup.synthetic_only or setup.idmap[_live_key] == nil then
+          setup.idmap[_live_key] = _live_ex
+        end
+      end
     end
     local client = setup.client
 
@@ -57,16 +61,18 @@ describe("TeamEntity", function()
       team_ref01_data = helpers.to_map(team_ref01_data_raw[1][2])
     end
 
-    -- LOAD
+    if setup.live then
+      runner.live_pace()
+    end
+    -- LIST
     local team_ref01_ent = client:Team(nil)
-    local team_ref01_match_dt0 = {
-      id = team_ref01_data["id"],
+    local team_ref01_match = {
+      ["team_id"] = setup.idmap["team01"],
     }
-    local team_ref01_data_dt0_loaded, err = team_ref01_ent:load(team_ref01_match_dt0, nil)
+
+    local team_ref01_list_result, err = team_ref01_ent:list(team_ref01_match, nil)
     assert.is_nil(err)
-    local team_ref01_data_dt0_load_result = helpers.to_map(type(team_ref01_data_dt0_loaded) == 'table' and team_ref01_data_dt0_loaded.data_get and team_ref01_data_dt0_loaded:data_get() or team_ref01_data_dt0_loaded)
-    assert.is_not_nil(team_ref01_data_dt0_load_result)
-    assert.are.equal(team_ref01_data_dt0_load_result["id"], team_ref01_data["id"])
+    assert.is_table(team_ref01_list_result)
 
   end)
 end)

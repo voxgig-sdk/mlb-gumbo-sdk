@@ -138,23 +138,34 @@ function isRunnable(code) {
 }
 // Wrap ONE block as a self-contained temp module: the block goes in its own
 // scope inside an async function with a shared seeded `client`.
+const SNIPPET_HEAD = [
+    'import { ' + SDK_NAME + ' } from ' + JSON.stringify(SDK_ROOT),
+    '',
+    'async function __ex() {',
+    // Shared client for snippets that reference `client` without constructing
+    // one (e.g. the direct() example).
+    '  const client = ' + SDK_NAME + '.test()',
+    '  void client',
+    '  {',
+];
+const SNIPPET_INDENT = '    ';
 function buildSnippetModule(block) {
-    const inner = stripImports(block).split('\n').map((l) => '    ' + l).join('\n');
+    const inner = stripImports(block).split('\n').map((l) => SNIPPET_INDENT + l).join('\n');
     return [
-        'import { ' + SDK_NAME + ' } from ' + JSON.stringify(SDK_ROOT),
-        '',
-        'async function __ex() {',
-        // Shared client for snippets that reference `client` without constructing
-        // one (e.g. the direct() example).
-        '  const client = ' + SDK_NAME + '.test()',
-        '  void client',
-        '  {',
+        ...SNIPPET_HEAD,
         inner,
         '  }',
         '}',
         'void __ex',
         '',
     ].join('\n');
+}
+// A tsc position in a wrapped module, as a line and column of the block itself.
+function blockPosition(line, col) {
+    const at = line - SNIPPET_HEAD.length;
+    return 0 < at
+        ? 'line ' + at + ', col ' + Math.max(1, col - SNIPPET_INDENT.length)
+        : 'wrapper line ' + line + ', col ' + col;
 }
 // Compile a batch of blocks in ONE tsc pass — one temp file per block, so
 // each is an isolated program entry — and return which snippet indices
@@ -195,22 +206,34 @@ function compileBatch(indices, blocks, key) {
         ], { cwd: tsDir, encoding: 'utf8' });
         const raw = ((res.stdout || '') + (res.stderr || '')).trim();
         const errored = new Set();
+        // Each snippet's own diagnostics, so a report quotes only those of the
+        // blocks it names; tsc's indented follow-on lines stay with theirs.
+        const diagnostics = new Map();
+        let current = null;
         let unattributed = false;
         if (0 !== res.status) {
             for (const line of raw.split('\n')) {
-                const m = /_snippet(\d+)\.gen\.cts\(\d+,\d+\):\s*error/.exec(line);
+                const m = /_snippet(\d+)\.gen\.cts\((\d+),(\d+)\):\s*(error[\s\S]*)$/.exec(line);
                 if (null == m) {
                     // A genuine error diagnostic not attributable to a snippet file
                     // (e.g. inside the SDK itself) is an anomaly.
                     if (/:\s*error\s+TS\d+/.test(line)) {
                         unattributed = true;
+                        current = null;
+                    }
+                    else if (null != current && /^\s/.test(line)) {
+                        current.push(line);
                     }
                     continue;
                 }
-                errored.add(parseInt(m[1], 10));
+                const i = parseInt(m[1], 10);
+                errored.add(i);
+                current = diagnostics.get(i) || [];
+                diagnostics.set(i, current);
+                current.push(blockPosition(parseInt(m[2], 10), parseInt(m[3], 10)) + ': ' + m[4]);
             }
         }
-        return { errored, raw, unattributed };
+        return { errored, diagnostics, raw, unattributed };
     }
     finally {
         Fs.rmSync(dir, { recursive: true, force: true });
@@ -225,13 +248,16 @@ function compileBatch(indices, blocks, key) {
 // verbatim by the caller.
 function typeCheckBlocks(blocks, key) {
     const failing = new Set();
+    const diagnostics = new Map();
     const raws = [];
     let globalError = false;
     let remaining = blocks.map((_b, i) => i);
     // Guard: at most one pass per block plus a final clean pass.
     for (let pass = 0; pass <= blocks.length && 0 < remaining.length; pass++) {
-        const { errored, raw, unattributed } = compileBatch(remaining, blocks, key);
+        const batch = compileBatch(remaining, blocks, key);
+        const { errored, raw, unattributed } = batch;
         raws.push(raw);
+        batch.diagnostics.forEach((lines, i) => diagnostics.set(i, lines));
         if (unattributed) {
             globalError = true;
         }
@@ -243,7 +269,7 @@ function typeCheckBlocks(blocks, key) {
         }
         remaining = remaining.filter((i) => !errored.has(i));
     }
-    return { failing, raw: raws.filter(Boolean).join('\n'), globalError };
+    return { failing, diagnostics, raw: raws.filter(Boolean).join('\n'), globalError };
 }
 // Turn a documented snippet into an offline-runnable one: strip imports,
 // rewrite real client construction (`new <Sdk>SDK(...)` and any
@@ -330,7 +356,7 @@ function indentBlock(code) {
             const md = Fs.readFileSync(doc.path, 'utf8');
             const blocks = extractTsBlocks(md);
             (0, node_assert_1.default)(blocks.length > 0, 'No TypeScript code blocks found in ' + doc.label);
-            const { failing, raw, globalError } = typeCheckBlocks(blocks, doc.key);
+            const { failing, diagnostics, raw, globalError } = typeCheckBlocks(blocks, doc.key);
             (0, node_assert_1.default)(!globalError, 'tsc reported an error outside any snippet in ' + doc.label +
                 ' — the harness could not attribute it:\n\n' + raw + '\n');
             let executed = 0;
@@ -345,7 +371,8 @@ function indentBlock(code) {
                     illustration++;
                 }
                 else if (!typechecks && !shape) {
-                    unrecognized.push('  snippet ' + i + ':\n' + indentBlock(b));
+                    unrecognized.push('  snippet ' + i + ':\n' + indentBlock(b) + '\n\n  tsc:\n' +
+                        indentBlock((diagnostics.get(i) || []).join('\n')));
                 }
                 else if (typechecks && runnable) {
                     executed++;
@@ -362,7 +389,7 @@ function indentBlock(code) {
             node_assert_1.default.strictEqual(unrecognized.length, 0, 'These ' + doc.label + ' ```ts blocks neither type-check nor match the ' +
                 'illustration allowlist. Fix the snippet (or the SDK), or — if it is ' +
                 'genuinely illustrative — reshape it to the allowlist:\n\n' +
-                unrecognized.join('\n\n') + '\n\ntsc output:\n' + raw + '\n');
+                unrecognized.join('\n\n') + '\n');
             node_assert_1.default.strictEqual(blocks.length, executed + typecheckedOnly + illustration, 'completeness partition mismatch for ' + doc.label + ': ' + blocks.length +
                 ' total != ' + executed + ' executed + ' + typecheckedOnly +
                 ' typechecked + ' + illustration + ' illustration');

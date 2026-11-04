@@ -192,6 +192,20 @@ func (sdk *MlbGumboSDK) Prepare(fetchargs map[string]any) (map[string]any, error
 		}
 	}
 
+	// A raw request has no point to declare its response type, so it asks
+	// for the JSON it reads: an API that negotiates on Accept otherwise
+	// answers in its own default format. A caller's own accept wins.
+	hasAccept := false
+	for k := range ctx.Spec.Headers {
+		if strings.ToLower(k) == "accept" {
+			hasAccept = true
+			break
+		}
+	}
+	if !hasAccept {
+		ctx.Spec.Headers["accept"] = "application/json"
+	}
+
 	_, err := utility.PrepareAuth(ctx)
 	if err != nil {
 		return nil, err
@@ -375,7 +389,7 @@ func (sdk *MlbGumboSDK) Graphql(
 // GameData returns a GameData entity bound to this client.
 // Idiomatic usage: client.GameData(nil).List(nil, nil) or
 // client.GameData(nil).Load(map[string]any{"id": ...}, nil).
-func (sdk *MlbGumboSDK) GameData(data map[string]any) MlbGumboEntity {
+func (sdk *MlbGumboSDK) GameData(data map[string]any) MlbGumboEntityBase {
 	return NewGameDataEntityFunc(sdk, data)
 }
 
@@ -383,7 +397,7 @@ func (sdk *MlbGumboSDK) GameData(data map[string]any) MlbGumboEntity {
 // Player returns a Player entity bound to this client.
 // Idiomatic usage: client.Player(nil).List(nil, nil) or
 // client.Player(nil).Load(map[string]any{"id": ...}, nil).
-func (sdk *MlbGumboSDK) Player(data map[string]any) MlbGumboEntity {
+func (sdk *MlbGumboSDK) Player(data map[string]any) MlbGumboEntityBase {
 	return NewPlayerEntityFunc(sdk, data)
 }
 
@@ -391,7 +405,7 @@ func (sdk *MlbGumboSDK) Player(data map[string]any) MlbGumboEntity {
 // Schedule returns a Schedule entity bound to this client.
 // Idiomatic usage: client.Schedule(nil).List(nil, nil) or
 // client.Schedule(nil).Load(map[string]any{"id": ...}, nil).
-func (sdk *MlbGumboSDK) Schedule(data map[string]any) MlbGumboEntity {
+func (sdk *MlbGumboSDK) Schedule(data map[string]any) MlbGumboEntityBase {
 	return NewScheduleEntityFunc(sdk, data)
 }
 
@@ -399,7 +413,7 @@ func (sdk *MlbGumboSDK) Schedule(data map[string]any) MlbGumboEntity {
 // Team returns a Team entity bound to this client.
 // Idiomatic usage: client.Team(nil).List(nil, nil) or
 // client.Team(nil).Load(map[string]any{"id": ...}, nil).
-func (sdk *MlbGumboSDK) Team(data map[string]any) MlbGumboEntity {
+func (sdk *MlbGumboSDK) Team(data map[string]any) MlbGumboEntityBase {
 	return NewTeamEntityFunc(sdk, data)
 }
 

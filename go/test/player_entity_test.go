@@ -38,7 +38,7 @@ func TestPlayerEntity(t *testing.T) {
 		client := sdk.TestSDK(nil, map[string]any{
 			"feature": map[string]any{"validate": map[string]any{"active": true}},
 		})
-		_, err := client.Player(nil).Load(map[string]any{"player_id": "x"}, nil)
+		_, err := client.Player(nil).List(map[string]any{"player_id": "x"}, nil)
 		if sdkerr, ok := err.(*core.MlbGumboError); !ok || "validate_failed" != sdkerr.Code {
 			t.Fatalf("expected validate_failed, got %v", err)
 		}
@@ -53,7 +53,7 @@ func TestPlayerEntity(t *testing.T) {
 		if setup.live {
 			_mode = "live"
 		}
-		for _, _op := range []string{} {
+		for _, _op := range []string{"list"} {
 			if _shouldSkip, _reason := isControlSkipped("entityOp", "player." + _op, _mode); _shouldSkip {
 				if _reason == "" {
 					_reason = "skipped via sdk-test-control.json"
@@ -62,6 +62,16 @@ func TestPlayerEntity(t *testing.T) {
 				return
 			}
 		}
+		if setup.live {
+			for _liveKey, _liveEx := range map[string]any{"player01": float64(660271)} {
+				if setup.syntheticOnly || setup.idmap[_liveKey] == nil {
+					setup.idmap[_liveKey] = _liveEx
+				}
+			}
+		}
+		client := setup.client
+		_ = client
+
 		// Bootstrap entity data from existing test data (no create step in flow).
 		playerRef01DataRaw := vs.Items(core.ToMapAny(vs.GetPath(setup.data, "existing.player")))
 		var playerRef01Data map[string]any
@@ -71,6 +81,24 @@ func TestPlayerEntity(t *testing.T) {
 		// Discard guards against Go's unused-var check when the flow's steps
 		// happen not to consume the bootstrap data (e.g. list-only flows).
 		_ = playerRef01Data
+
+		if setup.live {
+			livePace()
+		}
+		// LIST
+		playerRef01Ent := client.Player(nil)
+		playerRef01Match := map[string]any{
+			"player_id": setup.idmap["player01"],
+		}
+
+		playerRef01ListResult, err := playerRef01Ent.List(playerRef01Match, nil)
+		if err != nil {
+			t.Fatalf("list failed: %v", err)
+		}
+		_, playerRef01ListOk := playerRef01ListResult.([]any)
+		if !playerRef01ListOk {
+			t.Fatalf("expected list result to be an array, got %T", playerRef01ListResult)
+		}
 
 	})
 }

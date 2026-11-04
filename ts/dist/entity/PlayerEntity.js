@@ -12,14 +12,14 @@ class PlayerEntity extends MlbGumboEntityBase_1.MlbGumboEntityBase {
     make() {
         return new PlayerEntity(this._client, this.entopts());
     }
-    async load(reqmatch, ctrl) {
+    async list(reqmatch, ctrl) {
         const utility = this._utility;
         const { makeContext, done, 
         // The registry name is `makeError`; `error` is the local alias.
         makeError: error, featureHook, makePoint, makeRequest, makeResponse, makeResult, makeSpec, } = utility;
         let fres = undefined;
         let ctx = makeContext({
-            opname: 'load',
+            opname: 'list',
             ctrl,
             match: this._match,
             data: this._data,
@@ -74,12 +74,8 @@ class PlayerEntity extends MlbGumboEntityBase_1.MlbGumboEntityBase {
                 if (null != ctx.result.resmatch) {
                     this._match = ctx.result.resmatch;
                 }
-                if (null != ctx.result.resdata) {
-                    this._data = ctx.result.resdata;
-                }
             }
-            const out = done(ctx);
-            return (ctx.result && ctx.result.ok) ? this : out;
+            return done(ctx);
         }
         catch (err) {
             // What a hook throws here must not escape the cleaning below.
@@ -101,7 +97,7 @@ class PlayerEntity extends MlbGumboEntityBase_1.MlbGumboEntityBase {
             }
             else {
                 // Off-happy-path (throw disabled): typed as any so the method's
-                // Promise<PlayerEntity> return stays clean under strict null checks.
+                // Promise<PlayerEntity[]> return stays clean under strict null checks.
                 return undefined;
             }
         }

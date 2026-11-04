@@ -33,7 +33,10 @@ type Entity interface {
 	Deleted() bool
 }
 
-type MlbGumboEntity interface {
+// MlbGumboEntityBase is the full CRUD contract every generated entity
+// implements. Named `...Base`, as in the other targets, because an entity
+// struct is `<Entity>Entity`.
+type MlbGumboEntityBase interface {
 	Entity
 	Load(reqmatch map[string]any, ctrl map[string]any) (any, error)
 	List(reqmatch map[string]any, ctrl map[string]any) (any, error)
@@ -52,3 +55,8 @@ type StreamItem struct {
 }
 
 type FetcherFunc func(ctx *Context, fullurl string, fetchdef map[string]any) (any, error)
+
+// MlbGumboEntity is the former name of MlbGumboEntityBase.
+//
+// Deprecated: use MlbGumboEntityBase.
+type MlbGumboEntity = MlbGumboEntityBase

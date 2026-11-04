@@ -276,9 +276,20 @@ API path: `/game/{game_pk}/feed/live/timestamps`
 
 | Field | Description |
 | --- | --- |
-| `people` |  |
+| `batSide` |  |
+| `birthDate` |  |
+| `currentAge` |  |
+| `firstName` |  |
+| `fullName` |  |
+| `height` |  |
+| `id` |  |
+| `lastName` |  |
+| `pitchHand` |  |
+| `primaryNumber` |  |
+| `primaryPosition` |  |
+| `weight` |  |
 
-Operations: Load.
+Operations: List.
 
 API path: `/people/{playerId}`
 
@@ -297,10 +308,15 @@ API path: `/schedule`
 
 | Field | Description |
 | --- | --- |
+| `abbreviation` |  |
+| `division` |  |
 | `id` |  |
-| `teams` |  |
+| `league` |  |
+| `locationName` |  |
+| `name` |  |
+| `teamName` |  |
 
-Operations: List, Load.
+Operations: List.
 
 API path: `/teams/{teamId}/roster`
 
@@ -352,19 +368,31 @@ Create an instance: `player = client.Player`
 
 | Method | Description |
 | --- | --- |
-| `load(match)` | Load a single entity by match criteria. |
+| `list(match)` | List entities matching the criteria. |
 
 #### Fields
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `people` | `Array` |  |
+| `batSide` | `Hash` |  |
+| `birthDate` | `String` |  |
+| `currentAge` | `Integer` |  |
+| `firstName` | `String` |  |
+| `fullName` | `String` |  |
+| `height` | `String` |  |
+| `id` | `Integer` |  |
+| `lastName` | `String` |  |
+| `pitchHand` | `Hash` |  |
+| `primaryNumber` | `String` |  |
+| `primaryPosition` | `Hash` |  |
+| `weight` | `Integer` |  |
 
-#### Example: Load
+#### Example: List
 
 ```ruby
-# load returns the ENTITY — call data_get for the Player record (raises on error).
-player = client.Player.load({ "player_id" => 1 })
+# list returns an Array of Player entities, one per record (raises on error).
+players = client.Player.list({ "player_id" => 1 })
+players.each { |item| puts item.data_get }
 ```
 
 
@@ -403,27 +431,24 @@ Create an instance: `team = client.Team`
 | Method | Description |
 | --- | --- |
 | `list(match)` | List entities matching the criteria. |
-| `load(match)` | Load a single entity by match criteria. |
 
 #### Fields
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `id` | `String` |  |
-| `teams` | `Array` |  |
-
-#### Example: Load
-
-```ruby
-# load returns the ENTITY — call data_get for the Team record (raises on error).
-team = client.Team.load({ "id" => 1 })
-```
+| `abbreviation` | `String` |  |
+| `division` | `Hash` |  |
+| `id` | `Integer` |  |
+| `league` | `Hash` |  |
+| `locationName` | `String` |  |
+| `name` | `String` |  |
+| `teamName` | `String` |  |
 
 #### Example: List
 
 ```ruby
 # list returns an Array of Team entities, one per record (raises on error).
-teams = client.Team.list({ "id" => 1 })
+teams = client.Team.list({ "team_id" => 1 })
 teams.each { |item| puts item.data_get }
 ```
 

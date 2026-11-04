@@ -12,11 +12,11 @@ var NewTestFeatureFunc func() Feature
 
 var NewTimeoutFeatureFunc func() Feature
 
-var NewGameDataEntityFunc func(client *MlbGumboSDK, entopts map[string]any) MlbGumboEntity
+var NewGameDataEntityFunc func(client *MlbGumboSDK, entopts map[string]any) MlbGumboEntityBase
 
-var NewPlayerEntityFunc func(client *MlbGumboSDK, entopts map[string]any) MlbGumboEntity
+var NewPlayerEntityFunc func(client *MlbGumboSDK, entopts map[string]any) MlbGumboEntityBase
 
-var NewScheduleEntityFunc func(client *MlbGumboSDK, entopts map[string]any) MlbGumboEntity
+var NewScheduleEntityFunc func(client *MlbGumboSDK, entopts map[string]any) MlbGumboEntityBase
 
-var NewTeamEntityFunc func(client *MlbGumboSDK, entopts map[string]any) MlbGumboEntity
+var NewTeamEntityFunc func(client *MlbGumboSDK, entopts map[string]any) MlbGumboEntityBase
 

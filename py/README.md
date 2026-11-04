@@ -270,9 +270,20 @@ API path: `/game/{game_pk}/feed/live/timestamps`
 
 | Field | Description |
 | --- | --- |
-| `people` |  |
+| `batSide` |  |
+| `birthDate` |  |
+| `currentAge` |  |
+| `firstName` |  |
+| `fullName` |  |
+| `height` |  |
+| `id` |  |
+| `lastName` |  |
+| `pitchHand` |  |
+| `primaryNumber` |  |
+| `primaryPosition` |  |
+| `weight` |  |
 
-Operations: Load.
+Operations: List.
 
 API path: `/people/{playerId}`
 
@@ -291,10 +302,15 @@ API path: `/schedule`
 
 | Field | Description |
 | --- | --- |
+| `abbreviation` |  |
+| `division` |  |
 | `id` |  |
-| `teams` |  |
+| `league` |  |
+| `locationName` |  |
+| `name` |  |
+| `teamName` |  |
 
-Operations: List, Load.
+Operations: List.
 
 API path: `/teams/{teamId}/roster`
 
@@ -343,18 +359,29 @@ Create an instance: `player = client.Player()`
 
 | Method | Description |
 | --- | --- |
-| `load(match)` | Load a single entity by match criteria. |
+| `list()` | List entities, optionally matching the given criteria. |
 
 #### Fields
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `people` | `list` |  |
+| `batSide` | `dict` |  |
+| `birthDate` | `str` |  |
+| `currentAge` | `int` |  |
+| `firstName` | `str` |  |
+| `fullName` | `str` |  |
+| `height` | `str` |  |
+| `id` | `int` |  |
+| `lastName` | `str` |  |
+| `pitchHand` | `dict` |  |
+| `primaryNumber` | `str` |  |
+| `primaryPosition` | `dict` |  |
+| `weight` | `int` |  |
 
-#### Example: Load
+#### Example: List
 
 ```python
-player = client.Player().load({"player_id": 1})
+players = client.Player().list({"player_id": 1})
 ```
 
 
@@ -391,25 +418,23 @@ Create an instance: `team = client.Team()`
 | Method | Description |
 | --- | --- |
 | `list()` | List entities, optionally matching the given criteria. |
-| `load(match)` | Load a single entity by match criteria. |
 
 #### Fields
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `id` | `str` |  |
-| `teams` | `list` |  |
-
-#### Example: Load
-
-```python
-team = client.Team().load({"id": 1})
-```
+| `abbreviation` | `str` |  |
+| `division` | `dict` |  |
+| `id` | `int` |  |
+| `league` | `dict` |  |
+| `locationName` | `str` |  |
+| `name` | `str` |  |
+| `teamName` | `str` |  |
 
 #### Example: List
 
 ```python
-teams = client.Team().list({"id": 1})
+teams = client.Team().list({"team_id": 1})
 ```
 
 ## Features

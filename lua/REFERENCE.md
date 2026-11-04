@@ -164,16 +164,27 @@ local player = client:Player(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `people` | `table` | No |  |
+| `batSide` | `table` | No |  |
+| `birthDate` | `string` | No |  |
+| `currentAge` | `number` | No |  |
+| `firstName` | `string` | No |  |
+| `fullName` | `string` | No |  |
+| `height` | `string` | No |  |
+| `id` | `number` | No |  |
+| `lastName` | `string` | No |  |
+| `pitchHand` | `table` | No |  |
+| `primaryNumber` | `string` | No |  |
+| `primaryPosition` | `table` | No |  |
+| `weight` | `number` | No |  |
 
 ### Operations
 
-#### `load(reqmatch, ctrl) -> any, err`
+#### `list(reqmatch, ctrl) -> any, err`
 
-Load a single entity matching the given criteria. Returns the entity, whose record `data_get()` reads, or `nil` and an error on failure.
+List entities matching the given criteria. Returns an array of entities, one per record, or `nil` and an error on failure.
 
 ```lua
-local result, err = client:Player():load({ player_id = 1 })
+local results, err = client:Player():list({ player_id = 1 })
 ```
 
 ### Common Methods
@@ -269,8 +280,13 @@ local team = client:Team(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `id` | `string` | No |  |
-| `teams` | `table` | No |  |
+| `abbreviation` | `string` | No |  |
+| `division` | `table` | No |  |
+| `id` | `number` | No |  |
+| `league` | `table` | No |  |
+| `locationName` | `string` | No |  |
+| `name` | `string` | No |  |
+| `teamName` | `string` | No |  |
 
 ### Operations
 
@@ -279,15 +295,7 @@ local team = client:Team(nil)
 List entities matching the given criteria. Returns an array of entities, one per record, or `nil` and an error on failure.
 
 ```lua
-local results, err = client:Team():list({ id = 1 })
-```
-
-#### `load(reqmatch, ctrl) -> any, err`
-
-Load a single entity matching the given criteria. Returns the entity, whose record `data_get()` reads, or `nil` and an error on failure.
-
-```lua
-local result, err = client:Team():load({ id = 1 })
+local results, err = client:Team():list({ team_id = 1 })
 ```
 
 ### Common Methods

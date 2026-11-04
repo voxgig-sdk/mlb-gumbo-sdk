@@ -294,43 +294,9 @@ func (e *TeamEntity) streamSteps(ctx *core.Context) error {
 	return nil
 }
 
-
-func (e *TeamEntity) Load(reqmatch map[string]any, ctrl map[string]any) (any, error) {
-	utility := e.utility
-	ctx := utility.MakeContext(map[string]any{
-		"opname":   "load",
-		"ctrl":     ctrl,
-		"match":    e.match,
-		"data":     e.data,
-		"reqmatch": reqmatch,
-	}, e.entctx)
-
-	return e.runOp(ctx, func() {
-		if ctx.Result != nil {
-			if ctx.Result.Resmatch != nil {
-				e.match = ctx.Result.Resmatch
-			}
-			if ctx.Result.Resdata != nil {
-				e.data = map[string]any{}
-				if data := core.ToMapAny(vs.Clone(ctx.Result.Resdata)); data != nil {
-					e.data = data
-				}
-			}
-		}
-	})
+func (e *TeamEntity) Load(_ map[string]any, _ map[string]any) (any, error) {
+	return core.UnsupportedOp("load", e.name)
 }
-
-// LoadTyped is the statically-typed variant of Load: it takes an
-// TeamLoadMatch and returns an Team. It delegates to the untyped
-// Load (identical runtime) and converts at the typed boundary.
-func (e *TeamEntity) LoadTyped(reqmatch TeamLoadMatch, ctrl map[string]any) (Team, error) {
-	res, err := e.Load(asMap(reqmatch), ctrl)
-	if err != nil {
-		return Team{}, err
-	}
-	return typedFrom[Team](res), nil
-}
-
 
 
 

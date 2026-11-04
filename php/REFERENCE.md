@@ -166,16 +166,27 @@ $player = $client->Player();
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `people` | `array` | No |  |
+| `batSide` | `array` | No |  |
+| `birthDate` | `string` | No |  |
+| `currentAge` | `int` | No |  |
+| `firstName` | `string` | No |  |
+| `fullName` | `string` | No |  |
+| `height` | `string` | No |  |
+| `id` | `int` | No |  |
+| `lastName` | `string` | No |  |
+| `pitchHand` | `array` | No |  |
+| `primaryNumber` | `string` | No |  |
+| `primaryPosition` | `array` | No |  |
+| `weight` | `int` | No |  |
 
 ### Operations
 
-#### `load(array $reqmatch, ?array $ctrl = null): mixed`
+#### `list(?array $reqmatch = null, ?array $ctrl = null): mixed`
 
-Load a single entity matching the given criteria. Returns the entity, whose record `data_get()` reads, and throws on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record, and throws on error.
 
 ```php
-$result = $client->Player()->load(["player_id" => 1]);
+$results = $client->Player()->list(["player_id" => 1]);
 ```
 
 ### Common Methods
@@ -271,8 +282,13 @@ $team = $client->Team();
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `id` | `string` | No |  |
-| `teams` | `array` | No |  |
+| `abbreviation` | `string` | No |  |
+| `division` | `array` | No |  |
+| `id` | `int` | No |  |
+| `league` | `array` | No |  |
+| `locationName` | `string` | No |  |
+| `name` | `string` | No |  |
+| `teamName` | `string` | No |  |
 
 ### Operations
 
@@ -281,15 +297,7 @@ $team = $client->Team();
 List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record, and throws on error.
 
 ```php
-$results = $client->Team()->list(["id" => 1]);
-```
-
-#### `load(array $reqmatch, ?array $ctrl = null): mixed`
-
-Load a single entity matching the given criteria. Returns the entity, whose record `data_get()` reads, and throws on error.
-
-```php
-$result = $client->Team()->load(["id" => 1]);
+$results = $client->Team()->list(["team_id" => 1]);
 ```
 
 ### Common Methods

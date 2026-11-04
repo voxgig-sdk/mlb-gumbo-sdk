@@ -2,10 +2,15 @@ package utility
 
 import (
 	"bytes"
+	"compress/flate"
+	"compress/gzip"
+	"compress/zlib"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"sync"
 
@@ -42,21 +47,57 @@ func clientFor(fetchdef map[string]any) *http.Client {
 	}
 
 	// A shallow copy shares the pooled Transport; only CheckRedirect differs.
+	policy := *client
+	policy.CheckRedirect = followRedirect
 	if redirect, ok := fetchdef["redirect"].(string); ok && redirect == "manual" {
-		manual := *client
-		manual.CheckRedirect = func(req *http.Request, via []*http.Request) error {
+		policy.CheckRedirect = func(req *http.Request, via []*http.Request) error {
 			return http.ErrUseLastResponse
 		}
-		client = &manual
 	}
 
-	return client
+	return &policy
+}
+
+const maxRedirects = 5
+
+// Each redirect passes the GET-only guard before it is sent; past
+// maxRedirects hops the last 3xx is the answer.
+func followRedirect(req *http.Request, via []*http.Request) error {
+	if len(via) > maxRedirects {
+		return http.ErrUseLastResponse
+	}
+	return getOnlyRefusal(req.URL.String(), req.Method)
+}
+
+const getOnlyEnv = "VOXGIG_GETONLY_GUARD"
+
+// A GET-only live run refuses any other method before it is sent. The error
+// names the path alone: the query can carry a credential.
+func getOnlyRefusal(fullurl string, method string) error {
+	method = strings.ToUpper(method)
+	if os.Getenv(getOnlyEnv) != "TRUE" || method == "GET" {
+		return nil
+	}
+	rest := fullurl
+	if i := strings.Index(rest, "://"); i >= 0 {
+		rest = rest[i+3:]
+		rest = rest[strings.IndexAny(rest+"/", "/?#"):]
+	}
+	path := rest[:strings.IndexAny(rest+"?", "?#")]
+	if path == "" {
+		path = "/"
+	}
+	return core.NewMlbGumboError("fetch_getonly_block",
+		"[GET-ONLY GUARD] blocked "+method+" "+path, nil)
 }
 
 func defaultHTTPFetch(fullurl string, fetchdef map[string]any) (map[string]any, error) {
 	method, _ := fetchdef["method"].(string)
 	if method == "" {
 		method = "GET"
+	}
+	if err := getOnlyRefusal(fullurl, method); err != nil {
+		return nil, err
 	}
 
 	var bodyReader io.Reader
@@ -88,8 +129,9 @@ func defaultHTTPFetch(fullurl string, fetchdef map[string]any) (map[string]any, 
 		}
 	}
 	// Default User-Agent — Go's net/http defaults to "Go-http-client/1.1"
-	// which some CDNs block. Use a Mozilla-shaped UA unless the caller
-	// already set one, and record it with the headers the request sent.
+	// which some CDNs block. Use the project's agent (main.kit.http.useragent,
+	// browser-shaped by default) unless the caller already set one, and record
+	// it with the headers the request sent.
 	if !hasUA {
 		agent := "Mozilla/5.0 (compatible; MlbGumboSDK/1.0)"
 		req.Header.Set("User-Agent", agent)
@@ -105,6 +147,10 @@ func defaultHTTPFetch(fullurl string, fetchdef map[string]any) (map[string]any, 
 	defer resp.Body.Close()
 
 	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	bodyBytes, err = decodeBody(bodyBytes, resp.Header.Get("Content-Encoding"))
 	if err != nil {
 		return nil, err
 	}
@@ -137,6 +183,38 @@ func defaultHTTPFetch(fullurl string, fetchdef map[string]any) (map[string]any, 
 		"body":       string(bodyBytes),
 		"unreadable": unreadable,
 	}, nil
+}
+
+// A body net/http left encoded: it decodes gzip only when it asked for gzip
+// itself, and deflate never. Deflate is zlib-wrapped, or raw
+// as some servers send it.
+func decodeBody(body []byte, encoding string) ([]byte, error) {
+	encoding = strings.ToLower(strings.TrimSpace(encoding))
+	if len(body) == 0 {
+		return body, nil
+	}
+	var reader io.Reader
+	switch encoding {
+	case "gzip", "x-gzip":
+		zr, err := gzip.NewReader(bytes.NewReader(body))
+		if err != nil {
+			return nil, fmt.Errorf("response body is not valid %s data: %w", encoding, err)
+		}
+		reader = zr
+	case "deflate":
+		if zr, err := zlib.NewReader(bytes.NewReader(body)); err == nil {
+			reader = zr
+		} else {
+			reader = flate.NewReader(bytes.NewReader(body))
+		}
+	default:
+		return body, nil
+	}
+	out, err := io.ReadAll(reader)
+	if err != nil {
+		return nil, fmt.Errorf("response body is not valid %s data: %w", encoding, err)
+	}
+	return out, nil
 }
 
 func fetcherUtil(ctx *core.Context, fullurl string, fetchdef map[string]any) (any, error) {

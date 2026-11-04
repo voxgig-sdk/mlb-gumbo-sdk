@@ -37,7 +37,7 @@ class TestPlayerEntity:
         client = MlbGumboSDK.test(
             None, {"feature": {"validate": {"active": True}}})
         with pytest.raises(Exception) as err:
-            client.Player(None).load({"player_id": "x"}, None)
+            client.Player(None).list({"player_id": "x"}, None)
         assert "validate_failed" == getattr(err.value, "code", None)
 
     def test_should_run_basic_flow(self):
@@ -46,11 +46,15 @@ class TestPlayerEntity:
         # multiple ops; skipping any one skips the whole flow (steps depend
         # on each other).
         _live = setup.get("live", False)
-        for _op in []:
+        for _op in ["list"]:
             _skip, _reason = runner.is_control_skipped("entityOp", "player." + _op, "live" if _live else "unit")
             if _skip:
                 pytest.skip(_reason or "skipped via sdk-test-control.json")
                 return
+        if setup["live"]:
+            for _live_key, _live_ex in {"player01": 660271}.items():
+                if setup.get("synthetic_only") or setup["idmap"].get(_live_key) is None:
+                    setup["idmap"][_live_key] = _live_ex
         client = setup["client"]
 
         # Bootstrap entity data from existing test data.
@@ -59,6 +63,17 @@ class TestPlayerEntity:
         player_ref01_data = None
         if len(player_ref01_data_raw) > 0:
             player_ref01_data = helpers.to_map(player_ref01_data_raw[0][1])
+
+        if setup["live"]:
+            runner.live_pace()
+        # LIST
+        player_ref01_ent = client.Player(None)
+        player_ref01_match = {
+            "player_id": setup["idmap"]["player01"],
+        }
+
+        player_ref01_list_result = player_ref01_ent.list(player_ref01_match, None)
+        assert isinstance(player_ref01_list_result, list)
 
 
 

@@ -168,16 +168,28 @@ player = client.Player
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `people` | `Array` | No |  |
+| `batSide` | `Hash` | No |  |
+| `birthDate` | `String` | No |  |
+| `currentAge` | `Integer` | No |  |
+| `firstName` | `String` | No |  |
+| `fullName` | `String` | No |  |
+| `height` | `String` | No |  |
+| `id` | `Integer` | No |  |
+| `lastName` | `String` | No |  |
+| `pitchHand` | `Hash` | No |  |
+| `primaryNumber` | `String` | No |  |
+| `primaryPosition` | `Hash` | No |  |
+| `weight` | `Integer` | No |  |
 
 ### Operations
 
-#### `load(reqmatch, ctrl = nil) -> result`
+#### `list(reqmatch = nil, ctrl = nil) -> Array`
 
-Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
-result = client.Player.load({ "player_id" => 1 })
+results = client.Player.list({ "player_id" => 1 })
+results.each { |item| puts item.data_get }
 ```
 
 ### Common Methods
@@ -274,8 +286,13 @@ team = client.Team
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `id` | `String` | No |  |
-| `teams` | `Array` | No |  |
+| `abbreviation` | `String` | No |  |
+| `division` | `Hash` | No |  |
+| `id` | `Integer` | No |  |
+| `league` | `Hash` | No |  |
+| `locationName` | `String` | No |  |
+| `name` | `String` | No |  |
+| `teamName` | `String` | No |  |
 
 ### Operations
 
@@ -284,16 +301,8 @@ team = client.Team
 List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
 
 ```ruby
-results = client.Team.list({ "id" => 1 })
+results = client.Team.list({ "team_id" => 1 })
 results.each { |item| puts item.data_get }
-```
-
-#### `load(reqmatch, ctrl = nil) -> result`
-
-Load a single entity matching the given criteria. Returns the entity, whose record `data_get` reads, and raises on error.
-
-```ruby
-result = client.Team.load({ "id" => 1 })
 ```
 
 ### Common Methods

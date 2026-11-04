@@ -284,16 +284,76 @@ class MlbGumboConfig
         'player' => [
           'fields' => [
             [
-              'name' => 'people',
-              'title' => 'People',
-              'type' => '`$ARRAY`',
+              'name' => 'batSide',
+              'title' => 'Bat Side',
+              'type' => '`$OBJECT`',
             ],
+            [
+              'name' => 'birthDate',
+              'title' => 'Birth Date',
+              'type' => '`$STRING`',
+              'format' => 'date',
+            ],
+            [
+              'name' => 'currentAge',
+              'title' => 'Current Age',
+              'type' => '`$INTEGER`',
+            ],
+            [
+              'name' => 'firstName',
+              'title' => 'First Name',
+              'type' => '`$STRING`',
+            ],
+            [
+              'name' => 'fullName',
+              'title' => 'Full Name',
+              'type' => '`$STRING`',
+            ],
+            [
+              'name' => 'height',
+              'title' => 'Height',
+              'type' => '`$STRING`',
+            ],
+            [
+              'name' => 'id',
+              'title' => 'Id',
+              'type' => '`$INTEGER`',
+            ],
+            [
+              'name' => 'lastName',
+              'title' => 'Last Name',
+              'type' => '`$STRING`',
+            ],
+            [
+              'name' => 'pitchHand',
+              'title' => 'Pitch Hand',
+              'type' => '`$OBJECT`',
+            ],
+            [
+              'name' => 'primaryNumber',
+              'title' => 'Primary Number',
+              'type' => '`$STRING`',
+            ],
+            [
+              'name' => 'primaryPosition',
+              'title' => 'Primary Position',
+              'type' => '`$OBJECT`',
+            ],
+            [
+              'name' => 'weight',
+              'title' => 'Weight',
+              'type' => '`$INTEGER`',
+            ],
+          ],
+          'id' => [
+            'field' => 'id',
+            'name' => 'id',
           ],
           'name' => 'player',
           'op' => [
-            'load' => [
+            'list' => [
               'input' => 'data',
-              'name' => 'load',
+              'name' => 'list',
               'points' => [
                 [
                   'kind' => 'http',
@@ -318,7 +378,7 @@ class MlbGumboConfig
                   ],
                   'transform' => [
                     'req' => '`reqdata`',
-                    'res' => '`body`',
+                    'res' => '`body.people`',
                   ],
                   'args' => [
                     'params' => [
@@ -457,14 +517,39 @@ class MlbGumboConfig
         'team' => [
           'fields' => [
             [
-              'name' => 'id',
-              'title' => 'Id',
+              'name' => 'abbreviation',
+              'title' => 'Abbreviation',
               'type' => '`$STRING`',
             ],
             [
-              'name' => 'teams',
-              'title' => 'Teams',
-              'type' => '`$ARRAY`',
+              'name' => 'division',
+              'title' => 'Division',
+              'type' => '`$OBJECT`',
+            ],
+            [
+              'name' => 'id',
+              'title' => 'Id',
+              'type' => '`$INTEGER`',
+            ],
+            [
+              'name' => 'league',
+              'title' => 'League',
+              'type' => '`$OBJECT`',
+            ],
+            [
+              'name' => 'locationName',
+              'title' => 'Location Name',
+              'type' => '`$STRING`',
+            ],
+            [
+              'name' => 'name',
+              'title' => 'Name',
+              'type' => '`$STRING`',
+            ],
+            [
+              'name' => 'teamName',
+              'title' => 'Team Name',
+              'type' => '`$STRING`',
             ],
           ],
           'id' => [
@@ -544,12 +629,6 @@ class MlbGumboConfig
                     'media' => 'application/json',
                   ],
                 ],
-              ],
-            ],
-            'load' => [
-              'input' => 'data',
-              'name' => 'load',
-              'points' => [
                 [
                   'kind' => 'http',
                   'method' => 'GET',
@@ -559,26 +638,26 @@ class MlbGumboConfig
                       'lit' => 'teams',
                     ],
                     [
-                      'var' => 'id',
+                      'var' => 'team_id',
                     ],
                   ],
                   'parts' => [
                     'teams',
-                    '{id}',
+                    '{team_id}',
                   ],
                   'rename' => [
                     'param' => [
-                      'teamId' => 'id',
+                      'teamId' => 'team_id',
                     ],
                   ],
                   'transform' => [
                     'req' => '`reqdata`',
-                    'res' => '`body`',
+                    'res' => '`body.teams`',
                   ],
                   'args' => [
                     'params' => [
                       [
-                        'name' => 'id',
+                        'name' => 'team_id',
                         'orig' => 'teamId',
                         'type' => '`$INTEGER`',
                         'kind' => 'param',
@@ -604,7 +683,7 @@ class MlbGumboConfig
                   ],
                   'select' => [
                     'exist' => [
-                      'id',
+                      'team_id',
                     ],
                   ],
                   'response' => [

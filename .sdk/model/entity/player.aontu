@@ -5,18 +5,90 @@ main: kit: entity: player: {
   alias: field: {}
 
   fields: {
-    people: {
-      h: "People"
-      n: "people"
+    batSide: {
+      h: "Bat Side"
+      n: "batSide"
       r: false
-      t: "`$ARRAY`"
+      t: "`$OBJECT`"
     }
+    birthDate: {
+      fo: "date"
+      h: "Birth Date"
+      n: "birthDate"
+      r: false
+      t: "`$STRING`"
+    }
+    currentAge: {
+      h: "Current Age"
+      n: "currentAge"
+      r: false
+      t: "`$INTEGER`"
+    }
+    firstName: {
+      h: "First Name"
+      n: "firstName"
+      r: false
+      t: "`$STRING`"
+    }
+    fullName: {
+      h: "Full Name"
+      n: "fullName"
+      r: false
+      t: "`$STRING`"
+    }
+    height: {
+      h: "Height"
+      n: "height"
+      r: false
+      t: "`$STRING`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: false
+      t: "`$INTEGER`"
+    }
+    lastName: {
+      h: "Last Name"
+      n: "lastName"
+      r: false
+      t: "`$STRING`"
+    }
+    pitchHand: {
+      h: "Pitch Hand"
+      n: "pitchHand"
+      r: false
+      t: "`$OBJECT`"
+    }
+    primaryNumber: {
+      h: "Primary Number"
+      n: "primaryNumber"
+      r: false
+      t: "`$STRING`"
+    }
+    primaryPosition: {
+      h: "Primary Position"
+      n: "primaryPosition"
+      r: false
+      t: "`$OBJECT`"
+    }
+    weight: {
+      h: "Weight"
+      n: "weight"
+      r: false
+      t: "`$INTEGER`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
   }
 
   name: "player"
   op: {
-    load: {
-      name: "load"
+    list: {
+      name: "list"
       points: [
         {
           co: {
@@ -80,7 +152,7 @@ main: kit: entity: player: {
           ]
           t: {
             req: "`reqdata`"
-            res: "`body`"
+            res: "`body.people`"
           }
         }
       ]

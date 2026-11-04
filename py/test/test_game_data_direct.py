@@ -1,6 +1,7 @@
 # GameData direct test
 
 import json
+import os
 import pytest
 
 from mlbgumbo_sdk.utility.voxgig_struct import voxgig_struct as vs
@@ -37,9 +38,12 @@ class TestGameDataDirect:
                 if setup["idmap"].get(_live_key) is None:
                     runner.live_miss(LIVE_STRICT, f"Live test blocked: needs {_live_key} via MLB_GUMBO_TEST_GAME_DATA_ENTID")
 
+        if setup["live"]:
+            runner.live_pace()
         client = setup["client"]
 
         params = {}
+        query = {}
         if setup["live"]:
             params["game_pk"] = setup["idmap"].get("game_pk01")
         else:
@@ -49,6 +53,7 @@ class TestGameDataDirect:
             "path": "game/{game_pk}/feed/live/timestamps",
             "method": "GET",
             "params": params,
+            "query": query,
         })
         if setup["live"]:
             if not _live_ok(result):
@@ -68,6 +73,8 @@ class TestGameDataDirect:
         if _skip:
             pytest.skip(_reason or "skipped via sdk-test-control.json")
             return
+        if setup["live"]:
+            runner.live_pace()
         client = setup["client"]
 
         params = {}
@@ -120,6 +127,9 @@ def _game_data_direct_setup(mockres):
         })
         client = MlbGumboSDK(merged_opts)
         idmap = env.get("MLB_GUMBO_TEST_GAME_DATA_ENTID")
+        # A path parameter's example stands in for an id *_ENTID does not give.
+        idmap = {"game_pk01": "716463",
+                 **(idmap if isinstance(idmap, dict) else {})}
         return {
             "client": client,
             "calls": calls,

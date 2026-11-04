@@ -25,7 +25,7 @@ class TeamEntityTest < Minitest::Test
     end
     client = MlbGumboSDK.test(nil, { "feature" => { "validate" => { "active" => true } } })
     err = assert_raises(StandardError) do
-      client.Team(nil).list({ "id" => "x" }, nil)
+      client.Team(nil).list({ "team_id" => "x" }, nil)
     end
     assert_equal "validate_failed", err.code
   end
@@ -34,7 +34,7 @@ class TeamEntityTest < Minitest::Test
     setup = team_basic_setup(nil)
     # Per-op sdk-test-control.json skip.
     _live = setup[:live] || false
-    ["load"].each do |_op|
+    ["list"].each do |_op|
       _should_skip, _reason = Runner.is_control_skipped("entityOp", "team." + _op, _live ? "live" : "unit")
       if _should_skip
         skip(_reason || "skipped via sdk-test-control.json")
@@ -42,7 +42,11 @@ class TeamEntityTest < Minitest::Test
       end
     end
     if setup[:live]
-      Runner.live_miss(LIVE_STRICT, "Live entity test blocked: " + "the flow loads a team record it has no list to find")
+      { "team01" => 119 }.each do |_live_key, _live_ex|
+        if setup[:synthetic_only] || setup[:idmap][_live_key].nil?
+          setup[:idmap][_live_key] = _live_ex
+        end
+      end
     end
     client = setup[:client]
 
@@ -54,15 +58,15 @@ class TeamEntityTest < Minitest::Test
       team_ref01_data = Helpers.to_map(team_ref01_data_raw[0][1])
     end
 
-    # LOAD
+    Runner.live_pace if setup[:live]
+    # LIST
     team_ref01_ent = client.Team(nil)
-    team_ref01_match_dt0 = {
-      "id" => team_ref01_data["id"],
+    team_ref01_match = {
+      "team_id" => setup[:idmap]["team01"],
     }
-    team_ref01_data_dt0_loaded = team_ref01_ent.load(team_ref01_match_dt0, nil)
-    team_ref01_data_dt0_load_result = Helpers.to_map(team_ref01_data_dt0_loaded.respond_to?(:data_get) ? team_ref01_data_dt0_loaded.data_get : team_ref01_data_dt0_loaded)
-    assert !team_ref01_data_dt0_load_result.nil?
-    assert_equal team_ref01_data_dt0_load_result["id"], team_ref01_data["id"]
+
+    team_ref01_list_result = team_ref01_ent.list(team_ref01_match, nil)
+    assert team_ref01_list_result.is_a?(Array)
 
   end
 end
